@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
 {
-    public class AccountsEntity
+    public class AccountsEntity : EntityBase
     {
         public DateTime CreationDate { get; set; }
         public decimal Money { get; set; }
