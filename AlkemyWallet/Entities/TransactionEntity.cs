@@ -4,9 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
 {
-    public class TransactionEntity : EntityBase
-    {
-
         decimal Ammount { get; set; }
         [MinLength(4)]
         [MaxLength(50)]
@@ -41,7 +38,5 @@ namespace AlkemyWallet.Entities
             Ammount = ammount;
             Concept = concept;
         }
-
-
     }
 }
