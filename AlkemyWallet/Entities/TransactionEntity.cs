@@ -11,11 +11,11 @@ namespace AlkemyWallet.Entities
         public DateTime Date { get; set; }
         public string[] Type { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("User")]
         public int UserId { get; set; }
         public virtual UserEntity User { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("Account")]
         public int AccountId { get; set; }
         public virtual AccountsEntity Account { get; set; }
 
