@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
 {
+    public class TransactionEntity : EntityBase { 
         decimal Ammount { get; set; }
         [MinLength(4)]
         [MaxLength(50)]
@@ -19,6 +20,8 @@ namespace AlkemyWallet.Entities
         public int AccountId { get; set; }
         public virtual AccountsEntity Account { get; set; }
 
+        public int ToAccountId { get; set; }
+
         public TransactionEntity()
         {
             Type = new string[2] { "topup", "payment" };
@@ -26,13 +29,14 @@ namespace AlkemyWallet.Entities
             User = new UserEntity();
         }
 
-        public TransactionEntity(int userId, int accountId) : this()
+        public TransactionEntity(int userId, int accountId, int toAccountId) : this()
         {
             UserId = userId;
             AccountId = accountId;
+            ToAccountId = toAccountId;  
         }
 
-        public TransactionEntity(int userId, int accountId, DateTime date, decimal ammount, string concept) : this(userId, accountId)
+        public TransactionEntity(int userId, int accountId, int toAccountId,DateTime date, decimal ammount, string concept) : this(userId, accountId, toAccountId)
         {
             Date = date;
             Ammount = ammount;
