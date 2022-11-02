@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace AlkemyWallet.DataAccess
+﻿namespace AlkemyWallet.DataAccess
 {
-    public class WalletDbContext : DbContext
+    public class WalletDbContext
     {
     }
 }
