@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
 {
-    public class AccountsEntity : BaseEntity
+    public class AccountsEntity
     {
-        public DateTime creationDate { get; set; }
-        public decimal money { get; set; }
-        public bool isBlocked { get; set; }
+        public DateTime CreationDate { get; set; }
+        public decimal Money { get; set; }
+        public bool IsBlocked { get; set; }
 
         [ForeignKey("user_id")]
-        public virtual UserEntity userId { get; set; }
+        public virtual UserEntity UserId { get; set; }
 
     }
 
