@@ -6,6 +6,7 @@ using AlkemyWallet.DataAccess.DataSeed;
 
 var builder = WebApplication.CreateBuilder(args);
 var connString = builder.Configuration.GetConnectionString("WalletDbConn");
+
 // Add services to the container.
 builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
 builder.Services.AddControllers();
