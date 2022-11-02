@@ -8,9 +8,12 @@ namespace AlkemyWallet.Entities
         public DateTime CreationDate { get; set; }
         public decimal Money { get; set; }
         public bool IsBlocked { get; set; }
-
+       
         [ForeignKey("user_id")]
-        public virtual UserEntity UserId { get; set; }
+        public virtual UserEntity User { get; set; }
+
+        [Column("Id")]
+        public int UserId { get; set; }
 
     }
 
