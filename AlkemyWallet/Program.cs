@@ -2,6 +2,7 @@ using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using AlkemyWallet.DataAccess.DataSeed;
 
 var builder = WebApplication.CreateBuilder(args);
 var connString = builder.Configuration.GetConnectionString("WalletDbConn");
@@ -26,6 +27,19 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+SeedData(app);
+
 app.MapControllers();
 
 app.Run();
+
+
+void SeedData(IApplicationBuilder app)
+{
+    var scopedFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<CatalogueDataSeeder>();
+        service.Seed();
+    }
+}
