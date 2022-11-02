@@ -1,5 +1,6 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.DataAccess.DataSeed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,19 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+SeedData(app);
+
 app.MapControllers();
 
 app.Run();
+
+
+void SeedData(IApplicationBuilder app)
+{
+    var scopedFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<CatalogueDataSeeder>();
+        service.Seed();
+    }
+}
