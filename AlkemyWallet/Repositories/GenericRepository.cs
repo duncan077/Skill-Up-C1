@@ -1,40 +1,53 @@
-﻿using AlkemyWallet.Repositories.Interfaces;
+﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
+using AlkemyWallet.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlkemyWallet.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : EntityBase
     {
-        private readonly UnitOfWork _unitOfWork;
 
-        public GenericRepository(UnitOfWork unitOfWork)
+        private readonly WalletDbContext _walletDbContext;
+
+
+        public GenericRepository(WalletDbContext walletDbContext)
         {
-            _unitOfWork = unitOfWork;
+
+            _walletDbContext = walletDbContext;
+
+
         }
 
 
-        public Task delete(T entity)
+        public async Task delete(T entity)
         {
-            throw new NotImplementedException();
+            _walletDbContext.Set<T>().Remove(entity);
         }
 
-        public Task<IReadOnlyList<T>> getAll()
+        public async Task<IReadOnlyList<T>> getAll()
         {
-            throw new NotImplementedException();
+            return await _walletDbContext.Set<T>().ToListAsync();
         }
 
-        public Task<T> getById(int id)
+        public async Task<T> getById(int id)
         {
-            throw new NotImplementedException();
+            return await _walletDbContext.Set<T>().FirstAsync(e=> e.Id==id);
         }
 
-        public Task<int> insert(T entity)
+        public async Task insert(T entity)
         {
-            throw new NotImplementedException();
+            await _walletDbContext.AddAsync(entity);
         }
 
-        public Task<int> update(T entity)
+        public async Task saveChanges()
         {
-            throw new NotImplementedException();
+            await _walletDbContext.SaveChangesAsync();
+        }
+
+        public async Task update(T entity)
+        {
+             _walletDbContext.Update(entity);
         }
     }
 }
