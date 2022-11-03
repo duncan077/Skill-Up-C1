@@ -9,10 +9,9 @@ namespace AlkemyWallet.Entities
         public decimal Money { get; set; }
         public bool IsBlocked { get; set; }
        
-        [ForeignKey("user_id")]
+        [ForeignKey("UserId")]
         public virtual UserEntity User { get; set; }
-
-        [Column("Id")]
+        [Column("user_id")]
         public int UserId { get; set; }
 
     }
