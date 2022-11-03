@@ -1,6 +1,9 @@
 ﻿using AlkemyWallet.Repositories;
+using AlkemyWallet.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Controllers
 {
@@ -8,11 +11,11 @@ namespace AlkemyWallet.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IRolesServices<RoleEntity> _rolesServices;
 
-        public RolesController(UnitOfWork unitOfWork)
+        public RolesController(IRolesServices<RoleEntity> rolesServices)
         {
-            _unitOfWork = unitOfWork;
+            _rolesServices = rolesServices;
         }
 
 

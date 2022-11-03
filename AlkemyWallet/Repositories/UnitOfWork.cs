@@ -18,13 +18,13 @@ namespace AlkemyWallet.Repositories
         {
             get
             {
-                if (_rolesRepository == null)
-                {
-                    _rolesRepository = new GenericRepository<RoleEntity>(_walletDbContext);
-                }
-                return _rolesRepository;
+                  return _rolesRepository = _rolesRepository ?? new GenericRepository<RoleEntity>(_walletDbContext);
             }
         }
 
+        public void Save()
+        {
+            _walletDbContext.SaveChanges();
+        }
     }
 }
