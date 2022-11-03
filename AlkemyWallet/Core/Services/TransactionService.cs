@@ -5,7 +5,7 @@ namespace AlkemyWallet.Core.Services
 {
     public class TransactionService : ITransactionService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         public TransactionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
