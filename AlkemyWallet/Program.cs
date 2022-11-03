@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IRolesServices<RoleEntity>, RolesService>();
+builder.Services.AddScoped<IRolesServices, RolesService>();
 
 var app = builder.Build();
 

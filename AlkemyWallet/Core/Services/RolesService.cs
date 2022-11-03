@@ -5,7 +5,7 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class RolesService : IRolesServices<RoleEntity>
+    public class RolesService : IRolesServices
     {
         private IUnitOfWork _unitOfWork;
         public RolesService(IUnitOfWork unitOfWork)
@@ -13,11 +13,11 @@ namespace AlkemyWallet.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-
         public async Task delete(RoleEntity entity)
         {
             await _unitOfWork.RolesRepository.delete(entity);
         }
+
 
         public async Task<IReadOnlyList<RoleEntity>> getAll()
         {
