@@ -16,8 +16,9 @@ namespace AlkemyWallet.Entities
 
         public int Points { get; set; }
 
-        [ForeignKey("rol_id")]
+        [ForeignKey("RoleId")]
         public virtual RoleEntity Role { get; set; }
+        [Column("rol_id")]
         public int RoleId { get; set; }
     }
 }
