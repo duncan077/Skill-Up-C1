@@ -9,12 +9,12 @@ namespace AlkemyWallet.Entities
      
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public UserEntity User { get; set; }
 
 
         [ForeignKey("Account")]
         public int AccountId { get; set; }
-        public Account Account { get; set; }
+        public AccountEntity Account { get; set; }
 
 
 
