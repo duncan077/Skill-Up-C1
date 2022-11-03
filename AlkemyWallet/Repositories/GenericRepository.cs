@@ -4,11 +4,11 @@ namespace AlkemyWallet.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        public UnitOfWork UnitOfWork;
+        private readonly UnitOfWork _unitOfWork;
 
         public GenericRepository(UnitOfWork unitOfWork)
         {
-            UnitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
 
