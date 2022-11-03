@@ -7,11 +7,16 @@ namespace AlkemyWallet.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : EntityBase
     {
+
         private readonly WalletDbContext _walletDbContext;
+
 
         public GenericRepository(WalletDbContext walletDbContext)
         {
+
             _walletDbContext = walletDbContext;
+
+
         }
 
 
