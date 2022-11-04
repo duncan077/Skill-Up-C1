@@ -11,9 +11,9 @@ namespace AlkemyWallet.Controllers
     [ApiController]
     public class FixedTermDepositController : ControllerBase
     {
-        private readonly IFixedTermDepositServices<FixedTermDepositEntity> _fixedTermDepositServices;
+        private readonly IFixedTermDepositServices _fixedTermDepositServices;
 
-        public FixedTermDepositController(IFixedTermDepositServices<FixedTermDepositEntity> FixedTermDepositServices)
+        public FixedTermDepositController(IFixedTermDepositServices FixedTermDepositServices)
         {
             _fixedTermDepositServices = FixedTermDepositServices;
         }
