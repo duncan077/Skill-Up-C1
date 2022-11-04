@@ -8,6 +8,8 @@ namespace AlkemyWallet.Repositories
     {
         private IGenericRepository<RoleEntity> _rolesRepository;
         private IGenericRepository<TransactionEntity> _transactionRepository;
+        private IGenericRepository<AccountsEntity> _accountsRepository;
+
         private WalletDbContext _walletDbContext;
 
         public UnitOfWork(WalletDbContext walletDbContext)
@@ -28,6 +30,15 @@ namespace AlkemyWallet.Repositories
             {
                 return _transactionRepository = _transactionRepository ?? new GenericRepository<TransactionEntity>(_walletDbContext);
             }
+        }
+
+        public IGenericRepository<AccountsEntity> AccountsRepository
+        { 
+            get 
+            { 
+                return _accountsRepository ?? new GenericRepository<AccountsEntity>(_walletDbContext); 
+            } 
+        
         }
 
         public void Save()
