@@ -36,7 +36,7 @@ namespace AlkemyWallet.Repositories
         { 
             get 
             { 
-                return _accountsRepository ?? new GenericRepository<AccountsEntity>(_walletDbContext); 
+                return _accountsRepository = _accountsRepository ?? new GenericRepository<AccountsEntity>(_walletDbContext); 
             } 
         
         }
