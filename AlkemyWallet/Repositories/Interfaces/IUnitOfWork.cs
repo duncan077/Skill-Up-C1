@@ -6,6 +6,7 @@ namespace AlkemyWallet.Repositories.Interfaces
     {
         IGenericRepository<RoleEntity> RolesRepository { get; }
         IGenericRepository<TransactionEntity> TransactionRepository { get; }
+        IGenericRepository<UserEntity> UserRepository { get; }
         void Save();
     }
 }
