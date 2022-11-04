@@ -1,4 +1,4 @@
-﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
@@ -9,6 +9,7 @@ namespace AlkemyWallet.Repositories
         private IGenericRepository<RoleEntity> _rolesRepository;
         private IGenericRepository<TransactionEntity> _transactionRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
+        private IGenericRepository<AccountsEntity> _accountsRepository;
         private WalletDbContext _walletDbContext;
 
         public UnitOfWork(WalletDbContext walletDbContext)
@@ -30,6 +31,18 @@ namespace AlkemyWallet.Repositories
                 return _transactionRepository = _transactionRepository ?? new GenericRepository<TransactionEntity>(_walletDbContext);
             }
         }
+
+
+        public IGenericRepository<AccountsEntity> AccountsRepository
+        { 
+            get 
+            { 
+                return _accountsRepository = _accountsRepository ?? new GenericRepository<AccountsEntity>(_walletDbContext); 
+            } 
+        
+        }
+
+
         public IGenericRepository<FixedTermDepositEntity> FixedTermDepositRepository
         {
             get
