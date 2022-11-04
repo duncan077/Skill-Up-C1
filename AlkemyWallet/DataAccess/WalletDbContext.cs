@@ -13,15 +13,15 @@ namespace AlkemyWallet.DataAccess
         }
 
 
-        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             UserDataSeeder.UserDataSeed(modelBuilder);
             CatalogueDataSeeder.CatalogueDataSeed(modelBuilder);
             TransactionDataSeeder.TransactionDataSeed(modelBuilder);
             AccountsDataSeeder.AccountsDataSeed(modelBuilder);
-            RoleEntitySeeder.ConfigureMyEntity(modelbuilder);
+            RoleEntitySeeder.ConfigureMyEntity(modelBuilder);
 
-            base.OnModelCreating(modelbuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         public virtual DbSet<UserEntity> Users { get; set; } = null!;
