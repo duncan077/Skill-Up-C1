@@ -1,4 +1,4 @@
-﻿using AlkemyWallet.Entities;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Repositories.Interfaces
 {
@@ -6,8 +6,8 @@ namespace AlkemyWallet.Repositories.Interfaces
     {
         IGenericRepository<RoleEntity> RolesRepository { get; }
         IGenericRepository<TransactionEntity> TransactionRepository { get; }
+        IGenericRepository<FixedTermDepositEntity> FixedTermDepositRepository { get; }
         IGenericRepository<AccountsEntity> AccountsRepository { get; }
-        IGenericRepository<FixedTermDepositEntity> FixedTermDeposit { get; }
         void Save();
     }
 }
