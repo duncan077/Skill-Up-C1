@@ -16,6 +16,7 @@ namespace AlkemyWallet.DataAccess
             UserDataSeeder.UserDataSeed(modelBuilder);
             CatalogueDataSeeder.CatalogueDataSeed(modelBuilder);
             TransactionDataSeeder.TransactionDataSeed(modelBuilder);
+            AccountsDataSeeder.AccountsDataSeed(modelBuilder);
         }
 
         public virtual DbSet<UserEntity> Users { get; set; } = null!;
