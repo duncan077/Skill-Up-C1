@@ -12,7 +12,6 @@ namespace AlkemyWallet.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Roles="Admin")]
     public class AccountController : ControllerBase
     {
 
@@ -35,6 +34,7 @@ namespace AlkemyWallet.Controllers
 
         }
         [HttpGet("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var account = await _accountServices.GetAccountById(id);
