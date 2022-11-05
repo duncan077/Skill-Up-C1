@@ -3,11 +3,15 @@ using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using AlkemyWallet.DataAccess.DataSeed;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using AlkemyWallet.Repositories.Interfaces;
+using AlkemyWallet.Repositories;
+using AlkemyWallet.Entities;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,7 @@ builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme
     {
@@ -28,7 +33,14 @@ builder.Services.AddSwaggerGen(options => {
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+builder.Services.AddScoped<IRolesServices, RolesService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
+
 
 builder.Services.AddCors(options => {
     options.AddPolicy(name: allowAnyOrigins, builder =>
@@ -64,19 +76,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-SeedData(app);
-
 app.MapControllers();
 
 app.Run();
-
-
-void SeedData(IApplicationBuilder app)
-{
-    var scopedFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
-    using (var scope = scopedFactory.CreateScope())
-    {
-        var service = scope.ServiceProvider.GetService<CatalogueDataSeeder>();
-        service.Seed();
-    }
-}
