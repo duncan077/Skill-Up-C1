@@ -12,6 +12,7 @@ namespace AlkemyWallet.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles="Admin")]
     public class AccountController : ControllerBase
     {
 
