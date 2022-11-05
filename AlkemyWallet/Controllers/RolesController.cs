@@ -11,9 +11,9 @@ namespace AlkemyWallet.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly IRolesServices<RoleEntity> _rolesServices;
+        private readonly IRolesServices _rolesServices;
 
-        public RolesController(IRolesServices<RoleEntity> rolesServices)
+        public RolesController(IRolesServices rolesServices)
         {
             _rolesServices = rolesServices;
         }
