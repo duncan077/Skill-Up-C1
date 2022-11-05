@@ -5,6 +5,8 @@ using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,18 +20,22 @@ namespace AlkemyWallet.Controllers
 
 
         private IAccountService _accountServices;
+        private IMapper _mapper;
 
-        public AccountController(IAccountService accountServices)
+        public AccountController(IAccountService accountServices, IMapper mapper)
         {
+            _mapper = mapper;
             _accountServices = accountServices;
         }
 
         [HttpGet]
-        
-        public IActionResult GetAccounts()
+        [Authorize(Roles ="Admin")]
+        public async Task<ActionResult<List<AccountDto>>> GetAccounts()
         {
-
-            return Ok();
+            var response = _mapper.Map<List<AccountDto>>(await _accountServices.getAll());
+            if(response.Count==0)
+                return NotFound();
+            return Ok(response);
 
 
         }
