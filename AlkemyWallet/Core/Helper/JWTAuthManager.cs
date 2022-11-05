@@ -25,21 +25,21 @@ namespace AlkemyWallet.Core.Helper
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
-        private byte[] CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private byte[] CreatePasswordHash(string password)
         {
             using (var hmac = new HMACSHA512())
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return passwordHash;
+                byte [] passwordSalt = hmac.Key;
+                return hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+               
             }
         }
 
-        private string CreateToken(string userName)
+        private string CreateToken(string userName, string role)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userName)
+                new Claim(ClaimTypes.Name, userName, role)
             };
             //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings").Value));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token").GetChildren().ToString()));
@@ -51,11 +51,13 @@ namespace AlkemyWallet.Core.Helper
             return jwt;
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        private bool VerifyPasswordHash(string password, byte[] passwordHash)
         {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
 
+            HMACSHA512 aux = new HMACSHA512();
+            byte[] salt = aux.Key;
+            using (var hmac = new HMACSHA512(salt))
+            {
                 var computeddHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computeddHash.SequenceEqual(passwordHash);
             }

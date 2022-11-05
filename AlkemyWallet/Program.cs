@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-var myAllowSpecificOrigins = "myAllowSpecificOrigins";
+var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
 var connString = builder.Configuration.GetConnectionString("WalletDbConn");
 
@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme
     {
         Description = "Standard Authorization header using the Bearer scheme(\"bearer {token}\")",
         In = ParameterLocation.Header,
@@ -31,7 +31,7 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddCors(options => {
-    options.AddPolicy(name: myAllowSpecificOrigins, builder =>
+    options.AddPolicy(name: allowAnyOrigins, builder =>
     {
         builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
     });
