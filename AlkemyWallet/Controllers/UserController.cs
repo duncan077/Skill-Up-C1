@@ -1,12 +1,14 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace AlkemyWallet.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
@@ -21,5 +23,36 @@ namespace AlkemyWallet.Controllers
         {
             return Ok();
         }
+
+    
+        [HttpGet("{id}")]
+        //[Authorize(Roles = "Regular")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try{ 
+
+
+            var user = await userService.getById(id);
+
+            if (user == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        Status = "Not found",
+                        Message = "No user matches the id"
+                    });
+            }
+
+            
+
+
+
+            return Ok(user);
+            }
+            catch (Exception ex) { return Ok(); };
+        }
+
+
     }
 }
