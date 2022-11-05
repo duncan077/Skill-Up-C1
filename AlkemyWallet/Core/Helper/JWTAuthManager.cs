@@ -16,7 +16,7 @@ namespace AlkemyWallet.Core.Helper
         private IConfiguration _configuration;
         public JWTAuthManager(IConfiguration configuration)
         {
-            _configuration = configuration; 
+            _configuration = configuration;
         }
 
 
@@ -25,13 +25,18 @@ namespace AlkemyWallet.Core.Helper
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
+        private byte[] GetSalt()
+        {
+            return Encoding.UTF8.GetBytes(_configuration.GetSection("secret").ToString());
+        }
         private byte[] CreatePasswordHash(string password)
         {
-            using (var hmac = new HMACSHA512())
+            
+            using (var hmac = new HMACSHA512(GetSalt()))
             {
-                byte [] passwordSalt = hmac.Key;
+                byte[] passwordSalt = hmac.Key;
                 return hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-               
+
             }
         }
 
@@ -39,10 +44,11 @@ namespace AlkemyWallet.Core.Helper
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userName, role)
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Role, role)
             };
             //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings").Value));
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token").GetChildren().ToString()));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token").ToString()));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
@@ -54,9 +60,7 @@ namespace AlkemyWallet.Core.Helper
         private bool VerifyPasswordHash(string password, byte[] passwordHash)
         {
 
-            HMACSHA512 aux = new HMACSHA512();
-            byte[] salt = aux.Key;
-            using (var hmac = new HMACSHA512(salt))
+            using (var hmac = new HMACSHA512(GetSalt()))
             {
                 var computeddHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computeddHash.SequenceEqual(passwordHash);
