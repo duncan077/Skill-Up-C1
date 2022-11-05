@@ -25,7 +25,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpGet]
-        
+
         public IActionResult GetAccounts()
         {
 
@@ -33,7 +33,22 @@ namespace AlkemyWallet.Controllers
 
 
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var account = await _accountServices.GetAccountById(id);
 
+            if (account == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        Status = "Not found",
+                        Message = "No account matches the id"
+                    });
+            }
+            return Ok(account);
+        }
 
 
 
