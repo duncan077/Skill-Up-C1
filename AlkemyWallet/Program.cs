@@ -20,6 +20,7 @@ builder.Services.AddScoped<IRolesServices, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
 
 
 var app = builder.Build();
@@ -35,19 +36,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-SeedData(app);
-
 app.MapControllers();
 
 app.Run();
-
-
-void SeedData(IApplicationBuilder app)
-{
-    var scopedFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
-    using (var scope = scopedFactory.CreateScope())
-    {
-        var service = scope.ServiceProvider.GetService<CatalogueDataSeeder>();
-        service.Seed();
-    }
-}
