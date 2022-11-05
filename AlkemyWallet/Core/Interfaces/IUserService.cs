@@ -1,14 +1,10 @@
 ﻿using AlkemyWallet.Entities;
+using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IGenericRepository<UserEntity>
     {
-        Task delete(UserEntity entity);
-        Task<IReadOnlyList<UserEntity>> getAll();
-        Task<UserEntity> getById(int id);
-        Task insert(UserEntity entity);
-        Task saveChanges();
-        Task update(UserEntity entity);
+
     }
 }
