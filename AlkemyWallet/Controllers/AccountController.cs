@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories;
@@ -33,8 +34,8 @@ namespace AlkemyWallet.Controllers
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
         {
-            var response = _mapper.Map<List<AccountDto>>(await _accountServices.getAll());
-            if(response.Count==0)
+            var response =await _accountServices.ListedAccounts();
+            if (response.Count==0)
                 return NotFound();
             return Ok(response);
 
