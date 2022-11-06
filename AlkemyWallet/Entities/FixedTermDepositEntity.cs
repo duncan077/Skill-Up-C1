@@ -8,6 +8,7 @@ namespace AlkemyWallet.Entities
     {
 
 
+
         
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
