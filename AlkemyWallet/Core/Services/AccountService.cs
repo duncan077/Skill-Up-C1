@@ -4,7 +4,7 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class AccountService:IAccountService
+    public class AccountService : IAccountService
     {
         private IUnitOfWork _unitOfWork;
         public AccountService(IUnitOfWork unitOfWork)
@@ -35,7 +35,7 @@ namespace AlkemyWallet.Core.Services
 
         public async Task saveChanges()
         {
-             _unitOfWork.Save();
+            _unitOfWork.Save();
         }
 
         public async Task update(AccountsEntity entity)
