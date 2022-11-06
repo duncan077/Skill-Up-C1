@@ -8,10 +8,11 @@ namespace AlkemyWallet.Repositories
     {
         private IGenericRepository<RoleEntity> _rolesRepository;
         private IGenericRepository<TransactionEntity> _transactionRepository;
-        private IGenericRepository<UserEntity> _userRepository;
+        private IUserRepository _userRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
         private IGenericRepository<AccountsEntity> _accountsRepository;
-        
+        private IGenericRepository<CatalogueEntity> _catalogueRepository;
+
         private WalletDbContext _walletDbContext;
 
         public UnitOfWork(WalletDbContext walletDbContext)
@@ -34,11 +35,11 @@ namespace AlkemyWallet.Repositories
             }
         }
 
-        public IGenericRepository<UserEntity> UserRepository
+        public IUserRepository UserRepository
         {
             get
             {
-                return _userRepository = _userRepository ?? new GenericRepository<UserEntity>(_walletDbContext);
+                return _userRepository = _userRepository ?? new UserRepository(_walletDbContext);
             }
         }
 
@@ -61,9 +62,19 @@ namespace AlkemyWallet.Repositories
             }
         }
 
+        public IGenericRepository<CatalogueEntity> CatalogueRepository
+        {
+            get
+            {
+                return _catalogueRepository = _catalogueRepository ?? new GenericRepository<CatalogueEntity>(_walletDbContext);
+            }
+        }
+
         public void Save()
         {
             _walletDbContext.SaveChanges();
         }
+
+
     }
 }

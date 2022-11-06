@@ -26,7 +26,7 @@ namespace AlkemyWallet.Controllers
 
     
         [HttpGet("{id}")]
-        [Authorize(Roles = "Regular")]
+        //[Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
            
@@ -43,8 +43,8 @@ namespace AlkemyWallet.Controllers
                     });
             }
 
-            
 
+    
             return Ok(user);
         }
         

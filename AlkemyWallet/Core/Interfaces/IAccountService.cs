@@ -1,12 +1,14 @@
-﻿using AlkemyWallet.Core.Models.DTO;
-using AlkemyWallet.Entities;
-using AlkemyWallet.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Core.Interfaces
+namespace AlkemyWallet.Core.Services
 {
-    public interface IAccountService:IGenericRepository<AccountsEntity>
+    public interface IAccountService
     {
-      
+        Task delete(AccountsEntity entity);
+        Task<IReadOnlyList<AccountsEntity>> getAll();
+        Task<AccountsEntity> getById(int id);
+        Task insert(AccountsEntity entity);
+        Task saveChanges();
+        Task update(AccountsEntity entity);
     }
 }

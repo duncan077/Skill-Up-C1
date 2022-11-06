@@ -1,4 +1,7 @@
-﻿namespace AlkemyWallet.Repositories.Interfaces
+﻿using AlkemyWallet.Entities;
+using System.Linq.Expressions;
+
+namespace AlkemyWallet.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -10,6 +13,7 @@
          Task  delete(T entity);
          Task update(T entity);
          Task saveChanges();
-
+     
+       
     }
 }
