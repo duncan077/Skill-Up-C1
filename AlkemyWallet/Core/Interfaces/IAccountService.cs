@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -10,5 +11,6 @@ namespace AlkemyWallet.Core.Services
         Task insert(AccountsEntity entity);
         Task saveChanges();
         Task update(AccountsEntity entity);
+        Task<TransferToAccountsDTO> TransferAccounts(TransferToAccountsDTO model, int id);
     }
 }

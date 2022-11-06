@@ -61,9 +61,9 @@ namespace AlkemyWallet.Repositories
             }
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _walletDbContext.SaveChanges();
+            await _walletDbContext.SaveChangesAsync();
         }
 
 

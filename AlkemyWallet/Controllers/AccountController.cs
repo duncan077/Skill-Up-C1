@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories;
@@ -8,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace AlkemyWallet.Controllers
 {
@@ -40,11 +42,12 @@ namespace AlkemyWallet.Controllers
 
 
         }
+
         [HttpGet("{id}")]
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> GetById(int id)
         {
-            var account = await _accountServices.GetAccountById(id);
+            var account = await _accountServices.getById(id);
 
             if (account == null)
             {
@@ -58,7 +61,21 @@ namespace AlkemyWallet.Controllers
             return Ok(account);
         }
 
-
+        [HttpPost("accounts/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> TransferToAccounts([FromBody] TransferToAccountsDTO model, int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest("Some of the information in the transfer request between Accounts is invalid");
+                model = await _accountServices.TransferAccounts(model, id);
+                return Ok($"Successful transfer of ${model.Amount} successfully performed from Account:'{model.SourceAccount}' to the Account:'{model.ToAccountId}'.");
+            }
+            catch (Exception err)
+            {
+                return BadRequest($"Unable to transfer ${model.Amount} to the Account:'{model.ToAccountId}'. Error: {err.Message}");
+            }
+        }
 
     }
 }
