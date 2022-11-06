@@ -4,9 +4,9 @@ using System.Security.Principal;
 
 namespace AlkemyWallet.Entities
 {
-    public class FixedTermDeposit : BaseEntity
+    public class FixedTermDepositEntity : EntityBase
     {
-     
+        
         [ForeignKey("User")]
         public int UserId { get; set; }
         public UserEntity User { get; set; }
@@ -14,7 +14,7 @@ namespace AlkemyWallet.Entities
 
         [ForeignKey("Account")]
         public int AccountId { get; set; }
-        public AccountEntity Account { get; set; }
+        public AccountsEntity Account { get; set; }
 
 
 
