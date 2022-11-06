@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services

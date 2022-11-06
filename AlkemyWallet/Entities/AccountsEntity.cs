@@ -5,14 +5,18 @@ namespace AlkemyWallet.Entities
 {
     public class AccountsEntity : EntityBase
     {
+  
         public DateTime CreationDate { get; set; }
         public decimal Money { get; set; }
-        public bool IsBlocked { get; set; }
+        public bool IsBlocked { get; set; } = false;
        
-        [ForeignKey("UserId")]
-        public virtual UserEntity User { get; set; }
-        [Column("user_id")]
+       
         public int UserId { get; set; }
+      
+        public virtual UserEntity User { get; set; }
+       
+        
+    public virtual ICollection<FixedTermDepositEntity> FixedTerms { get; set; }
 
     }
 

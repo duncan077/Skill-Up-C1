@@ -6,15 +6,18 @@ namespace AlkemyWallet.Entities
 {
     public class FixedTermDepositEntity : EntityBase
     {
-     
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-        public UserEntity User { get; set; }
 
 
-        [ForeignKey("Account")]
-        public int AccountId { get; set; }
-        public AccountsEntity Account { get; set; }
+        
+        public int? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual UserEntity? User { get; set; }
+
+
+       
+        public int? AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual AccountsEntity? Account { get; set; }
 
 
 

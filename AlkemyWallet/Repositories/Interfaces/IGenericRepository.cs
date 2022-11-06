@@ -1,4 +1,7 @@
-﻿namespace AlkemyWallet.Repositories.Interfaces
+﻿using AlkemyWallet.Entities;
+using System.Linq.Expressions;
+
+namespace AlkemyWallet.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -10,6 +13,8 @@
          Task  delete(T entity);
          Task update(T entity);
          Task saveChanges();
-
+        Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IQueryable<T>> includes = null);
+        IEnumerable<T> Query(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IQueryable<T>> includes = null);
+       
     }
 }

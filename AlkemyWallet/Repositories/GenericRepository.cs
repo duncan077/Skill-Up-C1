@@ -2,6 +2,7 @@
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AlkemyWallet.Repositories
 {
@@ -18,7 +19,35 @@ namespace AlkemyWallet.Repositories
 
 
         }
+       protected IQueryable<T> QueryDb(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, Func<IQueryable<T>, IQueryable<T>> includes)
+        {
+            IQueryable<T> query = _walletDbContext.Set<T>();
 
+            
+                query = filter!=null ?  query.Where(filter) : query;
+            
+
+           
+                query =includes!=null ? includes(query):query;
+            
+
+            
+                query = orderBy!=null ? orderBy(query):query;
+            
+
+            return query;
+        }
+        public virtual IEnumerable<T> Query(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IQueryable<T>> includes = null)
+        {
+            var result = QueryDb(filter, orderBy, includes);
+            return result.ToList();
+        }
+
+        public virtual async Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IQueryable<T>> includes = null)
+        {
+            var result = QueryDb(filter, orderBy, includes);
+            return await result.ToListAsync();
+        }
 
         public async Task delete(T entity)
         {
@@ -27,6 +56,7 @@ namespace AlkemyWallet.Repositories
 
         public async Task<IReadOnlyList<T>> getAll()
         {
+           
             return await _walletDbContext.Set<T>().ToListAsync();
         }
 
