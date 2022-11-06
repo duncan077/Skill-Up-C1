@@ -1,6 +1,7 @@
 using AlkemyWallet.DataAccess.DataSeed;
 using AlkemyWallet.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace AlkemyWallet.DataAccess
 {
@@ -16,10 +17,21 @@ namespace AlkemyWallet.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             UserDataSeeder.UserDataSeed(modelBuilder);
-            CatalogueDataSeeder.CatalogueDataSeed(modelBuilder);
+           CatalogueDataSeeder.CatalogueDataSeed(modelBuilder);
             TransactionDataSeeder.TransactionDataSeed(modelBuilder);
             AccountsDataSeeder.AccountsDataSeed(modelBuilder);
-            RoleEntitySeeder.ConfigureMyEntity(modelBuilder);
+           RoleEntitySeeder.ConfigureMyEntity(modelBuilder);
+
+            modelBuilder.Entity<FixedTermDepositEntity>()
+                .HasOne<AccountsEntity>(a=>a.Account)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FixedTermDepositEntity>()
+                 .HasOne<UserEntity>(a => a.User)
+                 .WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AccountsEntity>()
+                .HasOne(u=>u.User)
+                .WithOne(a=>a.Account)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }
