@@ -11,7 +11,8 @@ namespace AlkemyWallet.Repositories
         private IGenericRepository<UserEntity> _userRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
         private IGenericRepository<AccountsEntity> _accountsRepository;
-        
+        private IGenericRepository<CatalogueEntity> _catalogueRepository;
+
         private WalletDbContext _walletDbContext;
 
         public UnitOfWork(WalletDbContext walletDbContext)
@@ -58,6 +59,14 @@ namespace AlkemyWallet.Repositories
             get
             {
                 return _fixedTermDepositRepository = _fixedTermDepositRepository ?? new GenericRepository<FixedTermDepositEntity>(_walletDbContext);
+            }
+        }
+
+        public IGenericRepository<CatalogueEntity> CatalogueRepository
+        {
+            get
+            {
+                return _catalogueRepository = _catalogueRepository ?? new GenericRepository<CatalogueEntity>(_walletDbContext);
             }
         }
 
