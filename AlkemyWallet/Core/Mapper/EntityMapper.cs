@@ -1,6 +1,15 @@
-﻿namespace AlkemyWallet.Core.Mapper
+﻿using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
+using AutoMapper;
+
+namespace AlkemyWallet.Core.Mapper
 {
-    public class EntityMapper
+    public class EntityMapper:Profile
     {
+        public EntityMapper()
+        {
+            CreateMap<AccountsEntity, AccountDto>();
+                
+        }
     }
 }
