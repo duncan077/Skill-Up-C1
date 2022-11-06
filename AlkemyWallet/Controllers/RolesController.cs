@@ -22,9 +22,9 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        public IActionResult GetRoles()
+        public async Task<IActionResult> GetRoles()
         {
-            var listRoles = _rolesServices.getAll();
+            var listRoles = await _rolesServices.getAll();
 
             if (listRoles is null)
                 return NotFound( new { Status = "Not Found", Message = "No Role Fount"});
