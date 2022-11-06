@@ -6,7 +6,7 @@ namespace AlkemyWallet.Entities
 {
     public class FixedTermDepositEntity : EntityBase
     {
-     
+        
         [ForeignKey("User")]
         public int UserId { get; set; }
         public UserEntity User { get; set; }
