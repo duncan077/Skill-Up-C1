@@ -28,8 +28,10 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpGet]
+
         [Authorize(Roles ="Admin")]
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
+
         {
             var response = _mapper.Map<List<AccountDto>>(await _accountServices.getAll());
             if(response.Count==0)
@@ -38,7 +40,23 @@ namespace AlkemyWallet.Controllers
 
 
         }
+        [HttpGet("{id}")]
+        [Authorize(Roles="Admin")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var account = await _accountServices.GetAccountById(id);
 
+            if (account == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        Status = "Not found",
+                        Message = "No account matches the id"
+                    });
+            }
+            return Ok(account);
+        }
 
 
 
