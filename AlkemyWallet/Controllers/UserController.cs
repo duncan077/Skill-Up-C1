@@ -29,8 +29,7 @@ namespace AlkemyWallet.Controllers
         //[Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
-            try{ 
-
+           
 
             var user = await userService.getById(id);
 
@@ -46,12 +45,10 @@ namespace AlkemyWallet.Controllers
 
             
 
-
-
             return Ok(user);
-            }
-            catch (Exception ex) { return Ok(); };
         }
+        
+        
 
 
     }

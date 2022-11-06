@@ -5,6 +5,7 @@ using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> GetById(int id)
         {
-            var account = await _accountServices.GetAccountById(id);
+            var account = await _accountServices.getById(id);
 
             if (account == null)
             {
