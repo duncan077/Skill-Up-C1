@@ -16,7 +16,6 @@ using AlkemyWallet.Core.Helper;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
-var connString = "Data Source=DESKTOP-3ALPJN4;Initial Catalog=alkemy;Integrated Security=True";
 
 
 // Add services to the container.
