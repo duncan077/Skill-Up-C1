@@ -3,7 +3,7 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Interfaces
 {
-    public interface IFixedTermDepositServices : IGenericRepository<FixedTermDepositEntity>
+    public interface IFixedTermDepositServices 
     {
 
     }

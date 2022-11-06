@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories;
@@ -44,7 +45,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> GetById(int id)
         {
-            var account = await _accountServices.GetAccountById(id);
+            var account = await _accountServices.getById(id);
 
             if (account == null)
             {

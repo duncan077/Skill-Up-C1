@@ -10,7 +10,9 @@ namespace AlkemyWallet.Entities
         [MaxLength(50)]
         public string Concept { get; set; }
         public DateTime Date { get; set; }
-        public string Types { get; set; }
+
+        public string Types { get; set; }=String.Empty;
+
 
         [ForeignKey("User")]
         public int UserId { get; set; }
@@ -24,7 +26,9 @@ namespace AlkemyWallet.Entities
 
         public TransactionEntity()
         {
+
             Types = string.Empty;
+
             Account = new AccountsEntity();
             User = new UserEntity();
         }
