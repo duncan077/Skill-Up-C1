@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Authorization;
+using AlkemyWallet.Core.Models.DTO;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace AlkemyWallet.Controllers
 {
@@ -13,10 +16,12 @@ namespace AlkemyWallet.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRolesServices _rolesServices;
+        private readonly IMapper _mapper;
 
-        public RolesController(IRolesServices rolesServices)
+        public RolesController(IRolesServices rolesServices, IMapper mapper)
         {
             _rolesServices = rolesServices;
+            _mapper = mapper;
         }
 
 
@@ -24,7 +29,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> GetRoles()
         {
-            var listRoles = await _rolesServices.getAll();
+            var listRoles = _mapper.Map<IReadOnlyList<RolesDTO>>(await _rolesServices.getAll());
 
             if (listRoles is null)
                 return NotFound( new { Status = "Not Found", Message = "No Role Fount"});
