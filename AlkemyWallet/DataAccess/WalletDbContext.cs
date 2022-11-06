@@ -31,7 +31,6 @@ namespace AlkemyWallet.DataAccess
             modelBuilder.Entity<AccountsEntity>()
                 .HasOne(u=>u.User)
                 .WithOne(a=>a.Account)
-                
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

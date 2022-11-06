@@ -12,10 +12,7 @@ namespace AlkemyWallet.Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<UserEntity> QueryAsync(Expression<Func<UserEntity, bool>> filter, Func<IQueryable<UserEntity>, IOrderedQueryable<UserEntity>> orderBy = null, Func<IQueryable<UserEntity>, IQueryable<UserEntity>> includes = null)
-        {
-            return (UserEntity)await _unitOfWork.UserRepository.QueryAsync(filter, orderBy, includes);
-        }
+       
         public async Task delete(UserEntity entity)
         {
             await _unitOfWork.UserRepository.delete(entity);

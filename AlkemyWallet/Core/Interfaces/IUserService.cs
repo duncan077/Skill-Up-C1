@@ -11,7 +11,7 @@ namespace AlkemyWallet.Core.Interfaces
         Task<UserEntity> getById(int id);
         Task<UserEntity> getByUserName(string username);
         Task insert(UserEntity entity);
-        Task<UserEntity> QueryAsync(Expression<Func<UserEntity, bool>> filter, Func<IQueryable<UserEntity>, IOrderedQueryable<UserEntity>> orderBy = null, Func<IQueryable<UserEntity>, IQueryable<UserEntity>> includes = null);
+   
         Task saveChanges();
         Task update(UserEntity entity);
 
