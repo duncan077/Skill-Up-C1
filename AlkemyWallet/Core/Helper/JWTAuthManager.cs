@@ -11,7 +11,7 @@ using System.Text;
 
 namespace AlkemyWallet.Core.Helper
 {
-    public class JWTAuthManager
+    public class JWTAuthManager : IJWTAuthManager
     {
         private IConfiguration _configuration;
         public JWTAuthManager(IConfiguration configuration)
@@ -20,18 +20,18 @@ namespace AlkemyWallet.Core.Helper
         }
 
 
-        private string CreateRandomToken()
+        public string CreateRandomToken()
         {
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
-        private byte[] GetSalt()
+        public byte[] GetSalt()
         {
             return Encoding.UTF8.GetBytes(_configuration.GetSection("secret").ToString());
         }
-        private byte[] CreatePasswordHash(string password)
+        public byte[] CreatePasswordHash(string password)
         {
-            
+
             using (var hmac = new HMACSHA512(GetSalt()))
             {
                 byte[] passwordSalt = hmac.Key;
@@ -40,7 +40,7 @@ namespace AlkemyWallet.Core.Helper
             }
         }
 
-        private string CreateToken(string userName, string role)
+        public string CreateToken(string userName, string role)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -57,7 +57,7 @@ namespace AlkemyWallet.Core.Helper
             return jwt;
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash)
+        public bool VerifyPasswordHash(string password, byte[] passwordHash)
         {
 
             using (var hmac = new HMACSHA512(GetSalt()))
