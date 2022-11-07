@@ -42,6 +42,7 @@ builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
 builder.Services.AddScoped<IJWTAuthManager, JWTAuthManager>();
