@@ -14,10 +14,11 @@ namespace AlkemyWallet.DataAccess.DataSeed
                     Ammount = 100.00,
                     Concept = "Pago",
                     Date = DateTime.UtcNow.AddMonths(-2),
-                    Type = "payment",
+                    Types = "payment",
                     UserId = 1,
                     AccountId = 1,
-                    ToAccountId = 2
+                    ToAccountId = 2,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -25,10 +26,11 @@ namespace AlkemyWallet.DataAccess.DataSeed
                     Ammount = 2500.30,
                     Concept = "Compra del dia",
                     Date = DateTime.UtcNow.AddMonths(-3),
-                    Type = "payment",
+                    Types = "payment",
                     UserId = 2,
                     AccountId = 4,
-                    ToAccountId = 2
+                    ToAccountId = 2,
+                    IsDeleted = false
                 }
             );
         }

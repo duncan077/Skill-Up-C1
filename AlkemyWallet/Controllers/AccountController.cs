@@ -45,7 +45,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> GetById(int id)
         {
-            var account = await _accountServices.GetAccountById(id);
+            var account = await _accountServices.getById(id);
 
             if (account == null)
             {

@@ -12,10 +12,11 @@ using Swashbuckle.AspNetCore.Filters;
 using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Core.Helper;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
-var connString = builder.Configuration.GetConnectionString("WalletDbConn");
+
 
 // Add services to the container.
 builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
@@ -37,12 +38,14 @@ builder.Services.AddSwaggerGen(options => {
 });
 
 
-builder.Services.AddScoped<IRolesServices, RolesService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
+builder.Services.AddScoped<IJWTAuthManager, JWTAuthManager>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 builder.Services.AddCors(options => {
