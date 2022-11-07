@@ -7,7 +7,7 @@ namespace AlkemyWallet.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private IGenericRepository<RoleEntity> _rolesRepository;
-        private IGenericRepository<TransactionEntity> _transactionRepository;
+        private ITransactionRepository _transactionRepository;
         private IUserRepository _userRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
         private IGenericRepository<AccountsEntity> _accountsRepository;
@@ -27,11 +27,11 @@ namespace AlkemyWallet.Repositories
                   return _rolesRepository = _rolesRepository ?? new GenericRepository<RoleEntity>(_walletDbContext);
             }
         }
-        public IGenericRepository<TransactionEntity> TransactionRepository
+        public ITransactionRepository TransactionRepository
         {
             get
             {
-                return _transactionRepository = _transactionRepository ?? new GenericRepository<TransactionEntity>(_walletDbContext);
+                return _transactionRepository = _transactionRepository ?? new TransactionRepository(_walletDbContext);
             }
         }
 
