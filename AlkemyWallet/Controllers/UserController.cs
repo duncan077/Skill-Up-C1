@@ -31,7 +31,7 @@ namespace AlkemyWallet.Controllers
         {
            
 
-            var user = await userService.getById(id);
+            var user = await _userService.getById(id);
 
             if (user == null)
             {
