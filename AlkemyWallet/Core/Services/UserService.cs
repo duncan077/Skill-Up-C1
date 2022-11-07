@@ -1,6 +1,8 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
 using System.Linq.Expressions;
 
 namespace AlkemyWallet.Core.Services
@@ -8,8 +10,11 @@ namespace AlkemyWallet.Core.Services
     public class UserService : IUserService
     {
         private IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private IMapper _mapper;
+
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
        
@@ -19,9 +24,14 @@ namespace AlkemyWallet.Core.Services
         }
 
 
-        public async Task<IReadOnlyList<UserEntity>> getAll()
+        /*public async Task<IReadOnlyList<UserEntity>> getAll()
         {
             return await _unitOfWork.UserRepository.getAll();
+        }*/
+        
+        public async Task<IReadOnlyList<UserDTO>> getAll()
+        {
+            return _mapper.Map<List<UserDTO>>(await _unitOfWork.UserRepository.getAll()) ?? new List<UserDTO>();
         }
 
         public async Task<UserEntity> getById(int id)
