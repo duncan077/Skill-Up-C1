@@ -9,12 +9,10 @@ namespace AlkemyWallet.Core.Services
     public class AccountService : IAccountService
     {
         private IUnitOfWork _unitOfWork;
-        private IJWTAuthManager _jwtManager;
 
-        public AccountService(IUnitOfWork unitOfWork, IJWTAuthManager jwtManager)
+        public AccountService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _jwtManager = jwtManager;
         }
 
         public async Task delete(AccountsEntity entity)
