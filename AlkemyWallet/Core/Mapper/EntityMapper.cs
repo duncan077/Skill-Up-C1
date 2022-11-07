@@ -11,6 +11,7 @@ namespace AlkemyWallet.Core.Mapper
             CreateMap<RoleEntity, RolesDTO>().ReverseMap();
             CreateMap<FixedTermDepositEntity, FixedTermDepositDTO>().ReverseMap();
             CreateMap<AccountsEntity, AccountDto>();
+            CreateMap<UserEntity, UserDTO>();
         }
     }
 }
