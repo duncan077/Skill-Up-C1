@@ -1,15 +1,20 @@
-﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
 using System.Linq.Expressions;
+
 
 namespace AlkemyWallet.Core.Services
 {
     public class UserService : IUserService
     {
         private IUnitOfWork _unitOfWork;
+       
         public UserService(IUnitOfWork unitOfWork)
         {
+           
             _unitOfWork = unitOfWork;
         }
        
@@ -27,6 +32,7 @@ namespace AlkemyWallet.Core.Services
         public async Task<UserEntity> getById(int id)
         {
             return await _unitOfWork.UserRepository.getById(id);
+
         }
         public async Task<UserEntity> getByUserName(string userName)
         {
@@ -38,6 +44,7 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.UserRepository.insert(entity);
         }
 
+  
         public async Task saveChanges()
         {
             await _unitOfWork.UserRepository.saveChanges();
