@@ -53,8 +53,8 @@ namespace AlkemyWallet.Core.Services
 
                 var user = await _unitOfWork.UserRepository.getByUserName(userName);
 
-                var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getByUserId(user.Id);
-                if (withdrawBalanceAccount is null) throw new ArgumentException("The account does not Correspond to the Logged User.");
+                var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getById(id);
+                if (withdrawBalanceAccount.UserId != user.Id) throw new ArgumentException("The account does not Correspond to the Logged User.");
                 if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
 
                 var addBalanceAccount = await _unitOfWork.AccountsRepository.getById(model.ToAccountId);
