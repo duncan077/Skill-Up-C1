@@ -10,35 +10,40 @@ namespace AlkemyWallet.DataAccess.DataSeed
             modelBuilder.Entity<AccountsEntity>().HasData(
                     new 
                     { 
-                        Id = 0, 
-                        CreationDate = new DateTime(), 
-                        Money = 100.00, 
-                        IsBlocked = true, 
-                        UserId = 0 
-                    },
-                    new 
-                    { 
                         Id = 1, 
                         CreationDate = new DateTime(), 
-                        Money = 0.00, 
+                        Money = Convert.ToDecimal(100.0), 
                         IsBlocked = true, 
-                        UserId = 1 
+                        UserId = 1,
+                        IsDeleted = false
                     },
                     new 
                     { 
                         Id = 2, 
+                        CreationDate = new DateTime(), 
+                        Money = Convert.ToDecimal(0.0), 
+                        IsBlocked = true, 
+                        UserId = 2,
+                        IsDeleted = false
+                    },
+                    new 
+                    { 
+                        Id = 3, 
                         CreationDate = new DateTime(),
-                        Money = 100.00, 
+                        Money = Convert.ToDecimal(100.0), 
                         IsBlocked = false, 
-                        UserId = 2 
+                        UserId = 3,
+                        IsDeleted = false
                     },
                     new
                     {
-                        Id = 3,
+                        Id = 4,
                         CreationDate = new DateTime(),
-                        Money = 0.00,
+                        Money = Convert.ToDecimal(0.0),
                         IsBlocked = false,
-                        UserId = 3
+                        UserId = 4,
+                        IsDeleted=false
+
                     }
                );
         }
