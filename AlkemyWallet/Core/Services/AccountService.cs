@@ -83,9 +83,6 @@ namespace AlkemyWallet.Core.Services
             }
 
 
-
-
-            return model;
         }
     }
 }
