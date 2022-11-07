@@ -11,6 +11,6 @@ namespace AlkemyWallet.Core.Services
         Task insert(AccountsEntity entity);
         Task saveChanges();
         Task update(AccountsEntity entity);
-        Task<TransferToAccountsDTO> TransferAccounts(TransferToAccountsDTO model, int id);
+        Task TransferAccounts(TransferToAccountsDTO model, int id, string userName);
     }
 }

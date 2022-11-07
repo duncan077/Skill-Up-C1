@@ -68,7 +68,7 @@ namespace AlkemyWallet.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest("Some of the information in the transfer request between Accounts is invalid");
-                model = await _accountServices.TransferAccounts(model, id);
+                model = await _accountServices.TransferAccounts(model, id, User.Identity.Name);
                 return Ok($"Successful transfer of ${model.Amount} successfully performed from Account:'{model.SourceAccount}' to the Account:'{model.ToAccountId}'.");
             }
             catch (Exception err)

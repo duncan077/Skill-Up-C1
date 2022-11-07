@@ -2,10 +2,6 @@
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
-using Microsoft.OpenApi.Extensions;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 using static AlkemyWallet.Entities.TransactionEntity;
 
 namespace AlkemyWallet.Core.Services
@@ -52,30 +48,33 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.update(entity);
         }
 
-        public async Task<TransferToAccountsDTO> TransferAccounts(TransferToAccountsDTO model, int id)
+        public async Task TransferAccounts(TransferToAccountsDTO model, int id, string userName)
         {
             try
             {
 
-                //if (!_jwtManager.VerifyPasswordHash(model.Password, _jwtManager.CreatePasswordHash(model.Password))) throw new ArgumentException("");
+                var user = await _unitOfWork.UserRepository.getByUserName(userName);
 
-                var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getById(id);
-                if (withdrawBalanceAccount is null) throw new ArgumentException("");
+                var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getByUserId(user.Id);
+                if (withdrawBalanceAccount is null) throw new ArgumentException("The account does not Correspond to the Logged User.");
+                if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
 
                 var addBalanceAccount = await _unitOfWork.AccountsRepository.getById(model.ToAccountId);
-                if (withdrawBalanceAccount is null) throw new ArgumentException("");
+                if (withdrawBalanceAccount is null) throw new ArgumentException("Please, Enter a valid account for the recipient.");
 
-                withdrawBalanceAccount.Money -= model.Amount; 
+                withdrawBalanceAccount.Money -= model.Amount;
                 await _unitOfWork.AccountsRepository.update(withdrawBalanceAccount);
 
                 addBalanceAccount.Money += model.Amount;
                 await _unitOfWork.AccountsRepository.update(addBalanceAccount);
 
-                var user = await _unitOfWork.UserRepository.getById(withdrawBalanceAccount.UserId);
+
                 user.Points = (int)(model.Amount * (3 / 100));
                 await _unitOfWork.UserRepository.update(user);
+                var type = new Typess();
+                if (model.Types == "Topup") {type = Typess.Topup;} else type = Typess.Payment;
 
-                var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, Typess.Topup, DateTime.Now,model.Amount, "Money Transfer");
+                var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, type, DateTime.Now, model.Amount, model.Concept);
                 await _unitOfWork.TransactionRepository.update(trans);
 
                 await _unitOfWork.Save();

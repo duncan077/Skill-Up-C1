@@ -10,7 +10,7 @@ namespace AlkemyWallet.Repositories
         private IGenericRepository<TransactionEntity> _transactionRepository;
         private IGenericRepository<UserEntity> _userRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
-        private IGenericRepository<AccountsEntity> _accountsRepository;
+        private AccountsRepository _accountsRepository;
         
         private WalletDbContext _walletDbContext;
 
@@ -43,11 +43,11 @@ namespace AlkemyWallet.Repositories
         }
 
 
-        public IGenericRepository<AccountsEntity> AccountsRepository
+        public AccountsRepository AccountsRepository
         { 
             get 
             { 
-                return _accountsRepository = _accountsRepository ?? new GenericRepository<AccountsEntity>(_walletDbContext); 
+                return _accountsRepository = _accountsRepository ?? new AccountsRepository(_walletDbContext); 
             } 
         
         }
@@ -60,6 +60,7 @@ namespace AlkemyWallet.Repositories
                 return _fixedTermDepositRepository = _fixedTermDepositRepository ?? new GenericRepository<FixedTermDepositEntity>(_walletDbContext);
             }
         }
+
 
         public async Task Save()
         {

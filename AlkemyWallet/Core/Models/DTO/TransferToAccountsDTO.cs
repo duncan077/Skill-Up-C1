@@ -10,8 +10,8 @@ namespace AlkemyWallet.Core.Models.DTO
         public decimal Amount { get; set; }
         [Required]
         public int ToAccountId { get; set; }
-        public int SourceAccount { get; set; }
+        public string Concept { get; set; } = "Miscellaneous Concepts";
         [Required]
-        public string Password { get; set; }
+        public string Types { get; set; }
     }
 }
