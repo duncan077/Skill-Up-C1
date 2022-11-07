@@ -1,4 +1,5 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -9,17 +10,24 @@ namespace AlkemyWallet.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
-        public UserController(IUserService _userService)
+        public UserController(IUserService userService)
         {
-            userService = _userService;
+            _userService = userService;
         }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserDTO>>> GetUsers()
         {
-            return Ok();
+            var response = await _userService.getAll();
+
+            if (response.Count == 0)
+                return NotFound();
+
+            return Ok(response);
+
         }
     }
 }

@@ -5,7 +5,7 @@ namespace AlkemyWallet.Core.Services
 {
     public interface IAccountService
     {
-        Task delete(AccountsEntity entity);
+        Task<List<AccountDto>> ListedAccounts();
         Task<IReadOnlyList<AccountsEntity>> getAll();
         Task<AccountsEntity> getById(int id);
         Task insert(AccountsEntity entity);

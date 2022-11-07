@@ -4,6 +4,7 @@ using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using static AlkemyWallet.Entities.TransactionEntity;
 
+
 namespace AlkemyWallet.Core.Services
 {
     public class AccountService : IAccountService
@@ -15,11 +16,7 @@ namespace AlkemyWallet.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task delete(AccountsEntity entity)
-        {
-            await _unitOfWork.AccountsRepository.delete(entity);
-        }
-
+     
 
         public async Task<IReadOnlyList<AccountsEntity>> getAll()
         {
@@ -36,15 +33,12 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.insert(entity);
         }
 
-        public async Task saveChanges()
+        public async Task<List<AccountDto>> ListedAccounts()
         {
-            _unitOfWork.Save();
+
+            return _mapper.Map<List<AccountDto>>(await _unitOfWork.AccountsRepository.getAll()) ?? new List<AccountDto>();
         }
 
-        public async Task update(AccountsEntity entity)
-        {
-            await _unitOfWork.AccountsRepository.update(entity);
-        }
 
         public async Task TransferAccounts(TransferToAccountsDTO model, int id, string userName)
         {
@@ -83,9 +77,7 @@ namespace AlkemyWallet.Core.Services
             }
 
 
-
-
-            return model;
         }
+
     }
 }
