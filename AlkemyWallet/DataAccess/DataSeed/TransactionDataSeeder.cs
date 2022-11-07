@@ -7,7 +7,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
     {
         public static void TransactionDataSeed(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TransactionEntity>().HasData(
+            /*modelBuilder.Entity<TransactionEntity>().HasData(
                 new
                 {
                     Id = 1,
@@ -30,7 +30,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
                     AccountId = 4,
                     ToAccountId = 2
                 }
-            );
+            );*/
         }
     }
 }

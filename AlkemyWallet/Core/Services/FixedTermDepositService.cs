@@ -1,50 +1,30 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
 
 namespace AlkemyWallet.Core.Services
 {
     public class FixedTermDepositService : IFixedTermDepositServices
     {
         private IUnitOfWork _unitOfWork;
-        public FixedTermDepositService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public FixedTermDepositService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task delete(FixedTermDepositEntity entity)
+      
+        public FixedTermDepositDTO GetFixedTransactionDetailById(FixedTermDepositEntity fixedDeposit)
         {
-            await _unitOfWork.FixedTermDepositRepository.delete(entity);
+            if (fixedDeposit.UserId == _unitOfWork.UserRepository.getById(fixedDeposit.UserId).Id)
+            {
+                return _mapper.Map<FixedTermDepositDTO>(fixedDeposit);
+            }
         }
-
-
-        public async Task<IReadOnlyList<FixedTermDepositEntity>> getAll()
-        {
-            return await _unitOfWork.FixedTermDepositRepository.getAll();
-        }
-
-        public async Task<FixedTermDepositEntity> getById(int id)
-        {
-            return await _unitOfWork.FixedTermDepositRepository.getById(id);
-        }
-
-        public async Task insert(FixedTermDepositEntity entity)
-        {
-            await _unitOfWork.FixedTermDepositRepository.insert(entity);
-        }
-
-        public async Task saveChanges()
-        {
-            await _unitOfWork.FixedTermDepositRepository.saveChanges();
-        }
-
-        public async Task update(FixedTermDepositEntity entity)
-        {
-            await _unitOfWork.FixedTermDepositRepository.update(entity);
-        }
-
-
 
     }
 }

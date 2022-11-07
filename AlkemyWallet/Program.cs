@@ -13,10 +13,11 @@ using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Helper;
+using Microsoft.AspNetCore.Hosting.Server;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
-var connString = builder.Configuration.GetConnectionString("WalletDbConn");
+var connString = "Server = LAPTOP - TU4DOCKA; Database = AlkemyWallet; User = root; Password = 8ak87xwa; MultipleActiveResultSets = true";//builder.Configuration.GetConnectionString("WalletDbConn");
 
 // Add services to the container.
 builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
@@ -48,12 +49,12 @@ builder.Services.AddScoped<IJWTAuthManager, JWTAuthManager>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-builder.Services.AddCors(options => {
+/*builder.Services.AddCors(options => {
     options.AddPolicy(name: allowAnyOrigins, builder =>
     {
         builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
     });
-});
+});*/
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

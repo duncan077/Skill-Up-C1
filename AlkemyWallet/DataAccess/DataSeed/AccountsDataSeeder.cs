@@ -7,7 +7,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
     {
         public static void AccountsDataSeed(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AccountsEntity>().HasData(
+            /*modelBuilder.Entity<AccountsEntity>();.HasData(
                     new 
                     { 
                         Id = 0, 
@@ -40,7 +40,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
                         IsBlocked = false,
                         UserId = 3
                     }
-               );
+               );*/
         }
 
     }

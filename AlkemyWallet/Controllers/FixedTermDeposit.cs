@@ -17,16 +17,14 @@ namespace AlkemyWallet.Controllers
     {
         private readonly IFixedTermDepositServices _fixedTermDepositServices;
         private readonly WalletDbContext _context;
-        private readonly IMapper _mapper;
-        public FixedTermDepositController(IFixedTermDepositServices FixedTermDepositServices, WalletDbContext context, IMapper mapper)
+
+        public FixedTermDepositController(IFixedTermDepositServices FixedTermDepositServices)
         {
             _fixedTermDepositServices = FixedTermDepositServices;
-            _context = context;
-            _mapper = mapper;
         }
 
         [Route("api/[Controller]")]
-        [Authorize]
+        [Authorize(Roles ="Regular")]
         [HttpGet("{id}")]
         public  async Task<IActionResult> GetFixedTermDepositById(int id)
         {
@@ -34,11 +32,10 @@ namespace AlkemyWallet.Controllers
             if (fixedDeposit == null) return NotFound(new { Status = "Not Fund", Message = "No FixedDeposit Fund" });
             else
             {
-                if (fixedDeposit.UserId == _context.Users.Find(fixedDeposit.UserId).Id)
-                {
-                    return Ok(_mapper.Map<FixedTermDepositDTO>(fixedDeposit));
-                }
-                return BadRequest(new { Status = "Not Fund",Message="Not Fixed Deposit Fund"});
+                var fixedDepositDto = _fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit);
+                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
+                else return Ok(fixedDepositDto);
+
             }
         }
     }
