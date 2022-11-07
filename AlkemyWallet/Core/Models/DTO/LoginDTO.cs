@@ -1,6 +1,5 @@
 ﻿namespace AlkemyWallet.Core.Models.DTO
 {
-    public class LoginDTO
-    {
-    }
+    public record LoginDTO(string userName, string password);
+    
 }

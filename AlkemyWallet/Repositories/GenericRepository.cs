@@ -2,6 +2,7 @@
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AlkemyWallet.Repositories
 {
@@ -18,7 +19,8 @@ namespace AlkemyWallet.Repositories
 
 
         }
-
+   
+     
 
         public async Task delete(T entity)
         {
@@ -27,6 +29,7 @@ namespace AlkemyWallet.Repositories
 
         public async Task<IReadOnlyList<T>> getAll()
         {
+           
             return await _walletDbContext.Set<T>().ToListAsync();
         }
 

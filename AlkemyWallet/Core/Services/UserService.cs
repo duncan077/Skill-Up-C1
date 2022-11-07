@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -11,7 +12,7 @@ namespace AlkemyWallet.Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-
+       
         public async Task delete(UserEntity entity)
         {
             await _unitOfWork.UserRepository.delete(entity);
@@ -26,6 +27,10 @@ namespace AlkemyWallet.Core.Services
         public async Task<UserEntity> getById(int id)
         {
             return await _unitOfWork.UserRepository.getById(id);
+        }
+        public async Task<UserEntity> getByUserName(string userName)
+        {
+            return await _unitOfWork.UserRepository.getByUserName(userName);
         }
 
         public async Task insert(UserEntity entity)

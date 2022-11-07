@@ -5,6 +5,11 @@ namespace AlkemyWallet.Entities
 {
     public class UserEntity : EntityBase
     {
+        public UserEntity()
+        {
+            Account=new AccountsEntity();
+        }
+  
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -20,5 +25,8 @@ namespace AlkemyWallet.Entities
         public virtual RoleEntity Role { get; set; }
         [Column("rol_id")]
         public int RoleId { get; set; }
+
+        public virtual AccountsEntity Account { get; set; }
+ 
     }
 }

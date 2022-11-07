@@ -5,7 +5,7 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class RolesService : IRolesServices
+    public class RolesService : IRolesService
     {
         private IUnitOfWork _unitOfWork;
         public RolesService(IUnitOfWork unitOfWork)
