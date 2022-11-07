@@ -14,7 +14,6 @@ namespace AlkemyWallet.Core.Services
         public FixedTermDepositService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
       
@@ -24,7 +23,10 @@ namespace AlkemyWallet.Core.Services
             {
                 return _mapper.Map<FixedTermDepositDTO>(fixedDeposit);
             }
+            else
+                return null;
         }
 
+      
     }
 }
