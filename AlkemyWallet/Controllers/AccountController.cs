@@ -62,7 +62,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpPost("accounts/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> TransferToAccounts([FromBody] TransferToAccountsDTO model, int id)
         {
             try
