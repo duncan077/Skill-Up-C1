@@ -13,6 +13,7 @@ using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Controllers;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
