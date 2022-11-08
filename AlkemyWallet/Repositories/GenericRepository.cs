@@ -35,7 +35,7 @@ namespace AlkemyWallet.Repositories
 
         public async Task<T> getById(int id)
         {
-            return await _walletDbContext.Set<T>().FirstAsync(e=> e.Id==id);
+            return await _walletDbContext.Set<T>().FirstOrDefaultAsync(e=> e.Id==id);
         }
 
         public async Task insert(T entity)

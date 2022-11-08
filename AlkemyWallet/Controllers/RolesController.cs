@@ -40,7 +40,6 @@ namespace AlkemyWallet.Controllers
             return Ok(listRoles);
         }
 
-        [Route("api/[Controller]")]
         [Authorize]
         [HttpGet("{id}")]
         public async Task <IActionResult> GetRoleDetail(int id)
