@@ -2,6 +2,7 @@
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
 using static AlkemyWallet.Entities.TransactionEntity;
 
 
@@ -10,9 +11,11 @@ namespace AlkemyWallet.Core.Services
     public class AccountService : IAccountService
     {
         private IUnitOfWork _unitOfWork;
+        private IMapper _mapper;
 
-        public AccountService(IUnitOfWork unitOfWork)
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
