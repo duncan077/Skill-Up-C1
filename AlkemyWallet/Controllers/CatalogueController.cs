@@ -1,4 +1,5 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,19 @@ namespace AlkemyWallet.Controllers
         {
             _mapper = mapper;
             _catalogueService = catalogueService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Regular")]
+        public async Task<ActionResult<List<CatalogueDTO>>> GetAll()
+
+        {
+            var response = await _catalogueService.getAllSortByPoints();
+            if (response.Count == 0)
+                return NotFound();
+            return Ok(response);
+
+
         }
 
 
