@@ -21,6 +21,7 @@ namespace AlkemyWallet.Core.Services
         public async Task delete(RoleEntity entity)
         {
             await _unitOfWork.RolesRepository.delete(entity);
+            await _unitOfWork.RolesRepository.saveChanges();
         }
 
 

@@ -65,6 +65,25 @@ namespace AlkemyWallet.Controllers
            
 
         }
+
+        
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            try
+            {
+                var rol = await _rolesServices.getById(id);
+                if (rol is null) return NotFound("We can't find a Role with the submitted Id");
+                await _rolesServices.delete(rol);
+                return Ok("Successfully deleted Role"); 
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
+
     }
 
 
