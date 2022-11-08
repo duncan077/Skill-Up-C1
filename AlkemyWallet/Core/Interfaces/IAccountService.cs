@@ -8,6 +8,9 @@ namespace AlkemyWallet.Core.Services
         Task<List<AccountDto>> ListedAccounts();
         Task<IReadOnlyList<AccountsEntity>> getAll();
         Task<AccountsEntity> getById(int id);
-     
+        Task insert(AccountsEntity entity);
+        Task saveChanges();
+        Task update(AccountsEntity entity);
+        Task TransferAccounts(TransferToAccountsDTO model, int id, string userName);
     }
 }
