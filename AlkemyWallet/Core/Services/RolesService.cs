@@ -60,7 +60,6 @@ namespace AlkemyWallet.Core.Services
         {
             try
             {
-                await _unitOfWork.RolesRepository.update(entity);
                 await _unitOfWork.RolesRepository.saveChanges();
                 return _mapper.Map<RolesDTO>(entity);
             }
