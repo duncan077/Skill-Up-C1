@@ -9,7 +9,7 @@ namespace AlkemyWallet.Repositories.Interfaces
         IUserRepository UserRepository { get; }
         IGenericRepository<FixedTermDepositEntity> FixedTermDepositRepository { get; }
         AccountsRepository AccountsRepository { get; }
-        IGenericRepository<CatalogueEntity> CatalogueRepository { get; }
+        ICatalogueRepository CatalogueRepository { get; }
         Task Save();
     }
 }
