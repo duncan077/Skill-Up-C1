@@ -80,7 +80,9 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-
-
+        public async Task<IReadOnlyList<FixedTermDepositEntity>> getTransactionsByUserId(int id)
+        {
+            return await _unitOfWork.FixedTermDepositRepository.getFixedTermDepositByUserId(id);
+        }
     }
 }

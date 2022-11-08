@@ -40,7 +40,17 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-   
+        [Authorize(Roles = "Regular")]
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<FixedTermDepositEntity>>> GetAll(int id)
+        {
+            var response = await _fixedTermDepositServices.getTransactionsByUserId(id);
+            if (response is null)
+            {
+                return NotFound("User not found");
+            }
+            return Ok(response);
+        }
 
    
         [HttpPost]
