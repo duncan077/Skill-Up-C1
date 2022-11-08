@@ -49,6 +49,7 @@ namespace AlkemyWallet.Core.Services
 
         public async Task TransferAccounts(TransferToAccountsDTO model, int id, string userName)
         {
+            int pointsPercentage = 2;
             try
             {
 
@@ -56,19 +57,23 @@ namespace AlkemyWallet.Core.Services
 
                 var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getById(id);
                 if (withdrawBalanceAccount.UserId != user.Id) throw new ArgumentException("The account does not Correspond to the Logged User.");
-                if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
 
                 var addBalanceAccount = await _unitOfWork.AccountsRepository.getById(model.ToAccountId);
                 if (withdrawBalanceAccount is null) throw new ArgumentException("Please, Enter a valid account for the recipient.");
 
-                withdrawBalanceAccount.Money -= model.Amount;
-                await _unitOfWork.AccountsRepository.update(withdrawBalanceAccount);
+                if(addBalanceAccount != withdrawBalanceAccount)
+                {
+                    if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
+                    withdrawBalanceAccount.Money -= model.Amount;
+                    await _unitOfWork.AccountsRepository.update(withdrawBalanceAccount);
+                    pointsPercentage = 3;
+                }
 
                 addBalanceAccount.Money += model.Amount;
                 await _unitOfWork.AccountsRepository.update(addBalanceAccount);
 
 
-                user.Points = (int)(model.Amount * (3 / 100));
+                user.Points = (int)(model.Amount * (pointsPercentage / 100));
                 await _unitOfWork.UserRepository.update(user);
                 var type = new Typess();
                 if (model.Types == "Topup") { type = Typess.Topup; } else type = Typess.Payment;
