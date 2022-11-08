@@ -42,6 +42,10 @@ namespace AlkemyWallet.Core.Services
             return _mapper.Map<List<AccountDto>>(await _unitOfWork.AccountsRepository.getAll()) ?? new List<AccountDto>();
         }
 
+        public async Task saveChanges()
+        {
+            await _unitOfWork.AccountsRepository.saveChanges();
+        }
 
         public async Task TransferAccounts(TransferToAccountsDTO model, int id, string userName)
         {
@@ -82,5 +86,9 @@ namespace AlkemyWallet.Core.Services
 
         }
 
+        public async Task update(AccountsEntity entity)
+        {
+            await _unitOfWork.AccountsRepository.update(entity);
+        }
     }
 }
