@@ -16,7 +16,7 @@ using AlkemyWallet.Core.Helper;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
-
+var connString = builder.Configuration.GetConnectionString("WalletDbConn");
 
 // Add services to the container.
 builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
@@ -40,7 +40,7 @@ builder.Services.AddSwaggerGen(options => {
 
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
