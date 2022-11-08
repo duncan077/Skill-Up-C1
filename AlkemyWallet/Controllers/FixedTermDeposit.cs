@@ -11,21 +11,21 @@ using AlkemyWallet.Core.Models.DTO;
 
 namespace AlkemyWallet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FixedTermDepositController : ControllerBase
     {
-        private readonly IFixedTermDepositServices _fixedTermDepositServices;
+        private readonly IFixedTermDepositService _fixedTermDepositServices;
         private readonly WalletDbContext _context;
         private readonly IMapper _mapper;
-        public FixedTermDepositController(IFixedTermDepositServices FixedTermDepositServices, WalletDbContext context, IMapper mapper)
+        public FixedTermDepositController(IFixedTermDepositService FixedTermDepositServices, WalletDbContext context, IMapper mapper)
         {
             _fixedTermDepositServices = FixedTermDepositServices;
             _context = context;
             _mapper = mapper;
         }
 
-        [Route("api/[Controller]")]
+      
         [Authorize]
         [HttpGet("{id}")]
         public  async Task<IActionResult> GetFixedTermDepositById(int id)

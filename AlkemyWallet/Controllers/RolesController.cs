@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace AlkemyWallet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class RolesController : ControllerBase
     {
