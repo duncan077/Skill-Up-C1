@@ -4,6 +4,7 @@ using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using System.Data;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -56,9 +57,21 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.RolesRepository.saveChanges();
         }
 
-        public async Task update(RoleEntity entity)
+        public async Task<RolesDTO> update(RolesDTO roleDto, RoleEntity entity)
         {
-            await _unitOfWork.RolesRepository.update(entity);
+            try
+            {
+                var role = _mapper.Map(roleDto, entity);
+                await _unitOfWork.RolesRepository.update(role);
+                await _unitOfWork.RolesRepository.saveChanges();
+                return _mapper.Map<RolesDTO>(role);
+            }
+            catch (Exception err)
+            {
+
+                throw;
+            }
+
         }
     }
 }
