@@ -30,14 +30,13 @@ namespace AlkemyWallet.Controllers
         public  async Task<IActionResult> GetFixedTermDepositById(int id)
         {
             FixedTermDepositEntity fixedDeposit = await _fixedTermDepositServices.getById(id);
-            if (fixedDeposit == null) return NotFound(new { Status = "Not Found", Message = "No FixedDeposit Found" });
+            if (fixedDeposit == null) return NotFound(new { Status = "Not Fund", Message = "No FixedDeposit Fund" });
             else
             {
-                //if (_fixedTermDepositServices.GetUserById((int)fixedDeposit.UserId)!=null)
-                //{
-                //    return Ok(_mapper.Map<FixedTermDepositDTO>(fixedDeposit));
-                //}
-                return BadRequest(new { Status = "Not Fund",Message="Not Fixed Deposit Fund"});
+                var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
+                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
+                else return Ok(fixedDepositDto);
+
             }
         }
 
