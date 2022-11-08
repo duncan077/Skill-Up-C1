@@ -13,10 +13,10 @@ namespace AlkemyWallet.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly JWTAuthManager _authManager;
+        private readonly IJWTAuthManager _authManager;
         private readonly IUserService _userService;
 
-        public AuthController( JWTAuthManager authManager, IUserService userService)
+        public AuthController( IJWTAuthManager authManager, IUserService userService)
         {
             _authManager = authManager;
             _userService = userService;
@@ -34,10 +34,10 @@ namespace AlkemyWallet.Controllers
                 {
                     return Unauthorized();
                 }
-                if (_authManager.VerifyPasswordHash(loginDTO.password, Encoding.Default.GetBytes(user.Password)))
+                if (!_authManager.VerifyPasswordHash(loginDTO.password, Encoding.Default.GetBytes(user.Password)))
                 {
                     var token = _authManager.CreateToken(user.Email, user.Role.Name);
-                    return Accepted(token);
+                    return Ok(token);
                 }
                 return BadRequest();
             }

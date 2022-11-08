@@ -5,7 +5,7 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class FixedTermDepositService : IFixedTermDepositServices
+    public class FixedTermDepositService : IFixedTermDepositService
     {
         private IUnitOfWork _unitOfWork;
         public FixedTermDepositService(IUnitOfWork unitOfWork)
