@@ -34,12 +34,12 @@ namespace AlkemyWallet.Controllers
 
     
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Regular")]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
            
 
-            var user = await userService.getById(id);
+            var user = await _userService.getById(id);
 
             if (user == null)
             {

@@ -5,12 +5,11 @@ namespace AlkemyWallet.Repositories.Interfaces
     public interface IUnitOfWork
     {
         IGenericRepository<RoleEntity> RolesRepository { get; }
-        IGenericRepository<TransactionEntity> TransactionRepository { get; }
+        ITransactionRepository TransactionRepository { get; }
         IUserRepository UserRepository { get; }
         IGenericRepository<FixedTermDepositEntity> FixedTermDepositRepository { get; }
-        IGenericRepository<AccountsEntity> AccountsRepository { get; }
+        AccountsRepository AccountsRepository { get; }
         IGenericRepository<CatalogueEntity> CatalogueRepository { get; }
-
-        void Save();
+        Task Save();
     }
 }
