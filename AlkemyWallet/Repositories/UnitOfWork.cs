@@ -11,7 +11,7 @@ namespace AlkemyWallet.Repositories
         private IUserRepository _userRepository;
         private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
         private AccountsRepository _accountsRepository;
-        private IGenericRepository<AccountsEntity> _accountsRepository;
+      
         private IGenericRepository<CatalogueEntity> _catalogueRepository;
         private WalletDbContext _walletDbContext;
 

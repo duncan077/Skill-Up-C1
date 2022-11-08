@@ -35,7 +35,7 @@ namespace AlkemyWallet.Controllers
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
         {
-            var response =await _accountServices.ListedAccounts();
+            var response =await _accountServices.ListAccounts();
             if (response.Count==0)
                 return NotFound();
             return Ok(response);
@@ -61,7 +61,7 @@ namespace AlkemyWallet.Controllers
             return Ok(account);
         }
 
-        [HttpPost("accounts/{id}")]
+        [HttpPost("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> TransferToAccounts([FromBody] TransferToAccountsDTO model, int id)
         {

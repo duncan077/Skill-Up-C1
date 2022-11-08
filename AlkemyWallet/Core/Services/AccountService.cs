@@ -19,7 +19,7 @@ namespace AlkemyWallet.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-     
+
 
         public async Task<IReadOnlyList<AccountsEntity>> getAll()
         {
@@ -36,7 +36,7 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.insert(entity);
         }
 
-        public async Task<List<AccountDto>> ListedAccounts()
+        public async Task<List<AccountDto>> ListAccounts()
         {
 
             return _mapper.Map<List<AccountDto>>(await _unitOfWork.AccountsRepository.getAll()) ?? new List<AccountDto>();
@@ -67,7 +67,7 @@ namespace AlkemyWallet.Core.Services
                 user.Points = (int)(model.Amount * (3 / 100));
                 await _unitOfWork.UserRepository.update(user);
                 var type = new Typess();
-                if (model.Types == "Topup") {type = Typess.Topup;} else type = Typess.Payment;
+                if (model.Types == "Topup") { type = Typess.Topup; } else type = Typess.Payment;
 
                 var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, type, DateTime.Now, model.Amount, model.Concept);
                 await _unitOfWork.TransactionRepository.update(trans);
