@@ -1,4 +1,5 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
@@ -23,9 +24,16 @@ namespace AlkemyWallet.Core.Services
              await _unitOfWork.CatalogueRepository.delete(entity);
         }
 
-        public async Task<IReadOnlyList<CatalogueEntity>> getAll()
+        public async Task<IReadOnlyList<CatalogueDTO>> getAll()
         {
-            return await _unitOfWork.CatalogueRepository.getAll();
+            //return await _unitOfWork.CatalogueRepository.getAll();
+            return _mapper.Map<List<CatalogueDTO>>(await _unitOfWork.CatalogueRepository.getAll()) ?? new List<CatalogueDTO>();
+        }
+
+        public async Task<IReadOnlyList<CatalogueDTO>> getAllSortByPoints()
+        {
+            return _mapper.Map<List<CatalogueDTO>>(await _unitOfWork.CatalogueRepository.getCatalogueOrderByPoints()) ?? new List<CatalogueDTO>();
+
         }
 
         public async Task<CatalogueEntity> getById(int id)
@@ -34,6 +42,7 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.CatalogueRepository.getById(id);
           
         }
+
 
         public async Task insert(CatalogueEntity entity)
         {

@@ -7,13 +7,13 @@ namespace AlkemyWallet.Core.Interfaces
     {
 
         Task delete(CatalogueEntity entity);
-        Task<IReadOnlyList<CatalogueEntity>> getAll();
+        Task<IReadOnlyList<CatalogueDTO>> getAll();
         Task<CatalogueEntity> getById(int id);
         Task insert(CatalogueEntity entity);
       
         Task update(CatalogueEntity entity);
 
-
+        Task<IReadOnlyList<CatalogueDTO>> getAllSortByPoints();
     }
 
 
