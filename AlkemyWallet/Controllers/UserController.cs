@@ -1,10 +1,12 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq.Expressions;
+using AutoMapper;
 
 namespace AlkemyWallet.Controllers
 {
@@ -13,10 +15,12 @@ namespace AlkemyWallet.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -55,9 +59,38 @@ namespace AlkemyWallet.Controllers
     
             return Ok(user);
         }
-        
-        
 
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userData)
+        {
+            var user = await _userService.getById(id);
+
+            if (user == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        Status = "Not found",
+                        Message = "No user matches the id"
+                    });
+            }
+
+            try
+            {
+                await _userService.update(_mapper.Map<UserEntity>(userData));
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new
+                {
+                    Status = "Server Error",
+                    Message = err.Message
+                });
+            }
+        }
 
     }
 }
