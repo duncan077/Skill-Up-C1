@@ -39,6 +39,15 @@ namespace AlkemyWallet.Core.Services
         {
             await _unitOfWork.FixedTermDepositRepository.update(entity);
         }
+        
+        public FixedTermDepositEntity GetFixedTransactionDetailById(FixedTermDepositEntity fixedDeposit)
+        {
+            if (fixedDeposit.UserId == _unitOfWork.UserRepository.getById(fixedDeposit.UserId.Value).Id)
+            {
+                return  (fixedDeposit);
+            }
+            return null;
+        }
 
         public async Task CreateFixedTermDeposit(CreateFixedTermDepositDTO model)
         {
