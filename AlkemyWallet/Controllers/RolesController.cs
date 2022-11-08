@@ -93,7 +93,7 @@ namespace AlkemyWallet.Controllers
             {
                 var role = await _rolesServices.getById(id);
                 if (role is null) return NotFound("We can't find a Role with the submitted Id");
-                return Ok(await _rolesServices.update(roleDto, role)); 
+                return Ok(await _rolesServices.update(_mapper.Map<RoleEntity>(roleDto))); 
             }
             catch (Exception err)
             {
