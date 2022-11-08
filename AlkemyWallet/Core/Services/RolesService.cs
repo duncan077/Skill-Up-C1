@@ -36,10 +36,18 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<RolesDTO> insert(RolesDTO entity)
         {
-            var rol = _mapper.Map<RoleEntity>(entity);
-            await _unitOfWork.RolesRepository.insert(rol);
-            await _unitOfWork.RolesRepository.saveChanges();
-            return _mapper.Map<RolesDTO>(rol);
+            try
+            {
+                var rol = _mapper.Map<RoleEntity>(entity);
+                await _unitOfWork.RolesRepository.insert(rol);
+                await _unitOfWork.RolesRepository.saveChanges();
+                return _mapper.Map<RolesDTO>(rol);
+            }
+            catch (Exception err)
+            {
+                throw;
+            }
+           
         }
 
         public async Task saveChanges()
