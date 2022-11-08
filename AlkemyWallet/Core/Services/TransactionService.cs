@@ -28,6 +28,11 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.TransactionRepository.getById(id);
         }
 
+        public async Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id)
+        {
+            return await _unitOfWork.TransactionRepository.getTransactionsByUserId(id);
+        }
+
         public async Task insert(TransactionEntity entity)
         {
             await _unitOfWork.TransactionRepository.insert(entity);

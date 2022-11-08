@@ -10,5 +10,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task insert(TransactionEntity entity);
         Task saveChanges();
         Task update(TransactionEntity entity);
+        Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id);
     }
 }
