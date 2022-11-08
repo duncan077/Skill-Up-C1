@@ -48,6 +48,42 @@ namespace AlkemyWallet.Controllers
             if (rol is null) return BadRequest(new { Status = "Not Role Fund", Message = "" });
             else return Ok(rol);
         }
+
+        [HttpPost]
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> AddRole([FromBody] RolesDTO role)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest("");
+                    return Ok(await _rolesServices.insert(role));
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+           
+
+        }
+
+        
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            try
+            {
+                var rol = await _rolesServices.getById(id);
+                if (rol is null) return NotFound("We can't find a Role with the submitted Id");
+                await _rolesServices.delete(rol);
+                return Ok("Successfully deleted Role"); 
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
+
     }
 
 

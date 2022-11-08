@@ -1,21 +1,27 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using AutoMapper;
 
 namespace AlkemyWallet.Core.Services
 {
     public class RolesService : IRolesService
     {
         private IUnitOfWork _unitOfWork;
-        public RolesService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+
+        public RolesService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task delete(RoleEntity entity)
         {
             await _unitOfWork.RolesRepository.delete(entity);
+            await _unitOfWork.RolesRepository.saveChanges();
         }
 
 
@@ -29,9 +35,20 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.RolesRepository.getById(id);
         }
 
-        public async Task insert(RoleEntity entity)
+        public async Task<RolesDTO> insert(RolesDTO entity)
         {
-            await _unitOfWork.RolesRepository.insert(entity);
+            try
+            {
+                var rol = _mapper.Map<RoleEntity>(entity);
+                await _unitOfWork.RolesRepository.insert(rol);
+                await _unitOfWork.RolesRepository.saveChanges();
+                return _mapper.Map<RolesDTO>(rol);
+            }
+            catch (Exception err)
+            {
+                throw;
+            }
+           
         }
 
         public async Task saveChanges()
