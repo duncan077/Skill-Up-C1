@@ -35,13 +35,11 @@ namespace AlkemyWallet.Controllers
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
         {
-            var response =await _accountServices.ListAccounts();
-            if (response.Count==0)
-                return NotFound();
+            var response = await _accountServices.ListAccounts();
+           
+            if (response.Count() == 0) return NotFound();
             return Ok(response);
-
-
-        }
+                    }
 
         [HttpGet("{id}")]
         [Authorize(Roles="Admin")]
@@ -77,5 +75,21 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Regular")]
+
+        public async Task <IActionResult> CreateAccount([FromBody] AccountDto model)
+        {
+            AccountsEntity mappedModel = _mapper.Map<AccountsEntity>(model);
+            try
+            {
+                await _accountServices.insert(mappedModel);
+                return Ok();
+            } 
+            catch(Exception err)
+            {
+                return BadRequest($"Couldn't create account'. Error: {err.Message}");    
+            }
+        }
     }
 }
