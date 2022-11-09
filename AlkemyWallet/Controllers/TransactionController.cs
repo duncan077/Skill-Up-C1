@@ -28,11 +28,28 @@ namespace AlkemyWallet.Controllers
         public async Task<ActionResult<IReadOnlyList<TransactionEntity>>> GetTransactions(int id)
         {
             var response = await _transactionService.getTransactionsByUserId(id);
-            if(response is null)
+            if (response is null)
             {
                 return NotFound("User not found");
             }
             return Ok(response);
         }
+
+        [Authorize(Roles = "Regular")]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TransactionEntity>> GetTransactionById(int id)
+        {
+            try {
+                var transactionDetail = await _transactionService.getById(id);
+                if (transactionDetail is null)
+                    return NotFound(new { Status="Not Found", Message = "Trnasaction Not Found"});
+                return Ok(transactionDetail);
+            } catch (Exception ex)
+            { 
+                return BadRequest(new {Status ="", Message =$"Error: {ex.Message}" });
+            }
+            
+        }
+
     }
 }
