@@ -84,6 +84,23 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateRole([FromBody] RolesDTO roleDto, int id)
+        {
+            try
+            {
+                var role = await _rolesServices.getById(id);
+                if (role is null) return NotFound("We can't find a Role with the submitted Id");
+                return Ok(await _rolesServices.update(_mapper.Map(roleDto, role))); 
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
+
     }
 
 
