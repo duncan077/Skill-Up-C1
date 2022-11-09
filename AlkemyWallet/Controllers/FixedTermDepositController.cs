@@ -75,8 +75,7 @@ namespace AlkemyWallet.Controllers
             else { return BadRequest();}
 
         }
-
-
+  
         [HttpPut]
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdateFixedTermDeposit([FromBody] UpdateFixedTermDepositDTO model)
@@ -102,7 +101,30 @@ namespace AlkemyWallet.Controllers
 
         }
 
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteFixedTermDeposit(int id)
+        {
+            try
+            {
+                FixedTermDepositEntity entity = await _fixedTermDepositServices.getById(id);
+                if(entity != null)
+                {
+                    await _fixedTermDepositServices.delete(entity);
+                    return Ok("Fixed Term Deposit Deleted");
+                }
+                else
+                {
+                    return BadRequest("Check the data provided");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
 
+            }
+
+        }
 
 
 
