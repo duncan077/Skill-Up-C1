@@ -9,7 +9,7 @@ namespace AlkemyWallet.Repositories
         private IGenericRepository<RoleEntity> _rolesRepository;
         private ITransactionRepository _transactionRepository;
         private IUserRepository _userRepository;
-        private IFixedTermDepositRepository _fixedTermDepositRepository;
+        private FixedTermDepositRepository _fixedTermDepositRepository;
         private AccountsRepository _accountsRepository;
         private ICatalogueRepository _catalogueRepository;
         private WalletDbContext _walletDbContext;
@@ -53,7 +53,7 @@ namespace AlkemyWallet.Repositories
         }
 
 
-        public IFixedTermDepositRepository FixedTermDepositRepository
+        public FixedTermDepositRepository FixedTermDepositRepository
         {
             get
             {

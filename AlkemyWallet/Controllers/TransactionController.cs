@@ -34,5 +34,21 @@ namespace AlkemyWallet.Controllers
             }
             return Ok(response);
         }
+        [HttpPost]
+        [Authorize(Roles ="Developer")]
+        public async Task<IActionResult> CreateTransaction([FromBody]TransactionEntity transaction)
+        {
+
+            try
+            {
+                await CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

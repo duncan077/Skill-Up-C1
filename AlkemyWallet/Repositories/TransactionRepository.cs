@@ -17,7 +17,7 @@ namespace AlkemyWallet.Repositories
         {
             return await _walletDbContext.Set<TransactionEntity>()
                 .Include(u=>u.User)
-                .ThenInclude(a=>a.Account)
+                .ThenInclude(a=>a.Accounts)
                 .Where(t => t.UserId == id)
                 .OrderByDescending(d=>d.Date)
                 .ToListAsync();

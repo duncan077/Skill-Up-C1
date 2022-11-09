@@ -30,7 +30,7 @@ namespace AlkemyWallet.DataAccess
                  .WithMany().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<AccountsEntity>()
                 .HasOne(u=>u.User)
-                .WithOne(a=>a.Account)
+                .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
