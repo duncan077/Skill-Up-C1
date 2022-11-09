@@ -36,6 +36,7 @@ namespace AlkemyWallet.Controllers
                 var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
                 if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
                 else return Ok(fixedDepositDto);
+             
 
             }
         }
@@ -43,7 +44,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles = "Regular")]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<FixedTermDepositEntity>>> GetAll(int id)
-        {
+        {       
             var response = await _fixedTermDepositServices.getTransactionsByUserId(id);
             if (response is null)
             {
@@ -74,6 +75,37 @@ namespace AlkemyWallet.Controllers
             else { return BadRequest();}
 
         }
+
+
+        [HttpPut]
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> UpdateFixedTermDeposit([FromBody] UpdateFixedTermDepositDTO model)
+        {
+
+            try 
+            { 
+                if (ModelState.IsValid) 
+                {
+                    await _fixedTermDepositServices.update(model);
+                    return Ok("Fixed Term Deposit Updated");
+                } 
+                else 
+                { 
+                    return BadRequest("Check the data provided");
+                }
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
+
+            }
+
+        }
+
+
+
+
+
 
 
     }
