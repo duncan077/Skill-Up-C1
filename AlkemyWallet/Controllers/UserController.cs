@@ -93,7 +93,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPatch]
+        [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
             try
