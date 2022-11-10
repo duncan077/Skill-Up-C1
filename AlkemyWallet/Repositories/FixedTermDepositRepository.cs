@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.DataAccess;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,5 +25,27 @@ namespace AlkemyWallet.Repositories
                 .OrderByDescending(d => d.CreationDate)
                 .ToListAsync();
         }
+
+
+        public async Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters pagesParams)
+        {
+            try
+            {
+                var collection = _walletDbContext.FixedTermDeposits as IQueryable<FixedTermDepositEntity>;
+
+                collection = collection.Where(a => a.IsDeleted == false);
+
+                return PagedList<FixedTermDepositEntity>.Create(collection,
+                pagesParams.PageNumber,
+                pagesParams.PageSize);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+
+
+
     }
 }

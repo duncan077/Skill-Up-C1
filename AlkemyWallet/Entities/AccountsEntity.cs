@@ -14,9 +14,7 @@ namespace AlkemyWallet.Entities
         public int UserId { get; set; }
       
         public virtual UserEntity User { get; set; }
-       
-        
-    public virtual ICollection<FixedTermDepositEntity> FixedTerms { get; set; }
+
 
     }
 

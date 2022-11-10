@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
@@ -48,6 +50,7 @@ namespace AlkemyWallet.Core.Services
                 fixedTermDepositEntity.ClosingDate = model.ClosingDate;
                 fixedTermDepositEntity.CreationDate = model.CreationDate;
                 fixedTermDepositEntity.IsDeleted = model.IsDeleted;
+                
 
                 await _unitOfWork.FixedTermDepositRepository.update(fixedTermDepositEntity);
                 await _unitOfWork.Save();
@@ -112,5 +115,23 @@ namespace AlkemyWallet.Core.Services
         {
             return await _unitOfWork.FixedTermDepositRepository.getFixedTermDepositByUserId(id);
         }
+
+        public async Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters pagesParams)
+        {
+            try
+            {
+                PagedList<FixedTermDepositEntity> ListFixedDeposit = _unitOfWork.FixedTermDepositRepository.getAll(pagesParams).Result;
+
+
+                return ListFixedDeposit;
+
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+
+      
     }
 }

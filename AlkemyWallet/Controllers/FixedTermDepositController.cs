@@ -9,6 +9,8 @@ using AlkemyWallet.DataAccess;
 using AutoMapper;
 using AlkemyWallet.Core.Models.DTO;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers
 {
@@ -25,7 +27,7 @@ namespace AlkemyWallet.Controllers
         }
 
       
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
             public  async Task<IActionResult> GetFixedTermDepositById(int id)
         {
@@ -43,21 +45,63 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        [Authorize(Roles = "Regular")]
+        //[Authorize(Roles = "Regular")]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<FixedTermDepositEntity>>> GetAll(int id)
-        {       
-            var response = await _fixedTermDepositServices.getTransactionsByUserId(id);
-            if (response is null)
+        public async Task<IActionResult> GetAll([FromQuery] int page)
+        {
+            //Para cumplir con la firma del Helper
+            var pagesParameters = new PagesParameters();
+            pagesParameters.PageNumber = page;
+            pagesParameters.PageSize = 10;
+
+            try
             {
-                return NotFound("User not found");
+
+                PagedList<FixedTermDepositEntity> PagedList = _fixedTermDepositServices.getAll(pagesParameters).Result;
+
+                if (PagedList != null)
+                {
+
+                    String NextUrl = "";
+                    String PreviousUrl = "";
+                    String ActionPath = Request.Host + Request.Path;
+
+                    if (PagedList.HasNext)
+                    {
+                        NextUrl = "Next Page: " + ActionPath + "/page=" + (page + 1).ToString();
+                    }
+                    if (PagedList.HasPrevious)
+                    {
+                        PreviousUrl = "Previous Page: " + ActionPath + "/page=" + (page - 1).ToString();
+                    }
+
+                    return Ok(new
+                    {
+
+                        NextURl = NextUrl,
+                        PreviousURl = PreviousUrl,
+                        PagedList
+
+                    });
+
+                }
+                else { return NotFound(new { Status = "Not Found", Message = "No FixedTernDeposits found." }); }
+            
+            }catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
             }
-            return Ok(response);
+
+
+
+
+
+
         }
 
-   
+
         [HttpPost]
-        [Authorize(Roles = "Regular")]
+        //[Authorize(Roles = "Regular")]
         public async Task<IActionResult> CreateFixedTermDeposit([FromBody] CreateFixedTermDepositDTO model) {
 
             if (ModelState.IsValid)
@@ -79,7 +123,7 @@ namespace AlkemyWallet.Controllers
         }
   
         [HttpPut]
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdateFixedTermDeposit([FromBody] UpdateFixedTermDepositDTO model)
         {
 
@@ -104,7 +148,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFixedTermDeposit(int id)
         {
             try

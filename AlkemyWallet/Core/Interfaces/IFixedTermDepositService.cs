@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.Core.Models.DTO;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Interfaces
@@ -15,6 +17,7 @@ namespace AlkemyWallet.Core.Interfaces
         FixedTermDepositEntity GetFixedTransactionDetailById( FixedTermDepositEntity fixedDeposit);
 
         Task<IReadOnlyList<FixedTermDepositEntity>> getTransactionsByUserId(int id);
+        Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters rolesParams);
 
     }
 }
