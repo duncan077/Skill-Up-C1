@@ -5,6 +5,6 @@ namespace AlkemyWallet.Repositories.Interfaces
 {
     public interface IRolesRepository : IGenericRepository<RoleEntity>
     {
-        Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams);
+        Task<IReadOnlyList<RoleEntity>> getAll(EndpointParameters rolesParams);
     }
 }

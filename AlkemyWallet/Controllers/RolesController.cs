@@ -30,7 +30,7 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> GetRoles([FromQuery]RolesParameters rolesParams)
+        public async Task<IActionResult> GetRoles([FromQuery]EndpointParameters rolesParams)
         {
             try
             {

@@ -1,6 +1,6 @@
 ﻿namespace AlkemyWallet.Core.Services
 {
-    public class RolesParameters
+    public class EndpointParameters
     {
         public int PageNumber { get; set; } = 1;
 

@@ -15,7 +15,7 @@ namespace AlkemyWallet.Repositories
             _context = walletDbContext;
         }
 
-        public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
+        public async Task<IReadOnlyList<RoleEntity>> getAll(EndpointParameters rolesParams)
         {
             try
             {
