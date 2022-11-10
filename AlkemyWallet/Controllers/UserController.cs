@@ -36,12 +36,12 @@ namespace AlkemyWallet.Controllers
 
         }
 
-    
+
         [HttpGet("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
-           
+
 
             var user = await _userService.getById(id);
 
@@ -56,7 +56,7 @@ namespace AlkemyWallet.Controllers
             }
 
 
-    
+
             return Ok(user);
         }
 
@@ -92,5 +92,50 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPatch]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                UserEntity response = await _userService.getById(id);
+                if(response is null)
+                {
+                    return NotFound("User not found");
+                }
+                response.IsDeleted = true;
+                await _userService.update(response);
+                await _userService.saveChanges();
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Regular")]
+        public async Task<ActionResult> CreateUser(CreateUserDTO request)
+        {
+            if (request is not null)
+            {
+                UserEntity user = _mapper.Map<UserEntity>(request);
+                user.RoleId = 2;
+                try
+                {
+                    await _userService.insert(user);
+                    await _userService.saveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Can´t create the user, please check the data");
+            }
+            return Ok("User created successfully");
+        }
     }
 }
