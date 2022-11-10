@@ -6,7 +6,6 @@ namespace AlkemyWallet.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private IGenericRepository<RoleEntity> _rolesRepository;
         private ITransactionRepository _transactionRepository;
         private IUserRepository _userRepository;
         private IFixedTermDepositRepository _fixedTermDepositRepository;

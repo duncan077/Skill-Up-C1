@@ -33,7 +33,6 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
         {
-            if (rolesParams is null) return await getAll();
             return await _unitOfWork.RolesRepository.getAll(rolesParams);
         }
 

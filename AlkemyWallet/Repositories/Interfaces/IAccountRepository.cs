@@ -2,7 +2,7 @@
 
 namespace AlkemyWallet.Repositories.Interfaces
 {
-    public interface IAccountRepository : IGenericRepository<AccountsEntity>
+    public interface IAccountRepository:IGenericRepository<AccountsEntity>
     {
         Task<AccountsEntity> getByUserId(int id);
     }
