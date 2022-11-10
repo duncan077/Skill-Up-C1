@@ -47,6 +47,7 @@ namespace AlkemyWallet.Core.Services
                     var accountTo = await _unitOfWork.AccountsRepository.getById(entity.ToAccountId);
                     if (accountTo != null)
                     {
+                        entity.Date=DateTime.Now;
                         await _unitOfWork.TransactionRepository.insert(entity);
                         await _unitOfWork.Save();
                     }
