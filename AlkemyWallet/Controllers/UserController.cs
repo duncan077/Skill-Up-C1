@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq.Expressions;
 using AutoMapper;
+using System;
+using System.Text;
 
 namespace AlkemyWallet.Controllers
 {
@@ -16,11 +18,13 @@ namespace AlkemyWallet.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IJWTAuthManager _jWTAuthManager;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper, IJWTAuthManager jWTAuthManager)
         {
             _userService = userService;
             _mapper = mapper;
+            _jWTAuthManager = jWTAuthManager;
         }
 
         [HttpGet]
@@ -120,6 +124,8 @@ namespace AlkemyWallet.Controllers
             if (request is not null)
             {
                 UserEntity user = _mapper.Map<UserEntity>(request);
+                byte[] password = _jWTAuthManager.CreatePasswordHash(request.Password);
+                user.Password = Convert.ToBase64String(password);
                 user.RoleId = 2;
                 try
                 {
