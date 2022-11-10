@@ -1,5 +1,5 @@
 ﻿using AlkemyWallet.Core.Helper;
-using AlkemyWallet.Core.Services;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
@@ -15,7 +15,7 @@ namespace AlkemyWallet.Repositories
             _context = walletDbContext;
         }
 
-        public async Task<IReadOnlyList<RoleEntity>> getAll(EndpointParameters rolesParams)
+        public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
         {
             try
             {
