@@ -9,6 +9,7 @@ using AlkemyWallet.Core.Models.DTO;
 using AutoMapper;
 using System.Collections.Generic;
 
+
 namespace AlkemyWallet.Controllers
 {
     [Route("api/[controller]")]
@@ -16,12 +17,13 @@ namespace AlkemyWallet.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRolesServices _rolesServices;
-        private readonly IMapper _mapper;
+        private readonly  IMapper _mapper;
 
         public RolesController(IRolesServices rolesServices, IMapper mapper)
         {
             _rolesServices = rolesServices;
             _mapper = mapper;
+
         }
 
 
@@ -44,6 +46,17 @@ namespace AlkemyWallet.Controllers
             
         }
 
-
+        [Route("api/[Controller]")]
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task <IActionResult> GetRoleDetail(int id)
+        { 
+            RolesDTO rol = _mapper.Map<RolesDTO>(await _rolesServices.getById(id));
+            if (rol is null) return BadRequest(new { Status = "Not Role Fund", Message = "" });
+            else return Ok(rol);
+        }
     }
+
+
+    
 }
