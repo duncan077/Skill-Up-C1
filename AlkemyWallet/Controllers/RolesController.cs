@@ -27,14 +27,21 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> GetRoles()
+        public async Task<IActionResult> GetRoles([FromQuery]RolesParameters rolesParams)
         {
-            var listRoles = _mapper.Map<IReadOnlyList<RolesDTO>>(await _rolesServices.getAll());
+            try
+            {
+                var listRoles = _mapper.Map<IReadOnlyList<RolesDTO>>(await _rolesServices.getAll(rolesParams));
+                if (listRoles is null)
+                    return NotFound(new { Status = "Not Found", Message = "No Role Fount" });
 
-            if (listRoles is null)
-                return NotFound( new { Status = "Not Found", Message = "No Role Fount"});
-
-            return Ok(listRoles);
+                return Ok(listRoles);
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+            
         }
 
 

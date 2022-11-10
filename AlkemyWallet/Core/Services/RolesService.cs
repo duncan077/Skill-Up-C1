@@ -24,6 +24,12 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.RolesRepository.getAll();
         }
 
+        public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
+        {
+            if (rolesParams is null) return await getAll();
+            return await _unitOfWork.RolesRepository.getAll(rolesParams);
+        }
+
         public async Task<RoleEntity> getById(int id)
         {
             return await _unitOfWork.RolesRepository.getById(id);

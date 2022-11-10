@@ -4,7 +4,7 @@ namespace AlkemyWallet.Repositories.Interfaces
 {
     public interface IUnitOfWork
     {
-        IGenericRepository<RoleEntity> RolesRepository { get; }
+        IRolesRepository RolesRepository { get; }
         void Save();
     }
 }
