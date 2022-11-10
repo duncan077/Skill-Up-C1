@@ -73,6 +73,22 @@ namespace AlkemyWallet.Core.Services
             throw new ArgumentException("Error: Transaction not found.");
         }
 
+        public async Task UpdateTransaction(TransactionEntity entity, int id)
+        {
+            try
+            {
+                entity.Date = DateTime.Now;
+                await _unitOfWork.TransactionRepository.update(entity);
+                await _unitOfWork.Save();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+        }
         public async Task saveChanges()
         {
             await _unitOfWork.TransactionRepository.saveChanges();

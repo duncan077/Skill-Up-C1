@@ -18,6 +18,9 @@ namespace AlkemyWallet.Core.Mapper
 
             CreateMap<TransactionEntity, TransactionDTO>();
 
+            CreateMap<TransacctionUpdateDTO, TransactionEntity>();
+
+
         }
     }
 }
