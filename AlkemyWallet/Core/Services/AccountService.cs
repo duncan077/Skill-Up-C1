@@ -91,9 +91,11 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-        public async Task update(AccountsEntity entity)
+        public async Task update(AccountsEntity account)
         {
-            await _unitOfWork.AccountsRepository.update(entity);
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();
         }
+
     }
 }

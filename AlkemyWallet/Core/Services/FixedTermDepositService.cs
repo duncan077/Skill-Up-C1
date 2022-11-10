@@ -35,9 +35,28 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.FixedTermDepositRepository.saveChanges();
         }
 
-        public async Task update(FixedTermDepositEntity entity)
+        public async Task update(UpdateFixedTermDepositDTO model)
         {
-            await _unitOfWork.FixedTermDepositRepository.update(entity);
+
+            FixedTermDepositEntity fixedTermDepositEntity = _unitOfWork.FixedTermDepositRepository.getById(model.id).Result;
+            
+            if (fixedTermDepositEntity != null) 
+            {
+                fixedTermDepositEntity.User = _unitOfWork.UserRepository.getById((int)fixedTermDepositEntity.UserId).Result;
+                fixedTermDepositEntity.Account = _unitOfWork.AccountsRepository.getById((int)fixedTermDepositEntity.AccountId).Result;
+                fixedTermDepositEntity.Amount = model.Amount;
+                fixedTermDepositEntity.ClosingDate = model.ClosingDate;
+                fixedTermDepositEntity.CreationDate = model.CreationDate;
+                fixedTermDepositEntity.IsDeleted = model.IsDeleted;
+
+                await _unitOfWork.FixedTermDepositRepository.update(fixedTermDepositEntity);
+                await _unitOfWork.Save();
+            }
+            else 
+            {
+                throw new Exception("Fixed Term Deposit Not Found, please check the ID");
+            }
+
         }
         
         public FixedTermDepositEntity GetFixedTransactionDetailById(FixedTermDepositEntity fixedDeposit)
@@ -89,7 +108,9 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-
-
+        public async Task<IReadOnlyList<FixedTermDepositEntity>> getTransactionsByUserId(int id)
+        {
+            return await _unitOfWork.FixedTermDepositRepository.getFixedTermDepositByUserId(id);
+        }
     }
 }

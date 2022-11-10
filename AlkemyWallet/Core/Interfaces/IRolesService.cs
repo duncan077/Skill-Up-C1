@@ -10,6 +10,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task<RoleEntity> getById(int id);
         Task<RolesDTO> insert(RolesDTO entity);
         Task saveChanges();
-        Task update(RoleEntity entity);
+        Task<RolesDTO> update(RoleEntity entity);
     }
 }
