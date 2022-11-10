@@ -2,13 +2,12 @@
 using AlkemyWallet.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Authorization;
 using AlkemyWallet.Core.Models.DTO;
 using AutoMapper;
 using System.Collections.Generic;
-
+using AlkemyWallet.Core.Services.ResourceParameters;
 
 namespace AlkemyWallet.Controllers
 {
@@ -30,7 +29,7 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> GetRoles([FromQuery]EndpointParameters rolesParams)
+        public async Task<IActionResult> GetRoles([FromQuery]RolesParameters rolesParams)
         {
             try
             {

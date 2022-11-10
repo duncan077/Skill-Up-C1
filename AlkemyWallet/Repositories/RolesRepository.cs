@@ -21,6 +21,8 @@ namespace AlkemyWallet.Repositories
             {
                 var collection = _context.Roles as IQueryable<RoleEntity>;
 
+                collection = collection.Where(a => a.IsDeleted == false);
+
                 return PagedList<RoleEntity>.Create(collection,
                 rolesParams.PageNumber,
                 rolesParams.PageSize);
