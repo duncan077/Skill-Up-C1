@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq.Expressions;
 using AutoMapper;
+using System;
+using System.Text;
 
 namespace AlkemyWallet.Controllers
 {
@@ -16,11 +18,13 @@ namespace AlkemyWallet.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IJWTAuthManager _jWTAuthManager;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper, IJWTAuthManager jWTAuthManager)
         {
             _userService = userService;
             _mapper = mapper;
+            _jWTAuthManager = jWTAuthManager;
         }
 
         [HttpGet]
@@ -36,12 +40,12 @@ namespace AlkemyWallet.Controllers
 
         }
 
-    
+
         [HttpGet("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
-           
+
 
             var user = await _userService.getById(id);
 
@@ -56,7 +60,7 @@ namespace AlkemyWallet.Controllers
             }
 
 
-    
+
             return Ok(user);
         }
 
@@ -112,6 +116,33 @@ namespace AlkemyWallet.Controllers
             {
                 return BadRequest();
             }
+        }
+        
+        [HttpPost]
+        [Authorize(Roles = "Regular")]
+        public async Task<ActionResult> CreateUser(CreateUserDTO request)
+        {
+            if (request is not null)
+            {
+                UserEntity user = _mapper.Map<UserEntity>(request);
+                byte[] password = _jWTAuthManager.CreatePasswordHash(request.Password);
+                user.Password = Convert.ToBase64String(password);
+                user.RoleId = 2;
+                try
+                {
+                    await _userService.insert(user);
+                    await _userService.saveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Can�t create the user, please check the data");
+            }
+            return Ok("User created successfully");
         }
 
     }
