@@ -1,6 +1,6 @@
 ﻿namespace AlkemyWallet.Core.Services.ResourceParameters
 {
-    public class RolesParameters
+    public class PagesParameters
     {
         public int PageNumber { get; set; } = 1;
 

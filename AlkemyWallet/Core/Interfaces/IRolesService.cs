@@ -12,6 +12,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task<RolesDTO> insert(RolesDTO entity);
         Task saveChanges();
         Task<RolesDTO> update(RoleEntity entity);
-        Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams);
+        Task<IReadOnlyList<RoleEntity>> getAll(PagesParameters rolesParams);
     }
 }
