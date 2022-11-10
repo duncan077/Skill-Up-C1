@@ -37,6 +37,26 @@ namespace AlkemyWallet.Core.Services
         {
             await _unitOfWork.TransactionRepository.insert(entity);
         }
+        public async Task CreateTransaction(TransactionEntity entity)
+        {
+            var user = await _unitOfWork.UserRepository.getById(entity.UserId);
+            if(user != null)
+            {
+                if(user.Accounts.Where(a=>a.Id==entity.AccountId).Any())
+                {
+                    var accountTo = await _unitOfWork.AccountsRepository.getById(entity.ToAccountId);
+                    if (accountTo != null)
+                        await _unitOfWork.TransactionRepository.insert(entity);
+                    else
+                        throw new ArgumentException("404, Error: Transfer Account not found.");
+                }
+                else
+                    throw new ArgumentException("400, Error: User and account are different");
+            }
+            else
+                throw new ArgumentException("404, Error: User not found.");
+           
+        }
 
         public async Task saveChanges()
         {

@@ -33,9 +33,11 @@ namespace AlkemyWallet.Controllers
             if (fixedDeposit == null) return NotFound(new { Status = "Not Fund", Message = "No FixedDeposit Fund" });
             else
             {
+
                 var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
                 if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
                 else return Ok(fixedDepositDto);
+
 
 
             }
