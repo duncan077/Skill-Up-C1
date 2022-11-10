@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
@@ -25,6 +26,11 @@ namespace AlkemyWallet.Core.Services
         public async Task<TransactionEntity> getById(int id)
         {
             return await _unitOfWork.TransactionRepository.getById(id);
+        }
+
+        public async Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id)
+        {
+            return await _unitOfWork.TransactionRepository.getTransactionsByUserId(id);
         }
 
         public async Task insert(TransactionEntity entity)

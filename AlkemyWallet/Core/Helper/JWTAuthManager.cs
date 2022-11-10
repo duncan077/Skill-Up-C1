@@ -48,11 +48,15 @@ namespace AlkemyWallet.Core.Helper
                 new Claim(ClaimTypes.Role, role)
             };
             //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings").Value));
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token").ToString()));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
-            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
-
+            var token = new JwtSecurityToken(
+                    issuer: _configuration["JwtSettings:Issuer"],
+                    audience: _configuration["JwtSettings:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: credentials);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
         }

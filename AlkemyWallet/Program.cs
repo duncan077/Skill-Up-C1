@@ -13,6 +13,7 @@ using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Controllers;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -37,13 +38,14 @@ builder.Services.AddSwaggerGen(options => {
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-
-builder.Services.AddScoped<IRolesServices, RolesService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
+builder.Services.AddScoped<IFixedTermDepositService, FixedTermDepositService>();
 builder.Services.AddScoped<IJWTAuthManager, JWTAuthManager>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -56,16 +58,23 @@ builder.Services.AddCors(options => {
 });
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+     
         ValidateIssuerSigningKey = true,
-        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-        //.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("My clave personalizada para la app")),
-        ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
     };
 });
 
@@ -80,6 +89,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

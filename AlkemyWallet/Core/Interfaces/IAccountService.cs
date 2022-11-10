@@ -1,14 +1,15 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Core.Services
+namespace AlkemyWallet.Core.Interfaces
 {
     public interface IAccountService
     {
-        Task delete(AccountsEntity entity);
         Task<IReadOnlyList<AccountsEntity>> getAll();
         Task<AccountsEntity> getById(int id);
         Task insert(AccountsEntity entity);
-        Task saveChanges();
-        Task update(AccountsEntity entity);
+        Task<List<AccountDto>> ListAccounts();
+        Task TransferAccounts(TransferToAccountsDTO model, int id, string userName);
+        Task update(AccountsEntity account);
     }
 }
