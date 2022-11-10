@@ -43,12 +43,28 @@ namespace AlkemyWallet.Controllers
             try
             {
                 await CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
-                return Accepted();
+                return Accepted(new { Status = "202", Message = $"Accepted" });
             }
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+            }
+        }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteTransaction(int id)
+        {
+
+            try
+            {
+                await _transactionService.DeleteTransaction(id);
+                return Accepted(new { Status = "202", Message = $"Deleted" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Status = "", Message = $"Error: {ex.Message}" });
             }
         }
 
