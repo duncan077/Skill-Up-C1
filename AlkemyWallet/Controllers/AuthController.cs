@@ -30,7 +30,7 @@ namespace AlkemyWallet.Controllers
             try
             {
                 var user = await _userService.getByUserName(loginDTO.userName);
-                if (user is null)
+                if (user is null|| user.IsDeleted)
                 {
                     return Unauthorized();
                 }
