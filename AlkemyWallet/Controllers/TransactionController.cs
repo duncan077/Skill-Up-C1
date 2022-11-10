@@ -53,6 +53,25 @@ namespace AlkemyWallet.Controllers
         }
 
 
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateTransaction([FromBody] TransactionEntity transaction, int id)
+        {
+
+            try
+            {
+                if(transaction.Id != id)
+                    return BadRequest(new { Status = "400", Message = $"Error: Transaction Id and Id requested are not equal" });
+                await _transactionService.UpdateTransaction(transaction,id);
+                return Accepted(new { Status = "202", Message = $"Transaction Updated" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+            }
+        }
+
         [Authorize(Roles = "Regular")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionEntity>> GetTransactionById(int id)
