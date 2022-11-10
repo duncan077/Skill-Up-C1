@@ -92,5 +92,27 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPatch]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                UserEntity response = await _userService.getById(id);
+                if(response is null)
+                {
+                    return NotFound("User not found");
+                }
+                response.IsDeleted = true;
+                await _userService.update(response);
+                await _userService.saveChanges();
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
