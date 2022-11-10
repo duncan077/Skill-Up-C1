@@ -32,7 +32,7 @@ namespace AlkemyWallet.Controllers
         [HttpGet]
 
         [Authorize(Roles ="Admin")]
-        public async Task<ActionResult<List<AccountDto>>> GetAccounts([FromQuery] AccountDto param,[FromQuery]RolesDTO oaram)
+        public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
         {
             var response = await _accountServices.ListAccounts();
