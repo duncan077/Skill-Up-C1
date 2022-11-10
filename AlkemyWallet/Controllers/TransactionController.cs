@@ -34,5 +34,40 @@ namespace AlkemyWallet.Controllers
             }
             return Ok(response);
         }
+
+        [HttpPost]
+        [Authorize(Roles ="Regular")]
+        public async Task<IActionResult> CreateTransaction([FromBody]TransactionEntity transaction)
+        {
+
+            try
+            {
+                await CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [Authorize(Roles = "Regular")]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TransactionEntity>> GetTransactionById(int id)
+        {
+            try {
+                var transactionDetail = await _transactionService.getById(id);
+                if(transactionDetail is null)
+                    return NotFound(new { Status="Not Found", Message = "Trnasaction Not Found"});
+                return Ok(transactionDetail);
+            } catch (Exception ex)
+            { 
+                return BadRequest(new {Status ="", Message =$"Error: {ex.Message}" });
+            }
+            
+        }
+
     }
 }

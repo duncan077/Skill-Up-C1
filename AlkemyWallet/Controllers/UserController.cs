@@ -117,6 +117,7 @@ namespace AlkemyWallet.Controllers
                 return BadRequest();
             }
         }
+        
         [HttpPost]
         [Authorize(Roles = "Regular")]
         public async Task<ActionResult> CreateUser(CreateUserDTO request)
@@ -139,9 +140,10 @@ namespace AlkemyWallet.Controllers
             }
             else
             {
-                return BadRequest("Can´t create the user, please check the data");
+                return BadRequest("Canï¿½t create the user, please check the data");
             }
             return Ok("User created successfully");
         }
+
     }
 }
