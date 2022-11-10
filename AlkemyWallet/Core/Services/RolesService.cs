@@ -47,7 +47,7 @@ namespace AlkemyWallet.Core.Services
             }
         }
 
-        public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
+        public async Task<IReadOnlyList<RoleEntity>> getAll(PagesParameters rolesParams)
         {
             try
             {
