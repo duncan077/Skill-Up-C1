@@ -53,23 +53,24 @@ namespace AlkemyWallet.Controllers
         [HttpGet("me")]
         [Authorize]
 
-        public async Task<IActionResult> AuthenticateUser()
+        public async Task<IActionResult> GetUserData()
         {
             try
             {
                 var userName = User.Identity?.Name?.ToString();
-                var userRole = User.Claims.Select(claim => claim.Type == "Role").First().ToString();
-                return Ok(new
+                if (userName == null) return BadRequest(new
                 {
-                    UserName = userName,
-                    Role = userRole
+                    Status = "Bad Request",
+                    Message = "username null"
                 });
+                var userData = await _userService.getByUserName(userName);
+                return Ok(userData);
             }
             catch (Exception err)
             {
-                return BadRequest(new
+                return StatusCode(500, new
                 {
-                    Status = "Bad request",
+                    Status = "server error",
                     Message = err.Message
                 });
             }
