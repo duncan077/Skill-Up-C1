@@ -21,24 +21,53 @@ namespace AlkemyWallet.Core.Services
 
         public async Task delete(RoleEntity entity)
         {
-            await _unitOfWork.RolesRepository.delete(entity);
-            await _unitOfWork.RolesRepository.saveChanges();
+            try
+            {
+                await _unitOfWork.RolesRepository.delete(entity);
+                await _unitOfWork.RolesRepository.saveChanges();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+
         }
 
 
         public async Task<IReadOnlyList<RoleEntity>> getAll()
         {
-            return await _unitOfWork.RolesRepository.getAll();
+            try
+            {
+                return await _unitOfWork.RolesRepository.getAll();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
 
         public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
         {
-            return await _unitOfWork.RolesRepository.getAll(rolesParams);
+            try
+            {
+                return await _unitOfWork.RolesRepository.getAll(rolesParams);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
 
         public async Task<RoleEntity> getById(int id)
         {
-            return await _unitOfWork.RolesRepository.getById(id);
+            try
+            {
+                return await _unitOfWork.RolesRepository.getById(id);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
 
         public async Task<RolesDTO> insert(RolesDTO entity)
@@ -51,14 +80,21 @@ namespace AlkemyWallet.Core.Services
             }
             catch (Exception err)
             {
-                throw;
+                throw new Exception(err.Message);
             }
-           
         }
+           
 
         public async Task saveChanges()
         {
-            await _unitOfWork.RolesRepository.saveChanges();
+            try
+            {
+                await _unitOfWork.RolesRepository.saveChanges();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
 
         public async Task<RolesDTO> update(RoleEntity entity)
@@ -70,8 +106,7 @@ namespace AlkemyWallet.Core.Services
             }
             catch (Exception err)
             {
-
-                throw;
+                throw new Exception(err.Message);
             }
 
         }

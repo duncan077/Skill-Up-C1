@@ -17,11 +17,18 @@ namespace AlkemyWallet.Repositories
 
         public async Task<IReadOnlyList<RoleEntity>> getAll(RolesParameters rolesParams)
         {
-            var collection = _context.Roles as IQueryable<RoleEntity>;
+            try
+            {
+                var collection = _context.Roles as IQueryable<RoleEntity>;
 
-            return PagedList<RoleEntity>.Create(collection,
-            rolesParams.PageNumber,
-            rolesParams.PageSize);
+                return PagedList<RoleEntity>.Create(collection,
+                rolesParams.PageNumber,
+                rolesParams.PageSize);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
     }
 }
