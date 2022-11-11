@@ -12,7 +12,7 @@ namespace AlkemyWallet.Core.Interfaces
         Task<FixedTermDepositEntity> getById(int id);
         Task saveChanges();
         Task update(UpdateFixedTermDepositDTO model);
-        Task CreateFixedTermDeposit(CreateFixedTermDepositDTO model);
+        Task CreateFixedTermDeposit(CreateFixedTermDepositDTO model, string userName);
 
         FixedTermDepositEntity GetFixedTransactionDetailById( FixedTermDepositEntity fixedDeposit);
 

@@ -37,7 +37,7 @@ namespace AlkemyWallet.Controllers
             {
 
                 var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
-                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
+                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Found" });
                 else return Ok(fixedDepositDto);
 
 
@@ -54,12 +54,12 @@ namespace AlkemyWallet.Controllers
             var pagesParameters = new PagesParameters();
             pagesParameters.PageNumber = page;
             pagesParameters.PageSize = 10;
-            string id= User.Identity.Name.ToString();
+           
             
             try
             {
-
-                PagedList<FixedTermDepositEntity> PagedList = _fixedTermDepositServices.getAllbyUser(pagesParameters, id).Result;
+                string id = User.Identity.Name.ToString();
+                PagedList<FixedTermDepositEntity> PagedList = await _fixedTermDepositServices.getAllbyUser(pagesParameters, id);
 
                 if (PagedList != null)
                 {
@@ -77,10 +77,10 @@ namespace AlkemyWallet.Controllers
                         PreviousUrl = "Previous Page: " + ActionPath + "/page=" + (page - 1).ToString();
                     }
 
-                    var customCollection = from p in PagedList select new
+                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositItemDTO
                     {
                         Id = p.Id,
-                        AccountId = p.AccountId,
+                        AccountId = (int)p.AccountId,
                         CreationDate = p.CreationDate,
                         ClosingDate = p.ClosingDate,
                         Amount = p.Amount
@@ -92,17 +92,18 @@ namespace AlkemyWallet.Controllers
 
                         NextURl = NextUrl,
                         PreviousURl = PreviousUrl,
-                        customCollection
+                        ListFixedDeposit
 
                     });
 
                 }
-                else { return NotFound(new { Status = "Not Found", Message = "No FixedTernDeposits found." }); }
+                else { return NotFound(new { Status = "Not Found", Message = "No FixedTermDeposits found." }); }
             
             }catch (Exception err)
             {
                 return StatusCode(500, new { Status = "Server Error", Message = err.Message });
             }
+
 
         }
 
@@ -116,14 +117,15 @@ namespace AlkemyWallet.Controllers
 
                 try
                 {
-                    await _fixedTermDepositServices.CreateFixedTermDeposit(model);
+                    string id = User.Identity.Name.ToString();
+                    await _fixedTermDepositServices.CreateFixedTermDeposit(model, id);
                     return Ok($"Fixed Term Deposit created succesfully. Amount deposited: " + model.Amount + " . Closing Date: " + model.ClosingDate + ".");
             } catch (Exception Ex)
             {
 
-                return BadRequest(Ex.Message);
+                    return StatusCode(500, new { Status = "Server Error", Message = Ex.Message });
 
-            }
+                }
         }
             else { return BadRequest();}
 
@@ -148,7 +150,7 @@ namespace AlkemyWallet.Controllers
             }
             catch(Exception ex) 
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, new { Status = "Server Error", Message = ex.Message });
 
             }
 
@@ -173,7 +175,7 @@ namespace AlkemyWallet.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, new { Status = "Server Error", Message = ex.Message });
 
             }
 
