@@ -19,6 +19,10 @@ namespace AlkemyWallet.Repositories
         {
             return await _walletDbContext.Set<CatalogueEntity>().OrderBy(c => c.Points).ToListAsync();
         }
+        public async Task<IReadOnlyList<CatalogueEntity>> getCatalogueByUserPoints(int points)
+        {
+            return await _walletDbContext.Set<CatalogueEntity>().Where(c => c.Points <= points).ToListAsync();
+        }
     }
 }
 
