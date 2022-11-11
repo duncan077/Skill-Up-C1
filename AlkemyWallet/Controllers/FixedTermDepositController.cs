@@ -9,6 +9,8 @@ using AlkemyWallet.DataAccess;
 using AutoMapper;
 using AlkemyWallet.Core.Models.DTO;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers
 {
@@ -24,7 +26,7 @@ namespace AlkemyWallet.Controllers
             _mapper = mapper;
         }
 
-      
+
         [Authorize]
         [HttpGet("{id}")]
             public  async Task<IActionResult> GetFixedTermDepositById(int id)
@@ -35,7 +37,7 @@ namespace AlkemyWallet.Controllers
             {
 
                 var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
-                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Fund" });
+                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Found" });
                 else return Ok(fixedDepositDto);
 
 
@@ -43,19 +45,69 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        [Authorize(Roles = "Regular")]
+        
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<FixedTermDepositEntity>>> GetAll(int id)
-        {       
-            var response = await _fixedTermDepositServices.getTransactionsByUserId(id);
-            if (response is null)
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> GetAll([FromQuery] int page)
+        {
+            //Para cumplir con la firma del Helper
+            var pagesParameters = new PagesParameters();
+            pagesParameters.PageNumber = page;
+            pagesParameters.PageSize = 10;
+           
+            
+            try
             {
-                return NotFound("User not found");
+                string id = User.Identity.Name.ToString();
+                PagedList<FixedTermDepositEntity> PagedList = await _fixedTermDepositServices.getAllbyUser(pagesParameters, id);
+
+                if (PagedList != null)
+                {
+
+                    String NextUrl = "";
+                    String PreviousUrl = "";
+                    String ActionPath = Request.Host + Request.Path;
+
+                    if (PagedList.HasNext)
+                    {
+                        NextUrl = "Next Page: " + ActionPath + "/page=" + (page + 1).ToString();
+                    }
+                    if (PagedList.HasPrevious)
+                    {
+                        PreviousUrl = "Previous Page: " + ActionPath + "/page=" + (page - 1).ToString();
+                    }
+
+                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositItemDTO
+                    {
+                        Id = p.Id,
+                        AccountId = (int)p.AccountId,
+                        CreationDate = p.CreationDate,
+                        ClosingDate = p.ClosingDate,
+                        Amount = p.Amount
+                    };
+
+
+                    return Ok(new
+                    {
+
+                        NextURl = NextUrl,
+                        PreviousURl = PreviousUrl,
+                        ListFixedDeposit
+
+                    });
+
+                }
+                else { return NotFound(new { Status = "Not Found", Message = "No FixedTermDeposits found." }); }
+            
+            }catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
             }
-            return Ok(response);
+
+
         }
 
-   
+
         [HttpPost]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> CreateFixedTermDeposit([FromBody] CreateFixedTermDepositDTO model) {
@@ -65,21 +117,22 @@ namespace AlkemyWallet.Controllers
 
                 try
                 {
-                    await _fixedTermDepositServices.CreateFixedTermDeposit(model);
-                    return Ok($"Fixed Term Deposit created succesfully. Amount deposited: " + model.Amount + "Closing Date: " + model.ClosingDate + ".");
+                    string id = User.Identity.Name.ToString();
+                    await _fixedTermDepositServices.CreateFixedTermDeposit(model, id);
+                    return Ok($"Fixed Term Deposit created succesfully. Amount deposited: " + model.Amount + " . Closing Date: " + model.ClosingDate + ".");
             } catch (Exception Ex)
             {
 
-                return BadRequest(Ex.Message);
+                    return StatusCode(500, new { Status = "Server Error", Message = Ex.Message });
 
-            }
+                }
         }
             else { return BadRequest();}
 
         }
   
         [HttpPut]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateFixedTermDeposit([FromBody] UpdateFixedTermDepositDTO model)
         {
 
@@ -97,7 +150,7 @@ namespace AlkemyWallet.Controllers
             }
             catch(Exception ex) 
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, new { Status = "Server Error", Message = ex.Message });
 
             }
 
@@ -122,7 +175,7 @@ namespace AlkemyWallet.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, new { Status = "Server Error", Message = ex.Message });
 
             }
 

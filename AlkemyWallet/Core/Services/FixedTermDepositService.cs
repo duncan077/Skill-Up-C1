@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
@@ -48,6 +50,7 @@ namespace AlkemyWallet.Core.Services
                 fixedTermDepositEntity.ClosingDate = model.ClosingDate;
                 fixedTermDepositEntity.CreationDate = model.CreationDate;
                 fixedTermDepositEntity.IsDeleted = model.IsDeleted;
+                
 
                 await _unitOfWork.FixedTermDepositRepository.update(fixedTermDepositEntity);
                 await _unitOfWork.Save();
@@ -68,13 +71,13 @@ namespace AlkemyWallet.Core.Services
             return null;
         }
 
-        public async Task CreateFixedTermDeposit(CreateFixedTermDepositDTO model)
+        public async Task CreateFixedTermDeposit(CreateFixedTermDepositDTO model, string userName)
         {
+            
+            AccountsEntity UserAccount = await _unitOfWork.AccountsRepository.getById(model.AccountId);
+            UserEntity User = await _unitOfWork.UserRepository.getByUserName(userName);
 
-            AccountsEntity UserAccount = _unitOfWork.AccountsRepository.getById(model.AccountId).Result;
-            UserEntity User = _unitOfWork.UserRepository.getById(model.UserId).Result;
-
-            if (UserAccount != null && User != null && model.ClosingDate >= DateTime.Now.AddDays(1)&& model.Amount>0)
+            if (UserAccount != null && User != null && UserAccount.UserId == User.Id && model.ClosingDate >= DateTime.Now.AddDays(1)&& model.Amount>0)
             {
                 if (UserAccount.Money >= model.Amount)
                 {
@@ -102,7 +105,7 @@ namespace AlkemyWallet.Core.Services
 
 
             }
-            else { throw new Exception("Incorrect Data - Check UserId, Account, Ammount and Closing Date. Remember that the closing Date must be greater than today"); }
+            else { throw new Exception("Incorrect Data - Check AccountId, Ammount and Closing Date. Remember that the closing Date must be greater than today"); }
 
             
 
@@ -112,5 +115,22 @@ namespace AlkemyWallet.Core.Services
         {
             return await _unitOfWork.FixedTermDepositRepository.getFixedTermDepositByUserId(id);
         }
+
+        public async Task<PagedList<FixedTermDepositEntity>> getAllbyUser(PagesParameters pagesParams, string username)
+        {
+            try 
+            { 
+            
+            UserEntity usuario = await _unitOfWork.UserRepository.getByUserName(username);
+
+            var AllFixedTermDeposit = await _unitOfWork.FixedTermDepositRepository.getAll(pagesParams, usuario.Id);
+                return AllFixedTermDeposit;
+            
+            }
+            catch{ throw new Exception("An error occured"); }
+
+        }
+      
     }
+
 }
