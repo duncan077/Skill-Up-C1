@@ -17,7 +17,7 @@ namespace AlkemyWallet.Core.Interfaces
         FixedTermDepositEntity GetFixedTransactionDetailById( FixedTermDepositEntity fixedDeposit);
 
         Task<IReadOnlyList<FixedTermDepositEntity>> getTransactionsByUserId(int id);
-        Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters rolesParams);
+        Task<PagedList<FixedTermDepositEntity>> getAllbyUser(PagesParameters rolesParams, string username);
 
     }
 }

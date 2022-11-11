@@ -45,6 +45,22 @@ namespace AlkemyWallet.Repositories
             }
         }
 
+        public async Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters pagesParams, int userId)
+        {
+            try
+            {
+                var collection = _walletDbContext.FixedTermDeposits.Where(a => a.UserId == userId&&a.IsDeleted==false);
+           
+
+                return PagedList<FixedTermDepositEntity>.Create(collection,
+                pagesParams.PageNumber,
+                pagesParams.PageSize);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
 
 
     }

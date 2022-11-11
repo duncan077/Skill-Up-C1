@@ -45,19 +45,21 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        [Authorize(Roles = "Regular")]
+        
         [HttpGet]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetAll([FromQuery] int page)
         {
             //Para cumplir con la firma del Helper
             var pagesParameters = new PagesParameters();
             pagesParameters.PageNumber = page;
             pagesParameters.PageSize = 10;
-
+            string id= User.Identity.Name.ToString();
+            
             try
             {
 
-                PagedList<FixedTermDepositEntity> PagedList = _fixedTermDepositServices.getAll(pagesParameters).Result;
+                PagedList<FixedTermDepositEntity> PagedList = _fixedTermDepositServices.getAllbyUser(pagesParameters, id).Result;
 
                 if (PagedList != null)
                 {
@@ -75,12 +77,22 @@ namespace AlkemyWallet.Controllers
                         PreviousUrl = "Previous Page: " + ActionPath + "/page=" + (page - 1).ToString();
                     }
 
+                    var customCollection = from p in PagedList select new
+                    {
+                        Id = p.Id,
+                        AccountId = p.AccountId,
+                        CreationDate = p.CreationDate,
+                        ClosingDate = p.ClosingDate,
+                        Amount = p.Amount
+                    };
+
+
                     return Ok(new
                     {
 
                         NextURl = NextUrl,
                         PreviousURl = PreviousUrl,
-                        PagedList
+                        customCollection
 
                     });
 
@@ -91,11 +103,6 @@ namespace AlkemyWallet.Controllers
             {
                 return StatusCode(500, new { Status = "Server Error", Message = err.Message });
             }
-
-
-
-
-
 
         }
 

@@ -116,22 +116,20 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.FixedTermDepositRepository.getFixedTermDepositByUserId(id);
         }
 
-        public async Task<PagedList<FixedTermDepositEntity>> getAll(PagesParameters pagesParams)
+        public async Task<PagedList<FixedTermDepositEntity>> getAllbyUser(PagesParameters pagesParams, string username)
         {
-            try
-            {
-                PagedList<FixedTermDepositEntity> ListFixedDeposit = _unitOfWork.FixedTermDepositRepository.getAll(pagesParams).Result;
+            try { 
+            
+            UserEntity usuario = await _unitOfWork.UserRepository.getByUserName(username);
 
-
-                return ListFixedDeposit;
-
+            var AllFixedTermDeposit = await _unitOfWork.FixedTermDepositRepository.getAll(pagesParams, usuario.Id);
+                return AllFixedTermDeposit;
+            
             }
-            catch (Exception err)
-            {
-                throw new Exception(err.Message);
-            }
+            catch{ throw new Exception("An error occured"); }
+
         }
-
       
     }
+
 }
