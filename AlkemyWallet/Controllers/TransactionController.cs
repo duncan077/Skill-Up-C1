@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
@@ -33,7 +34,8 @@ namespace AlkemyWallet.Controllers
                 var response = _mapper.Map<List<TransactionDTO>>( await _transactionService.getAll(page));
                 if (response.Count>0)
                 {
-                    return Ok(response);
+                    var pagedList = new PagedList<TransactionDTO>(response,page*10,page,10);
+                    return Ok(pagedList);
                 }
                 return BadRequest(new { Status = "404", Message = "Error: Not found" });
             }
