@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.Entities;
 using System.Linq.Expressions;
 
 namespace AlkemyWallet.Repositories.Interfaces
@@ -13,7 +14,6 @@ namespace AlkemyWallet.Repositories.Interfaces
          Task  delete(T entity);
          Task update(T entity);
          Task saveChanges();
-     
-       
+        Task<IReadOnlyList<T>> getAllPaged(PagesParameters parameters);
     }
 }

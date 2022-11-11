@@ -26,14 +26,23 @@ namespace AlkemyWallet.Controllers
 
         [Authorize(Roles = "Regular")]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<TransactionEntity>>> GetTransactions(int id)
+        public async Task<IActionResult> GetTransactions([FromQuery]int page)
         {
-            var response = await _transactionService.getTransactionsByUserId(id);
-            if(response is null)
+            try
             {
-                return NotFound("User not found");
+                var response = _mapper.Map<List<TransactionDTO>>( await _transactionService.getAll(page));
+                if (response.Count>0)
+                {
+                    return Ok(response);
+                }
+                return BadRequest(new { Status = "404", Message = "Error: Not found" });
             }
-            return Ok(response);
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+            }
+           
         }
 
         [HttpPost]

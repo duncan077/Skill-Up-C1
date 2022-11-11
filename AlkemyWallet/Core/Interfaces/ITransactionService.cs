@@ -5,7 +5,7 @@ namespace AlkemyWallet.Core.Interfaces
     public interface ITransactionService
     {
         Task delete(TransactionEntity entity);
-        Task<IReadOnlyList<TransactionEntity>> getAll();
+     
         Task<TransactionEntity> getById(int id);
         Task insert(TransactionEntity entity);
         Task saveChanges();
@@ -14,6 +14,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task UpdateTransaction(TransactionEntity entity, int id);
 
         Task DeleteTransaction(int id);
-
+        Task<IReadOnlyList<TransactionEntity>> getAll(int page);
     }
 }

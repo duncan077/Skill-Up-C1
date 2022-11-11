@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.DataAccess;
+﻿using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,11 @@ namespace AlkemyWallet.Repositories
         {
            
             return await _walletDbContext.Set<T>().ToListAsync();
+        }
+        public async Task<IReadOnlyList<T>> getAllPaged(PagesParameters parameters)
+        {
+
+            return await _walletDbContext.Set<T>().OrderBy(o=>o.Id).Skip(parameters.PageSize*(parameters.PageNumber-1)).Take(parameters.PageSize).ToListAsync();
         }
 
         public async Task<T> getById(int id)
