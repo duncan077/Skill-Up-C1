@@ -26,8 +26,8 @@ namespace AlkemyWallet.Controllers
             _mapper = mapper;
         }
 
-      
-        //[Authorize]
+
+        [Authorize]
         [HttpGet("{id}")]
             public  async Task<IActionResult> GetFixedTermDepositById(int id)
         {
@@ -45,7 +45,7 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        //[Authorize(Roles = "Regular")]
+        [Authorize(Roles = "Regular")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int page)
         {
@@ -101,7 +101,7 @@ namespace AlkemyWallet.Controllers
 
 
         [HttpPost]
-        //[Authorize(Roles = "Regular")]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> CreateFixedTermDeposit([FromBody] CreateFixedTermDepositDTO model) {
 
             if (ModelState.IsValid)
@@ -110,7 +110,7 @@ namespace AlkemyWallet.Controllers
                 try
                 {
                     await _fixedTermDepositServices.CreateFixedTermDeposit(model);
-                    return Ok($"Fixed Term Deposit created succesfully. Amount deposited: " + model.Amount + "Closing Date: " + model.ClosingDate + ".");
+                    return Ok($"Fixed Term Deposit created succesfully. Amount deposited: " + model.Amount + " . Closing Date: " + model.ClosingDate + ".");
             } catch (Exception Ex)
             {
 
@@ -123,7 +123,7 @@ namespace AlkemyWallet.Controllers
         }
   
         [HttpPut]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateFixedTermDeposit([FromBody] UpdateFixedTermDepositDTO model)
         {
 
@@ -148,7 +148,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFixedTermDeposit(int id)
         {
             try
