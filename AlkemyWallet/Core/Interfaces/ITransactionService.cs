@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Interfaces
 {
@@ -10,7 +11,7 @@ namespace AlkemyWallet.Core.Interfaces
         Task insert(TransactionEntity entity);
         Task saveChanges();
         Task update(TransactionEntity entity);
-        Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id);
+        Task<PagedList<TransactionEntity>> getTransactionsByUserId(int id);
         Task UpdateTransaction(TransactionEntity entity, int id);
 
         Task DeleteTransaction(int id);

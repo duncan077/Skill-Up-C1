@@ -31,11 +31,11 @@ namespace AlkemyWallet.Controllers
         {
             try
             {
-                var response = _mapper.Map<List<TransactionDTO>>( await _transactionService.getAll(page));
+                var response = _mapper.Map<PagedList<TransactionDTO>>( await _transactionService.getAll(page));
                 if (response.Count>0)
                 {
-                    var pagedList = new PagedList<TransactionDTO>(response,page*10,page,10);
-                    return Ok(pagedList);
+                   
+                    return Ok(response);
                 }
                 return BadRequest(new { Status = "404", Message = "Error: Not found" });
             }
