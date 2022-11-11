@@ -16,5 +16,8 @@ namespace AlkemyWallet.Core.Interfaces
         Task saveChanges();
         Task update(UserEntity entity);
 
+        Task<AccountsEntity> GetAccountByID(int id);
+        Task blockAccount(AccountsEntity account);
+
     }
 }

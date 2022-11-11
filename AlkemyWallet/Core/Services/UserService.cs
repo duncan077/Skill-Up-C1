@@ -62,5 +62,19 @@ namespace AlkemyWallet.Core.Services
         {
             await _unitOfWork.UserRepository.update(entity);
         }
+
+        public async Task<AccountsEntity> GetAccountByID(int id)
+        {
+            return await _unitOfWork.AccountsRepository.getById(id);
+        }
+
+        public async Task blockAccount(AccountsEntity account)
+        {
+            account.IsBlocked = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.AccountsRepository.saveChanges();
+        }
+
+
     }
 }

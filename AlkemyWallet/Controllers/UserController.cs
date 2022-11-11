@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq.Expressions;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace AlkemyWallet.Controllers
 {
@@ -90,6 +91,30 @@ namespace AlkemyWallet.Controllers
                     Message = err.Message
                 });
             }
+        }
+
+        [HttpPatch("block/{id}")]
+        [Authorize]
+        public async Task<IActionResult> BlockAccountById(int id)
+        {
+            try {
+                var claims = User.Claims.ToList();
+                var user = await _userService.getByUserName(claims[0].Value);
+                var account = await _userService.GetAccountByID(id);
+                if (account is null)
+                    return NotFound($"The account doesn't exist");
+                if (!user.Id.Equals(account.UserId))
+                    return Unauthorized($"You're not authorize to block this account");
+                if (account.IsBlocked)
+                    return BadRequest($"The account is already blocked");
+                await _userService.blockAccount(account);
+                return Ok($"The account has been blocked successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
         }
 
     }
