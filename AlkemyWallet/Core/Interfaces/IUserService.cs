@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Models.DTO;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using System.Linq.Expressions;
 
@@ -17,5 +18,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task update(UserEntity entity);
         Task<CatalogueDTO> GetCatalogueById(int idProduct);
 
+        Task<PagedList<UserEntity>> getAll(int page);
     }
 }

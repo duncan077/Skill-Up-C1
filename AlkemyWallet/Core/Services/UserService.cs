@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
@@ -65,6 +67,13 @@ namespace AlkemyWallet.Core.Services
         public async Task<CatalogueDTO> GetCatalogueById(int idProduct)
         {
             return _mapper.Map<CatalogueDTO>(await _unitOfWork.CatalogueRepository.getById(idProduct));
+        }
+
+        public async Task<PagedList<UserEntity>> getAll(int page)
+        {
+            PagesParameters parameters = new PagesParameters();
+            parameters.PageNumber = page;
+            return await _unitOfWork.UserRepository.getAll(parameters);
         }
     }
 }
