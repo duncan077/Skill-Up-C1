@@ -6,6 +6,7 @@ namespace AlkemyWallet.Core.Models.DTO
 {
     public class TransactionDTO
     {
+        public int Id { get; set; }
        public decimal Ammount { get; set; }
         [MinLength(4)]
         [MaxLength(50)]
