@@ -29,12 +29,14 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserDTO>>> GetUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetUsers([FromQuery]int page)
         {
-            var response = await _userService.getAll();
+            var response = await _userService.getAll(page);
 
             if (response.Count == 0)
+            {
                 return NotFound();
+            }
 
             return Ok(response);
 
