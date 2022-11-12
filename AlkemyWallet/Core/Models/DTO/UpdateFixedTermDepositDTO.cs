@@ -7,7 +7,6 @@
         public decimal Amount { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ClosingDate { get; set; }
-        public bool IsDeleted { get; set; }
-
+       
     }
 }
