@@ -145,5 +145,30 @@ namespace AlkemyWallet.Controllers
             return Ok("User created successfully");
         }
 
+        [HttpPatch("product/{idProduct}")]
+        [Authorize]
+        public async Task<IActionResult> RedeemProduct(int idProduct)
+        {
+            try {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                if (user.Points.Equals(0))
+                    return BadRequest($"You don't have points to redeem");
+                var product = await _userService.GetCatalogueById(idProduct);
+                if (product == null)
+                    return BadRequest($"Doesn't exist the product {idProduct}");
+                if (user.Points < product.Points)
+                    return BadRequest($"You don't have points to redeem this product, Points: {user.Points}.");
+                user.Points -= product.Points;
+                await _userService.update(user);
+                await _userService.saveChanges();
+                return Ok($"You have successfully redeemed the product ** {product.ProductDescription} **. Points deducted: {product.Points}. New points balance: {user.Points}.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
     }
 }
