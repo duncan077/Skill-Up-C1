@@ -49,8 +49,7 @@ namespace AlkemyWallet.Core.Services
                 fixedTermDepositEntity.Amount = model.Amount;
                 fixedTermDepositEntity.ClosingDate = model.ClosingDate;
                 fixedTermDepositEntity.CreationDate = model.CreationDate;
-                fixedTermDepositEntity.IsDeleted = model.IsDeleted;
-                
+              
 
                 await _unitOfWork.FixedTermDepositRepository.update(fixedTermDepositEntity);
                 await _unitOfWork.Save();
