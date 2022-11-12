@@ -14,6 +14,8 @@ namespace AlkemyWallet.Core.Interfaces
         Task update(CatalogueEntity entity);
 
         Task<IReadOnlyList<CatalogueDTO>> getAllSortByPoints();
+        Task<IReadOnlyList<CatalogueDTO>> GetCatalogueByUserPoints(int points);
+        Task<UserEntity> getUserByUserName(string userName);
     }
 
 

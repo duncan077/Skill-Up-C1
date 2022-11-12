@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
@@ -7,7 +8,7 @@ namespace AlkemyWallet.Entities
     {
         public UserEntity()
         {
-            Account=new AccountsEntity();
+            Accounts=new HashSet<AccountsEntity>();
         }
   
         public string FirstName { get; set; }
@@ -26,7 +27,7 @@ namespace AlkemyWallet.Entities
         [Column("rol_id")]
         public int RoleId { get; set; }
 
-        public virtual AccountsEntity Account { get; set; }
+        public virtual ICollection<AccountsEntity> Accounts { get; set; } 
  
     }
 }
