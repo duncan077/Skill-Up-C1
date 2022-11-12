@@ -33,11 +33,19 @@ namespace AlkemyWallet.Controllers
             _fixedTermDepositServices = FixedTermDepositServices;
             _mapper = mapper;
         }
+
+        // GET: api/FixedTermDeposit/id
         /// <summary>
-        /// Gets a specific Fixed Term Deposit.
+        /// Obtiene un Fixed Term Deposit específico a partir de su Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, obtiene el fixed term deposit correspondiente al usuario logueado y para usuarios con rol "Regular".
+        /// </remarks>
+        /// <param name="id">Int, página solicitada.Debe ser mayor a 0.</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Items Fixed, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen FixedTermDeposit a nombre del usuario.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
 
         [Authorize]
         [HttpGet("{id}")]
@@ -172,7 +180,7 @@ namespace AlkemyWallet.Controllers
 
         // PUT: api/FixedTermDeposit
         /// <summary>
-        /// Actualiza un Fixed Term Deposit a partir de un modelo UpdateFixedTermDepositDTO
+        /// Actualiza un Fixed Term Deposit a partir del model DTO UpdateFixedTermDepositDTO
         /// </summary>
         /// <remarks>
         /// Mediante el parámetro UpdateFixedTermDepositDTO como modelo, actualiza un Fixed Term Deposit. El rol del usuario debe ser "Admin". Mediante la propiedad (int) id del DTO
@@ -215,7 +223,7 @@ namespace AlkemyWallet.Controllers
 
         // Delete: api/FixedTermDeposit
         /// <summary>
-        /// Elmina un Fixed Term Deposit a partir de un id
+        /// Elimina un Fixed Term Deposit a partir de su id
         /// </summary>
         /// <remarks>
         /// Mediante el parámetro indicado , elmina el fixed term deposit indicado.Debe tener el rol admin para efectuar esta operación.
