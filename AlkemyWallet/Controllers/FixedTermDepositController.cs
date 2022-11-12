@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Core.Helper;
 using NSwag.Annotations;
+using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Controllers
 {
@@ -129,7 +130,7 @@ namespace AlkemyWallet.Controllers
                     });
 
                 }
-                else { return NotFound(new { Status = "Not Found", Message = "No FixedTermDeposits found." }); }
+                else { return StatusCode(404, new { Status = "No Fixed Terms Deposit Found", Message = "No FixedTermDeposits found." }); }
             
             }catch (Exception err)
             {
@@ -174,7 +175,7 @@ namespace AlkemyWallet.Controllers
 
                 }
         }
-            else { return BadRequest();}
+            else { return StatusCode(400, new { Status = "Bad Request", Message = "Check the request parameters" }); }
 
         }
 
@@ -203,14 +204,24 @@ namespace AlkemyWallet.Controllers
 
             try 
             { 
-                if (ModelState.IsValid) 
+                if (ModelState.IsValid)
                 {
-                    await _fixedTermDepositServices.update(model);
-                    return Ok("Fixed Term Deposit Updated");
+
+                    FixedTermDepositEntity fixedTermDepositEntity = await _fixedTermDepositServices.getById(model.id);
+                    if (fixedTermDepositEntity != null) 
+                    {
+
+                        fixedTermDepositEntity.Amount = model.Amount;
+                        fixedTermDepositEntity.ClosingDate = model.ClosingDate;
+                        fixedTermDepositEntity.CreationDate = model.CreationDate;
+                        await _fixedTermDepositServices.update(fixedTermDepositEntity);
+                        return Ok("Fixed Term Deposit Updated");
+                    }
+                    else{return StatusCode(404, new { Status = "Not Found", Message = "No Fixed Term Deposit matches with the Id provided" }); }
                 } 
                 else 
-                { 
-                    return BadRequest("Check the data provided");
+                {
+                    return StatusCode(400, new { Status = "Bad Request", Message = "Check the request parameters" });
                 }
             }
             catch(Exception ex) 
@@ -250,7 +261,7 @@ namespace AlkemyWallet.Controllers
                 }
                 else
                 {
-                    return NotFound("Fixed Term Deposit not found.");
+                    return StatusCode(404, new { Status = "Not Found", Message = "No Fixed Term Deposit matches with the Id provided" });
                 }
             }
             catch (Exception ex)

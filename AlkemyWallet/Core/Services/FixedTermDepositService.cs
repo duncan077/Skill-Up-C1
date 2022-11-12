@@ -5,6 +5,7 @@ using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using System.Security.Cryptography;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -18,7 +19,8 @@ namespace AlkemyWallet.Core.Services
 
         public async Task delete(FixedTermDepositEntity entity)
         {
-            await _unitOfWork.FixedTermDepositRepository.delete(entity);
+            entity.IsDeleted = true;
+            await _unitOfWork.FixedTermDepositRepository.update(entity);
         }
 
 
@@ -37,27 +39,16 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.FixedTermDepositRepository.saveChanges();
         }
 
-        public async Task update(UpdateFixedTermDepositDTO model)
+        public async Task update(FixedTermDepositEntity fixedTermDeposit)
         {
-
-            FixedTermDepositEntity fixedTermDepositEntity = _unitOfWork.FixedTermDepositRepository.getById(model.id).Result;
             
-            if (fixedTermDepositEntity != null) 
-            {
-                fixedTermDepositEntity.User = _unitOfWork.UserRepository.getById((int)fixedTermDepositEntity.UserId).Result;
-                fixedTermDepositEntity.Account = _unitOfWork.AccountsRepository.getById((int)fixedTermDepositEntity.AccountId).Result;
-                fixedTermDepositEntity.Amount = model.Amount;
-                fixedTermDepositEntity.ClosingDate = model.ClosingDate;
-                fixedTermDepositEntity.CreationDate = model.CreationDate;
-              
 
-                await _unitOfWork.FixedTermDepositRepository.update(fixedTermDepositEntity);
-                await _unitOfWork.Save();
-            }
-            else 
-            {
-                throw new Exception("Fixed Term Deposit Not Found, please check the ID");
-            }
+            fixedTermDeposit.User = await _unitOfWork.UserRepository.getById((int)fixedTermDeposit.UserId);
+            fixedTermDeposit.Account = await  _unitOfWork.AccountsRepository.getById((int)fixedTermDeposit.AccountId);
+            await _unitOfWork.FixedTermDepositRepository.update(fixedTermDeposit);
+            await _unitOfWork.Save();
+
+            
 
         }
         
