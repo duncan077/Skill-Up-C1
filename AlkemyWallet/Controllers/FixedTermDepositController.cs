@@ -33,19 +33,11 @@ namespace AlkemyWallet.Controllers
             _fixedTermDepositServices = FixedTermDepositServices;
             _mapper = mapper;
         }
-
-        // GET: api/FixedTermDeposit/id
         /// <summary>
-        /// Obtiene un Fixed Term Deposit específico con su detalle
+        /// Gets a specific Fixed Term Deposit.
         /// </summary>
-        /// <remarks>
-        /// Mediante el parámetro Id obtiene el fixedTermDeposit solicitado,  correspondientes al usuario logueado y para usuarios con rol "Regular".
-        /// </remarks>
-        /// <param name="id">Int, Id del FixedTermDeposit solicitado..</param>
-        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
-        /// <response code="200">OK. Devuelve el objeto solicitado con su detalle.</response>        
-        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existe el FixedTermDeposit relacionado al id indicado.</response> 
-        /// <response code="500">Surgió un error inesperado.</response> 
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         [Authorize]
         [HttpGet("{id}")]
