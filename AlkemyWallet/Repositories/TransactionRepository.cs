@@ -28,7 +28,7 @@ namespace AlkemyWallet.Repositories
         {
             try
             {
-                var collection = _walletDbContext.FixedTermDeposits as IQueryable<TransactionEntity>;
+                var collection = _walletDbContext.Transactions as IQueryable<TransactionEntity>;
 
                 collection = collection.Where(a => a.IsDeleted == false);
 
