@@ -98,12 +98,12 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpPatch("block/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> BlockAccountById(int id)
         {
             try {
-                var claims = User.Claims.ToList();
-                var user = await _userService.getByUserName(claims[0].Value);
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
                 var account = await _userService.GetAccountByID(id);
                 if (account is null)
                     return NotFound($"The account doesn't exist");
