@@ -29,8 +29,7 @@ namespace AlkemyWallet.Controllers
             _accountServices = accountServices;
         }
 
-        [HttpGet]
-
+        /*[HttpGet]
         [Authorize(Roles ="Admin")]
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
@@ -39,7 +38,20 @@ namespace AlkemyWallet.Controllers
            
             if (response.Count() == 0) return NotFound();
             return Ok(response);
-                    }
+        }*/
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserDTO>>> GetAccounts([FromQuery] int page)
+        {
+            var response = await _accountServices.getAll(page);
+
+            if (response.Count == 0)
+                return NotFound();
+
+            return Ok(response);
+
+        }
 
         [HttpGet("{id}")]
         [Authorize(Roles="Admin")]

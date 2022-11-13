@@ -1,5 +1,7 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
@@ -24,6 +26,13 @@ namespace AlkemyWallet.Core.Services
         public async Task<IReadOnlyList<AccountsEntity>> getAll()
         {
             return await _unitOfWork.AccountsRepository.getAll();
+        }
+
+        public async Task<PagedList<AccountsEntity>> getAll(int page)
+        {
+            PagesParameters parameters = new PagesParameters();
+            parameters.PageNumber = page;
+            return await _unitOfWork.AccountsRepository.getAll(parameters);
         }
 
         public async Task<AccountsEntity> getById(int id)
