@@ -138,7 +138,7 @@ namespace AlkemyWallet.Controllers
         /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>        
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateTransaction([FromBody] TransacctionUpdateDTO transaction, int id)
+        public async Task<IActionResult> UpdateTransaction([FromBody] TransactionDTO transaction, int id)
         {
 
             try

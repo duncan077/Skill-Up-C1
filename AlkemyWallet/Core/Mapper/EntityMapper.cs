@@ -16,8 +16,8 @@ namespace AlkemyWallet.Core.Mapper
             CreateMap<UserEntity, UserDTO>();
             CreateMap<CreateUserDTO, UserEntity>();
             CreateMap<CatalogueEntity,CatalogueDTO>();
-            CreateMap<TransactionEntity, TransactionDTO>();
-            CreateMap<TransacctionUpdateDTO, TransactionEntity>();
+            CreateMap<TransactionEntity, TransactionDTO>().ReverseMap();
+           
 
 
         }
