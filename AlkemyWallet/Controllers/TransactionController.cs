@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace AlkemyWallet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TransactionController : ControllerBase
     {
@@ -24,7 +24,21 @@ namespace AlkemyWallet.Controllers
             _transactionService = transactionService;
             _mapper = mapper;
         }
-
+        // GET: Transaction
+        /// <summary>
+        /// Obtiene un listado de transacciones
+        /// </summary>
+        /// <remarks>
+        /// Obtiene un listado de transacciones realizadas por el usuario
+        /// </remarks>
+        
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve el objeto solicitado.</response>        
+        /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>        
+       
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Regular")]
         [HttpGet]
         public async Task<IActionResult> GetTransactions([FromQuery]int page)
@@ -38,16 +52,30 @@ namespace AlkemyWallet.Controllers
                    
                     return Ok(response);
                 }
-                return BadRequest(new { Status = "404", Message = "Error: Not found" });
+                return NotFound(new { Status = "404", Message = "Error: Not found" });
             }
             catch (Exception ex)
             {
 
-                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+                return BadRequest(new { Status = "Bad Request", Message = $"Error: {ex.Message}" });
             }
            
         }
+        // POST: Transaction
+        /// <summary>
+        /// Crea el registro de la transaccion
+        /// </summary>
+        /// <remarks>
+        /// Crea el registro de la transaccion
+        /// </remarks>
+       
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Creado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>        
 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
         [Authorize(Roles ="Regular")]
         public async Task<IActionResult> CreateTransaction([FromBody]TransactionEntity transaction)
@@ -56,14 +84,25 @@ namespace AlkemyWallet.Controllers
             try
             {
                 await CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
-                return Accepted(new { Status = "202", Message = $"Accepted" });
+                return Accepted(new { Status = "Created", Message = "Transaction created successfuly" });
             }
             catch (Exception ex)
             {
 
-                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+                return BadRequest(new { Status = "Bad Request", Message = $"Error: {ex.Message}" });
             }
         }
+        // DELETE: Transaction/5
+        /// <summary>
+        /// Elimina el registro de la transaccion del id proporcionado
+        /// </summary>
+        /// <remarks>
+        /// Elimina el registro de la transaccion del id proporcionado
+        /// </remarks>
+        /// <param name="id">Id de la Transaccion a eliminar</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Elimado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>        
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteTransaction(int id)
@@ -72,16 +111,27 @@ namespace AlkemyWallet.Controllers
             try
             {
                 await _transactionService.DeleteTransaction(id);
-                return Accepted(new { Status = "202", Message = $"Deleted" });
+                return Accepted(new { Status = "Transaction Deleted", Message = $"Transaction {id} deleted successfuly" });
             }
             catch (Exception ex)
             {
 
-                return BadRequest(new { Status = "", Message = $"Error: {ex.Message}" });
+                return BadRequest(new { Status = "Bad request", Message = $"Error: {ex.Message}" });
             }
         }
 
-
+        // PUT: Transaction/5
+        /// <summary>
+        /// Actualiza el registro de la transaccion del id proporcionado
+        /// </summary>
+        /// <remarks>
+        /// Actualiza el registro de la transaccion del id proporcionado
+        /// </remarks>
+        /// <param name="transaction">Transaccion con los datos actualizados</param>
+        /// <param name="id">Id de la transaccion a actualizar</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="202">ACcepted. Actualizado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>        
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateTransaction([FromBody] TransacctionUpdateDTO transaction, int id)
@@ -90,17 +140,27 @@ namespace AlkemyWallet.Controllers
             try
             {
                 if(transaction.Id != id)
-                    return BadRequest(new { Status = "400", Message = "Error: Transaction Id and Id requested are not equal" });
+                    return BadRequest(new { Status = "Bad Request", Message = "Error: Transaction Id and Id requested are not equal" });
                 await _transactionService.UpdateTransaction(_mapper.Map<TransactionEntity>(transaction),id);
-                return Accepted(new { Status = "202", Message = "Transaction Updated" });
+                return Accepted(new { Status = "Transaction Updated", Message = $"Transaction {id} Updated" });
             }
             catch (Exception ex)
             {
 
-                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+                return BadRequest(new { Status = "Bad Request", Message = $"Error: {ex.Message}" });
             }
         }
+        // GET: Transaction/5
+        /// <summary>
+        /// Devuelve el registro de la transaccion del id proporcionado
+        /// </summary>
+        /// <remarks>
+        /// Devuelve el registro de la transaccion del id proporcionado
+        /// </remarks>
 
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve la transaccion pedida.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>        
         [Authorize(Roles = "Regular")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionEntity>> GetTransactionById(int id)
