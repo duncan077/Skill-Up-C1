@@ -72,11 +72,14 @@ namespace AlkemyWallet.Controllers
         }
 
 
+
         // Put: api/Catalogue
         /// <summary>
         /// Modifica la descripcion de un catalogue y guarda los cambios en la base de datos
         /// </summary>
-        [HttpPut("{Id}")]
+
+        [HttpPut("{id}")]
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCatalogueDetail(int id, string detail)
         {
@@ -90,11 +93,13 @@ namespace AlkemyWallet.Controllers
             else return BadRequest(new { message = "Error"});
 
         }
+
         // Delete: api/Catalogue
         /// <summary>
         /// Realiza una baja logica de la entidad Catalogue
         /// </summary>
-        [HttpDelete("{Id}")]
+        [HttpDelete("{id}")]
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalogByid(int id)
         {

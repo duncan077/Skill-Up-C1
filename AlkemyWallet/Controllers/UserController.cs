@@ -34,7 +34,7 @@ namespace AlkemyWallet.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserDTO>>> GetUsers([FromQuery]int page)
         {
-            var response = await _userService.getAll(page);
+            var response = _mapper.Map<List<UserDTO>>( await _userService.getAll(page));
 
             if (response.Count == 0)
             {
@@ -130,7 +130,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPatch]
+        [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
             try
