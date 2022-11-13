@@ -67,13 +67,14 @@ namespace AlkemyWallet.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest("Some of the information in the transfer request between Accounts is invalid");
+                if (!ModelState.IsValid) 
+                    return StatusCode(400, new { Status = "Bad Request", Message = "Some of the information in the transfer request between Accounts is invalid" }); 
                 await _accountServices.TransferAccounts(model, id, User.Identity.Name);
                 return Ok($"Successful transfer of ${model.Amount} successfully performed from Account:'{id}' to the Account:'{model.ToAccountId}'.");
             }
             catch (Exception err)
             {
-                return BadRequest($"Unable to transfer ${model.Amount} to the Account:'{model.ToAccountId}'. Error: {err.Message}");
+                return StatusCode(500, new { Status = "Server Error", Message = $"Unable to transfer ${model.Amount} to the Account:'{model.ToAccountId}'. Error: {err.Message}" });
             }
         }
 
