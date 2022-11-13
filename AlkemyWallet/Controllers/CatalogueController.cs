@@ -73,11 +73,25 @@ namespace AlkemyWallet.Controllers
             if (validateCatalogue(catalogue)/*!(catalogue is null) ||ModelState.IsValid*/)
             {
                 await _catalogueService.insert(_mapper.Map<CatalogueEntity>(catalogue));
-                return Ok(new { message = "agregado correctamente", Code=200});
+                return Ok(new { message = "Add Success", Code=200});
             }
-            else return BadRequest(new { message = "Error al agregar el registro" , Code=500});
+            else return BadRequest(new { message = "Error" , Code=500});
         }
 
+
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCatalogueDetail(int id, string detail)
+        {
+            CatalogueEntity catalogueUpdate = await _catalogueService.getById(id);
+            if (!(catalogueUpdate is null))
+            {
+                catalogueUpdate.ProductDescription = string.IsNullOrEmpty(detail) ? catalogueUpdate.ProductDescription : detail;
+                await _catalogueService.update(catalogueUpdate);
+                return Ok(new { message= "Updae catalogue success", Code=200});
+            }
+            else return BadRequest(new { message = "Error"});
+        }
 
     }
 }
