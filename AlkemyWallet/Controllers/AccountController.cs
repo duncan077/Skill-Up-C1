@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
@@ -42,9 +43,9 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserDTO>>> GetAccounts([FromQuery] int page)
+        public async Task<ActionResult<PagedList<AccountDto>>> GetAccounts([FromQuery] int page)
         {
-            var response = await _accountServices.getAll(page);
+            var response = _mapper.Map<PagedList<AccountDto>>(await _accountServices.getAll(page));
 
             if (response.Count == 0)
                 return NotFound();
