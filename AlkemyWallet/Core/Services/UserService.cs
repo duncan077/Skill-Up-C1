@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
@@ -67,6 +69,12 @@ namespace AlkemyWallet.Core.Services
             return _mapper.Map<CatalogueDTO>(await _unitOfWork.CatalogueRepository.getById(idProduct));
         }
 
+        public async Task<PagedList<UserEntity>> getAll(int page)
+        {
+            PagesParameters parameters = new PagesParameters();
+            parameters.PageNumber = page;
+            return await _unitOfWork.UserRepository.getAll(parameters);
+        }
         public async Task<AccountsEntity> GetAccountByID(int id)
         {
             return await _unitOfWork.AccountsRepository.getById(id);
@@ -78,12 +86,14 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.update(account);
             await _unitOfWork.AccountsRepository.saveChanges();
         }
+
         public async Task unblockAccount(AccountsEntity account)
         {
             account.IsBlocked = false;
             await _unitOfWork.AccountsRepository.update(account);
             await _unitOfWork.AccountsRepository.saveChanges();
         }
+
 
     }
 }
