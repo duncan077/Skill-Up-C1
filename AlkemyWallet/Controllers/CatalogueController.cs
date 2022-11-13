@@ -26,18 +26,6 @@ namespace AlkemyWallet.Controllers
             _catalogueService = catalogueService;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Regular")]
-        public async Task<ActionResult<List<CatalogueDTO>>> GetAll()
-
-        {
-            var response = await _catalogueService.getAllSortByPoints();
-            if (response.Count == 0)
-                return NotFound();
-            return Ok(response);
-
-
-        }
 
 
         [HttpGet("{id}")]
@@ -112,7 +100,7 @@ namespace AlkemyWallet.Controllers
         }
 
         [HttpGet("user")]
-        [Authorize]
+        [Authorize(Roles ="Regular")]
         public async Task<IActionResult> GetProductsByUserPoints()
         {
             try

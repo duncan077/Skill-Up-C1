@@ -60,6 +60,7 @@ namespace AlkemyWallet.Controllers
             else
             {
                     FixedTermDepositDTO fixedDepositDTO = new FixedTermDepositDTO();
+                fixedDepositDTO.Id = id;
                     fixedDepositDTO.CreationDate = fixedDeposit.CreationDate;
                     fixedDepositDTO.UserId = (int)fixedDeposit.UserId;
                     fixedDepositDTO.AccountId = (int)fixedDeposit.AccountId;

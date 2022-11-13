@@ -8,8 +8,7 @@ namespace AlkemyWallet.Core.Models.DTO
     {
         [Required]
         public int Id;
-        [Required]
-        public bool IsDeleted { get; set; }
+ 
         [Required]
         public decimal Amount { get; set; }
         [MinLength(4)]

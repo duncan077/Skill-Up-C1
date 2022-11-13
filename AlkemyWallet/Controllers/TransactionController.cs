@@ -90,12 +90,12 @@ namespace AlkemyWallet.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
         [Authorize(Roles ="Regular")]
-        public async Task<IActionResult> CreateTransaction([FromBody]TransactionEntity transaction)
+        public async Task<IActionResult> CreateTransaction([FromBody]TransactionDTO transaction)
         {
 
             try
             {
-                await CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
+                await _transactionService.CreateTransaction(_mapper.Map<TransactionEntity>(transaction));
                 return Accepted(new { Status = "Created", Message = "Transaction created successfuly" });
             }
             catch (Exception ex)
