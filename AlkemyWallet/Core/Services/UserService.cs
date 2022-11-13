@@ -75,5 +75,16 @@ namespace AlkemyWallet.Core.Services
             parameters.PageNumber = page;
             return await _unitOfWork.UserRepository.getAll(parameters);
         }
+        public async Task<AccountsEntity> GetAccountByID(int id)
+        {
+            return await _unitOfWork.AccountsRepository.getById(id);
+        }
+
+        public async Task blockAccount(AccountsEntity account)
+        {
+            account.IsBlocked = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.AccountsRepository.saveChanges();
+        }
     }
 }
