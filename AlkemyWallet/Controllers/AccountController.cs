@@ -151,7 +151,7 @@ namespace AlkemyWallet.Controllers
                 if (account is null) 
                     return NotFound("No account matches the id");
 
-                await _accountServices.delete(account);
+                await _accountServices.DeleteAccount(account);
 
                 return Ok("Account deleted");
             }

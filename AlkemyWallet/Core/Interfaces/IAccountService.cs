@@ -12,5 +12,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task TransferAccounts(TransferToAccountsDTO model, int id, string userName);
         Task update(AccountsEntity account);
         Task delete(AccountsEntity account);
+        Task DeleteAccount(AccountsEntity account);
     }
 }

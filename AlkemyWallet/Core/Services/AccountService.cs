@@ -111,5 +111,13 @@ namespace AlkemyWallet.Core.Services
 
         }
 
+        public async Task DeleteAccount(AccountsEntity account)
+        {
+            account.IsDeleted = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();     
+        }
+
+
     }
 }
