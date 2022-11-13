@@ -40,9 +40,9 @@ namespace AlkemyWallet.Controllers
         /// Obtiene un Fixed Term Deposit específico a partir de su Id
         /// </summary>
         /// <remarks>
-        /// Mediante el parámetro id suministrado, obtiene el fixed term deposit correspondiente al usuario logueado y para usuarios con rol "Regular".
+        /// Mediante el parámetro id suministrado, obtiene el fixed term deposit correspondiente al usuario logueado y para usuarios con rol  "Regular".
         /// </remarks>
-        /// <param name="id">Int, página solicitada.Debe ser mayor a 0.</param>
+        /// <param name="id">Int, Id del Fixed Term Deposit a consultar  .</param>
         /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
         /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Items Fixed, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
         /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen FixedTermDeposit a nombre del usuario.</response> 
@@ -59,10 +59,8 @@ namespace AlkemyWallet.Controllers
             if (fixedDeposit == null) return StatusCode(404, new { Status = "No Fixed Terms Deposit Found for the logged user", Message = "No FixedTermDeposits found for the logged user that matches with the ID provided." });
             else
             {
-              
                     FixedTermDepositDTO fixedDepositDTO = new FixedTermDepositDTO();
                     fixedDepositDTO.CreationDate = fixedDeposit.CreationDate;
-                    fixedDepositDTO.UserName = fixedDeposit.User.Email;
                     fixedDepositDTO.UserId = (int)fixedDeposit.UserId;
                     fixedDepositDTO.AccountId = (int)fixedDeposit.AccountId;
                     fixedDepositDTO.Amount = fixedDeposit.Amount;
@@ -103,20 +101,13 @@ namespace AlkemyWallet.Controllers
                 if (PagedList != null)
                 {
 
-                    String NextUrl = "";
-                    String PreviousUrl = "";
-                    String ActionPath = Request.Host + Request.Path;
+                    string NextUrl = string.Empty;
+                    string PreviousUrl = string.Empty;
+                    string ActionPath = Request.Host + Request.Path;
+                    NextUrl = PagedList.HasNext ? $"Next Page: {ActionPath} ?page= {(page + 1)}" : string.Empty;
+                    PreviousUrl = PagedList.HasPrevious ? $"Previous Page: {ActionPath} ?page= {(page - 1)}" : string.Empty;
 
-                    if (PagedList.HasNext)
-                    {
-                        NextUrl = "Next Page: " + ActionPath + "/page=" + (page + 1).ToString();
-                    }
-                    if (PagedList.HasPrevious)
-                    {
-                        PreviousUrl = "Previous Page: " + ActionPath + "/page=" + (page - 1).ToString();
-                    }
-
-                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositItemDTO
+                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositDTO
                     {
                         Id = p.Id,
                         AccountId = (int)p.AccountId,
@@ -124,6 +115,8 @@ namespace AlkemyWallet.Controllers
                         ClosingDate = p.ClosingDate,
                         Amount = p.Amount
                     };
+
+
 
 
                     return Ok(new
