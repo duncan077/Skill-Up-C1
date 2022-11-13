@@ -197,5 +197,30 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        [HttpPatch("unblock/{id}")]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> UnblockAccountById(int id)
+        {
+            try
+            {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                var account = await _userService.GetAccountByID(id);
+                if (account is null)
+                    return NotFound($"The account doesn't exist");
+                if (!user.Id.Equals(account.UserId))
+                    return Unauthorized($"You're not authorize to unblock this account");
+                if (!account.IsBlocked)
+                    return BadRequest($"The account is already unblocked");
+                await _userService.unblockAccount(account);
+                return Ok($"The account has been unblocked successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
+        }
+
     }
 }
