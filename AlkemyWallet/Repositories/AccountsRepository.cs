@@ -27,8 +27,6 @@ namespace AlkemyWallet.Repositories
             {
                 var collection = _dbSet as IQueryable<AccountsEntity>;
 
-                collection = collection.Where(a => a.IsDeleted == false);
-
                 return PagedList<AccountsEntity>.Create(collection,
                 pagesParams.PageNumber,
                 pagesParams.PageSize);

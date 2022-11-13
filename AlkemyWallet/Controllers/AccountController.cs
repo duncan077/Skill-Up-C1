@@ -41,18 +41,28 @@ namespace AlkemyWallet.Controllers
             return Ok(response);
         }*/
 
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PagedList<AccountDto>>> GetAccounts([FromQuery] int page)
         {
-            var response = _mapper.Map<PagedList<AccountDto>>(await _accountServices.getAll(page));
+            try
+            {
+                var result = await _accountServices.getAll(page);
+                var response = new PagedList<AccountDto>(_mapper.Map<List<AccountDto>>(result.ToList()), result.TotalCount, result.CurrentPage, 10);
+                if (response.Count > 0)
+                    return Ok(response);
+               
+                return BadRequest(new { Status = "404", Message = "Error: Not found" });
+            }
+            catch (Exception ex)
+            {
 
-            if (response.Count == 0)
-                return NotFound();
-
-            return Ok(response);
+                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+            }
 
         }
+
 
         [HttpGet("{id}")]
         [Authorize(Roles="Admin")]
