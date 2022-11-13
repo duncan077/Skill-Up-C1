@@ -45,12 +45,7 @@ namespace AlkemyWallet.Controllers
 
             if (catalogue == null)
             {
-                return NotFound(
-                    new
-                    {
-                        Status = "Not found",
-                        Message = "No product catalogue matches the id"
-                    });
+                return StatusCode(404, new { Status = "No Item Catalogue found", Message = "No Item Catalogue found." });
             }
             return Ok(catalogue);
         }

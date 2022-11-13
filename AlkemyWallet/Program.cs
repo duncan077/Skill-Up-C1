@@ -44,16 +44,7 @@ builder.Services.AddSwaggerGen(options => {
         Title = "Alkemy Wallet API",
         Description = "An ASP.NET Core Web API for managing Alkemy Wallet items",
         TermsOfService = new Uri("https://example.com/terms"),
-        Contact = new OpenApiContact
-        {
-            Name = "Example Contact",
-            Url = new Uri("https://example.com/contact")
-        },
-        License = new OpenApiLicense
-        {
-            Name = "Example License",
-            Url = new Uri("https://example.com/license")
-        }
+     
     });
 
     // using System.Reflection;
