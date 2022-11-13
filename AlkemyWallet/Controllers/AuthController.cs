@@ -38,17 +38,17 @@ namespace AlkemyWallet.Controllers
                 {
                     return Unauthorized();
                 }
-                if (!_authManager.VerifyPasswordHash(loginDTO.password, Encoding.Default.GetBytes(user.Password)))
+                if (_authManager.VerifyPasswordHash(loginDTO.password, user.Password))
                 {
                     var token = _authManager.CreateToken(user.Email, user.Role.Name);
                     return Ok(token);
                 }
-                return BadRequest();
+                return BadRequest(new { Status = "Bad Request", Message = "Error: Wrong User or password" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return BadRequest();
+                return BadRequest(new { Status = "Bad Request", Message = $"Error: {ex.Message}" });
             }
 
 

@@ -29,13 +29,13 @@ namespace AlkemyWallet.Core.Helper
         {
             return Encoding.UTF8.GetBytes(_configuration.GetSection("secret").ToString());
         }
-        public byte[] CreatePasswordHash(string password)
+        public string CreatePasswordHash(string password)
         {
 
             using (var hmac = new HMACSHA512(GetSalt()))
             {
                 byte[] passwordSalt = hmac.Key;
-                return hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
 
             }
         }
@@ -61,13 +61,13 @@ namespace AlkemyWallet.Core.Helper
             return jwt;
         }
 
-        public bool VerifyPasswordHash(string password, byte[] passwordHash)
+        public bool VerifyPasswordHash(string password, string passwordHash)
         {
 
             using (var hmac = new HMACSHA512(GetSalt()))
             {
                 var computeddHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computeddHash.SequenceEqual(passwordHash);
+                return computeddHash.SequenceEqual(Convert.FromBase64String(passwordHash));
             }
         }
     }
