@@ -45,7 +45,7 @@ namespace AlkemyWallet.Core.Services
             }
             catch (Exception err)
             {
-                throw;
+                throw new Exception(err.Message);
             }
            
         }
