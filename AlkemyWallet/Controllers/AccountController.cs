@@ -139,5 +139,26 @@ namespace AlkemyWallet.Controllers
                 return BadRequest($"Couldn't create account'. Error: {err.Message}");    
             }
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAccount(int id)
+        {
+            try
+            {
+                var account = await _accountServices.getById(id);
+
+                if (account is null) 
+                    return NotFound("No account matches the id");
+
+                await _accountServices.DeleteAccount(account);
+
+                return Ok("Account deleted");
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
     }
 }
