@@ -2,13 +2,12 @@
 using AlkemyWallet.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Authorization;
 using AlkemyWallet.Core.Models.DTO;
 using AutoMapper;
 using System.Collections.Generic;
-
+using AlkemyWallet.Core.Services.ResourceParameters;
 
 namespace AlkemyWallet.Controllers
 {
@@ -30,14 +29,21 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> GetRoles()
+        public async Task<IActionResult> GetRoles([FromQuery]PagesParameters rolesParams)
         {
-            var listRoles = _mapper.Map<IReadOnlyList<RolesDTO>>(await _rolesServices.getAll());
+            try
+            {
+                var listRoles = _mapper.Map<IReadOnlyList<RolesDTO>>(await _rolesServices.getAll(rolesParams));
+                if (listRoles is null)
+                    return NotFound(new { Status = "Not Found", Message = "No Role Fount" });
 
-            if (listRoles is null)
-                return NotFound( new { Status = "Not Found", Message = "No Role Fount"});
-
-            return Ok(listRoles);
+                return Ok(listRoles);
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+            
         }
 
         [Authorize]
@@ -65,6 +71,42 @@ namespace AlkemyWallet.Controllers
            
 
         }
+
+        
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            try
+            {
+                var rol = await _rolesServices.getById(id);
+                if (rol is null) return NotFound("We can't find a Role with the submitted Id");
+                await _rolesServices.delete(rol);
+                return Ok("Successfully deleted Role"); 
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
+
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateRole([FromBody] RolesDTO roleDto, int id)
+        {
+            try
+            {
+                var role = await _rolesServices.getById(id);
+                if (role is null) return NotFound("We can't find a Role with the submitted Id");
+                return Ok(await _rolesServices.update(_mapper.Map(roleDto, role))); 
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
+            }
+        }
+
     }
 
 

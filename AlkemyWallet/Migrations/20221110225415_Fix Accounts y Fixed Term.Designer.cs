@@ -4,6 +4,7 @@ using AlkemyWallet.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlkemyWallet.Migrations
 {
     [DbContext(typeof(WalletDbContext))]
-    partial class WalletDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221110225415_Fix Accounts y Fixed Term")]
+    partial class FixAccountsyFixedTerm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,9 +310,6 @@ namespace AlkemyWallet.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Concept")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -345,9 +344,8 @@ namespace AlkemyWallet.Migrations
                         {
                             Id = 1,
                             AccountId = 1,
-                            Amount = 100m,
                             Concept = "Pago",
-                            Date = new DateTime(2022, 9, 13, 15, 2, 37, 161, DateTimeKind.Utc).AddTicks(7638),
+                            Date = new DateTime(2022, 9, 10, 22, 54, 14, 515, DateTimeKind.Utc).AddTicks(3868),
                             IsDeleted = false,
                             ToAccountId = 2,
                             Types = "payment",
@@ -357,9 +355,8 @@ namespace AlkemyWallet.Migrations
                         {
                             Id = 2,
                             AccountId = 4,
-                            Amount = 2500.3m,
                             Concept = "Compra del dia",
-                            Date = new DateTime(2022, 8, 13, 15, 2, 37, 161, DateTimeKind.Utc).AddTicks(7643),
+                            Date = new DateTime(2022, 8, 10, 22, 54, 14, 515, DateTimeKind.Utc).AddTicks(3876),
                             IsDeleted = false,
                             ToAccountId = 2,
                             Types = "payment",
@@ -415,7 +412,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Duncan",
                             IsDeleted = false,
                             LastName = "Caceres",
-                            Password = "n+W6mDcjIDP3V3m4gmtpilWoSUfwxTUPxfgWBqjaWSp3CKBhJHa1h8/nRvBrjcyC6m4kXr34JMsnh8+11BVvCA==",
+                            Password = "test1234",
                             Points = 0,
                             RoleId = 1
                         },
@@ -426,7 +423,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Diego",
                             IsDeleted = false,
                             LastName = "Rodrigues",
-                            Password = "NT+A8xbqsp9rvSmBK4x2LOEXYl0rybyXRRpSLxaYvQASAgnTT2khS+iQLu+h3RqcmuiBPY/KERnQ09DL/Clquw==",
+                            Password = "DiegoTest333",
                             Points = 425,
                             RoleId = 2
                         },
@@ -437,7 +434,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Lucas",
                             IsDeleted = false,
                             LastName = "Gonzales",
-                            Password = "s3zUJfByMg6NgecUoiNbmAJ2AqX2OhDHCAbUuzA1boUkB984WxdbcWo43OR+HfvVf7pKQyRAs8/aVD/vmVtrjQ==",
+                            Password = "Boca4784",
                             Points = 5245,
                             RoleId = 2
                         },
@@ -448,7 +445,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "admin",
                             IsDeleted = false,
                             LastName = "admin",
-                            Password = "kZMHhy1p18L9BkfrXHiAj/mJqGlPfHZ76pxCXQWSj+8oXUyC/9KkjBm7v+FEKJQj12ArNf1xgehR5D1TPLWy7Q==",
+                            Password = "admin1234",
                             Points = 0,
                             RoleId = 1
                         });

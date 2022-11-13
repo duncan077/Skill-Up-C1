@@ -1,4 +1,5 @@
 ﻿using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Interfaces
@@ -10,6 +11,7 @@ namespace AlkemyWallet.Core.Interfaces
         Task<RoleEntity> getById(int id);
         Task<RolesDTO> insert(RolesDTO entity);
         Task saveChanges();
-        Task update(RoleEntity entity);
+        Task<RolesDTO> update(RoleEntity entity);
+        Task<IReadOnlyList<RoleEntity>> getAll(PagesParameters rolesParams);
     }
 }

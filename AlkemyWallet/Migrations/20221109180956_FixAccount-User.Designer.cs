@@ -4,6 +4,7 @@ using AlkemyWallet.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlkemyWallet.Migrations
 {
     [DbContext(typeof(WalletDbContext))]
-    partial class WalletDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221109180956_FixAccount-User")]
+    partial class FixAccountUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,6 +193,9 @@ namespace AlkemyWallet.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AccountsEntityId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
@@ -210,51 +215,11 @@ namespace AlkemyWallet.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("AccountsEntityId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("FixedTermDeposits");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccountId = 1,
-                            Amount = 1200m,
-                            ClosingDate = new DateTime(2023, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreationDate = new DateTime(2022, 11, 5, 15, 8, 55, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccountId = 2,
-                            Amount = 2000m,
-                            ClosingDate = new DateTime(2022, 12, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreationDate = new DateTime(2018, 1, 14, 9, 10, 55, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccountId = 2,
-                            Amount = 2100m,
-                            ClosingDate = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreationDate = new DateTime(2020, 6, 15, 16, 9, 25, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AccountId = 4,
-                            Amount = 1400m,
-                            ClosingDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreationDate = new DateTime(2021, 8, 20, 12, 35, 15, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 4
-                        });
                 });
 
             modelBuilder.Entity("AlkemyWallet.Entities.RoleEntity", b =>
@@ -308,9 +273,6 @@ namespace AlkemyWallet.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Concept")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -345,9 +307,8 @@ namespace AlkemyWallet.Migrations
                         {
                             Id = 1,
                             AccountId = 1,
-                            Amount = 100m,
                             Concept = "Pago",
-                            Date = new DateTime(2022, 9, 13, 15, 2, 37, 161, DateTimeKind.Utc).AddTicks(7638),
+                            Date = new DateTime(2022, 9, 9, 18, 9, 56, 261, DateTimeKind.Utc).AddTicks(7072),
                             IsDeleted = false,
                             ToAccountId = 2,
                             Types = "payment",
@@ -357,9 +318,8 @@ namespace AlkemyWallet.Migrations
                         {
                             Id = 2,
                             AccountId = 4,
-                            Amount = 2500.3m,
                             Concept = "Compra del dia",
-                            Date = new DateTime(2022, 8, 13, 15, 2, 37, 161, DateTimeKind.Utc).AddTicks(7643),
+                            Date = new DateTime(2022, 8, 9, 18, 9, 56, 261, DateTimeKind.Utc).AddTicks(7078),
                             IsDeleted = false,
                             ToAccountId = 2,
                             Types = "payment",
@@ -415,7 +375,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Duncan",
                             IsDeleted = false,
                             LastName = "Caceres",
-                            Password = "n+W6mDcjIDP3V3m4gmtpilWoSUfwxTUPxfgWBqjaWSp3CKBhJHa1h8/nRvBrjcyC6m4kXr34JMsnh8+11BVvCA==",
+                            Password = "test1234",
                             Points = 0,
                             RoleId = 1
                         },
@@ -426,7 +386,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Diego",
                             IsDeleted = false,
                             LastName = "Rodrigues",
-                            Password = "NT+A8xbqsp9rvSmBK4x2LOEXYl0rybyXRRpSLxaYvQASAgnTT2khS+iQLu+h3RqcmuiBPY/KERnQ09DL/Clquw==",
+                            Password = "DiegoTest333",
                             Points = 425,
                             RoleId = 2
                         },
@@ -437,7 +397,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "Lucas",
                             IsDeleted = false,
                             LastName = "Gonzales",
-                            Password = "s3zUJfByMg6NgecUoiNbmAJ2AqX2OhDHCAbUuzA1boUkB984WxdbcWo43OR+HfvVf7pKQyRAs8/aVD/vmVtrjQ==",
+                            Password = "Boca4784",
                             Points = 5245,
                             RoleId = 2
                         },
@@ -448,7 +408,7 @@ namespace AlkemyWallet.Migrations
                             FirstName = "admin",
                             IsDeleted = false,
                             LastName = "admin",
-                            Password = "kZMHhy1p18L9BkfrXHiAj/mJqGlPfHZ76pxCXQWSj+8oXUyC/9KkjBm7v+FEKJQj12ArNf1xgehR5D1TPLWy7Q==",
+                            Password = "admin1234",
                             Points = 0,
                             RoleId = 1
                         });
@@ -475,6 +435,10 @@ namespace AlkemyWallet.Migrations
                         .WithMany()
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("AlkemyWallet.Entities.AccountsEntity", null)
+                        .WithMany("FixedTerms")
+                        .HasForeignKey("AccountsEntityId");
 
                     b.HasOne("AlkemyWallet.Entities.UserEntity", "User")
                         .WithMany()
@@ -514,6 +478,11 @@ namespace AlkemyWallet.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("AlkemyWallet.Entities.AccountsEntity", b =>
+                {
+                    b.Navigation("FixedTerms");
                 });
 
             modelBuilder.Entity("AlkemyWallet.Entities.UserEntity", b =>
