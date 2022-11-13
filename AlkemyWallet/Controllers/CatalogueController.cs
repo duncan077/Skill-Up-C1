@@ -65,7 +65,7 @@ namespace AlkemyWallet.Controllers
         }
 
 
-        [HttpPut("{Id}")]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCatalogueDetail(int id, string detail)
         {
@@ -80,7 +80,7 @@ namespace AlkemyWallet.Controllers
 
         }
 
-        [HttpDelete("{Id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalogByid(int id)
         {
