@@ -16,5 +16,6 @@ namespace AlkemyWallet.Core.Interfaces
 
         Task DeleteTransaction(int id);
         Task<PagedList<TransactionEntity>> getAll(int page, string username);
+        Task CreateTransaction(TransactionEntity entity);
     }
 }
