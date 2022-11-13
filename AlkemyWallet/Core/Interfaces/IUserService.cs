@@ -19,6 +19,7 @@ namespace AlkemyWallet.Core.Interfaces
 
         Task<AccountsEntity> GetAccountByID(int id);
         Task blockAccount(AccountsEntity account);
+        Task unblockAccount(AccountsEntity account);
 
     }
 }
