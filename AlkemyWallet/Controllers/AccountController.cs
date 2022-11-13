@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
@@ -29,8 +30,7 @@ namespace AlkemyWallet.Controllers
             _accountServices = accountServices;
         }
 
-        [HttpGet]
-
+        /*[HttpGet]
         [Authorize(Roles ="Admin")]
         public async Task<ActionResult<List<AccountDto>>> GetAccounts()
 
@@ -39,7 +39,30 @@ namespace AlkemyWallet.Controllers
            
             if (response.Count() == 0) return NotFound();
             return Ok(response);
-                    }
+        }*/
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<PagedList<AccountDto>>> GetAccounts([FromQuery] int page)
+        {
+            try
+            {
+                var result = await _accountServices.getAll(page);
+                var response = new PagedList<AccountDto>(_mapper.Map<List<AccountDto>>(result.ToList()), result.TotalCount, result.CurrentPage, 10);
+                if (response.Count > 0)
+                    return Ok(response);
+               
+                return BadRequest(new { Status = "404", Message = "Error: Not found" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Status = "400", Message = $"Error: {ex.Message}" });
+            }
+
+        }
+
 
         [HttpGet("{id}")]
         [Authorize(Roles="Admin")]
