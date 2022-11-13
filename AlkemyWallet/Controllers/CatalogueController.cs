@@ -27,7 +27,10 @@ namespace AlkemyWallet.Controllers
         }
 
 
-
+        // GET: api/Catalogue/id
+        /// <summary>
+        /// Obtiene un catalogue por id
+        /// </summary>
         [HttpGet("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
@@ -41,7 +44,7 @@ namespace AlkemyWallet.Controllers
             return Ok(catalogue);
         }
 
-
+        
         private bool ValidateStirng(string cadena, int min, int max)
         {
             return (!string.IsNullOrEmpty(cadena)) && cadena.Length >= min && cadena.Length <=max;
@@ -52,6 +55,10 @@ namespace AlkemyWallet.Controllers
             return (catalogue.Points != null && catalogue.Points >= 0) && (ValidateStirng(catalogue.Image,4,50) && (ValidateStirng(catalogue.ProductDescription,4,200)));
         }
 
+        // Post: api/Catalogue
+        /// <summary>
+        /// Crea un nuevo Catalogue y lo agrega a la base de datos
+        /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PostCatalogue([FromBody] CatalogueEntity catalogue)
@@ -65,6 +72,10 @@ namespace AlkemyWallet.Controllers
         }
 
 
+        // Put: api/Catalogue
+        /// <summary>
+        /// Modifica la descripcion de un catalogue y guarda los cambios en la base de datos
+        /// </summary>
         [HttpPut("{Id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCatalogueDetail(int id, string detail)
@@ -79,7 +90,10 @@ namespace AlkemyWallet.Controllers
             else return BadRequest(new { message = "Error"});
 
         }
-
+        // Delete: api/Catalogue
+        /// <summary>
+        /// Realiza una baja logica de la entidad Catalogue
+        /// </summary>
         [HttpDelete("{Id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalogByid(int id)
@@ -99,6 +113,10 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        // Get: api/Catalogue/user
+        /// <summary>
+        /// Devuelve un listado de los Catalogue que podes cangear con tus puntos
+        /// </summary>
         [HttpGet("user")]
         [Authorize(Roles ="Regular")]
         public async Task<IActionResult> GetProductsByUserPoints()
@@ -126,6 +144,10 @@ namespace AlkemyWallet.Controllers
 
 
         }
+        // Get: api/Catalogue
+        /// <summary>
+        /// Devuelve un listado de todos los Catalogue paginado (10 registros por pagina)
+        /// </summary>
         [HttpGet]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetAll([FromQuery] int page)
