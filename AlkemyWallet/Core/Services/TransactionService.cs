@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
@@ -18,9 +20,12 @@ namespace AlkemyWallet.Core.Services
         }
 
 
-        public async Task<IReadOnlyList<TransactionEntity>> getAll()
+        public async Task<PagedList<TransactionEntity>> getAll(int page, string username)
         {
-            return await _unitOfWork.TransactionRepository.getAll();
+            var user = await _unitOfWork.UserRepository.getByUserName(username);
+            var param = new PagesParameters();
+            param.PageNumber = page;
+            return await _unitOfWork.TransactionRepository.getAll(param, user.Id);
         }
 
         public async Task<TransactionEntity> getById(int id)
@@ -28,10 +33,7 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.TransactionRepository.getById(id);
         }
 
-        public async Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id)
-        {
-            return await _unitOfWork.TransactionRepository.getTransactionsByUserId(id);
-        }
+ 
 
         public async Task insert(TransactionEntity entity)
         {

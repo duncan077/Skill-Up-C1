@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using static AlkemyWallet.Entities.TransactionEntity;
 
 
@@ -80,7 +81,7 @@ namespace AlkemyWallet.Core.Services
 
                 var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, type, DateTime.Now, model.Amount, model.Concept);
                 await _unitOfWork.TransactionRepository.update(trans);
-
+                
                 await _unitOfWork.Save();
             }
             catch (Exception err)
@@ -96,6 +97,28 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.update(account);
             await _unitOfWork.Save();
         }
+
+        public async Task delete(AccountsEntity entity)
+        {
+            try
+            {
+                await _unitOfWork.AccountsRepository.delete(entity);
+                await _unitOfWork.AccountsRepository.saveChanges();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+
+        }
+
+        public async Task DeleteAccount(AccountsEntity account)
+        {
+            account.IsDeleted = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();     
+        }
+
 
     }
 }
