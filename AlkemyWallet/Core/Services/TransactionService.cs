@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
@@ -18,9 +20,12 @@ namespace AlkemyWallet.Core.Services
         }
 
 
-        public async Task<IReadOnlyList<TransactionEntity>> getAll()
+        public async Task<PagedList<TransactionEntity>> getAll(int page, string username)
         {
-            return await _unitOfWork.TransactionRepository.getAll();
+            var user = await _unitOfWork.UserRepository.getByUserName(username);
+            var param = new PagesParameters();
+            param.PageNumber = page;
+            return await _unitOfWork.TransactionRepository.getAll(param, user.Id);
         }
 
         public async Task<TransactionEntity> getById(int id)
@@ -28,11 +33,64 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.TransactionRepository.getById(id);
         }
 
+ 
+
         public async Task insert(TransactionEntity entity)
         {
             await _unitOfWork.TransactionRepository.insert(entity);
         }
+        public async Task CreateTransaction(TransactionEntity entity)
+        {
+            var user = await _unitOfWork.UserRepository.getById(entity.UserId);
+            if(user != null)
+            {
+                if(user.Accounts.Where(a=>a.Id==entity.AccountId).Any())
+                {
+                    var accountTo = await _unitOfWork.AccountsRepository.getById(entity.ToAccountId);
+                    if (accountTo != null)
+                    {
+                        entity.Date=DateTime.Now;
+                        await _unitOfWork.TransactionRepository.insert(entity);
+                        await _unitOfWork.Save();
+                    }
+                    else
+                        throw new ArgumentException("Error: Transfer Account not found.");
+                }
+                else
+                    throw new ArgumentException(" Error: User and account are different");
+            }
+            else
+                throw new ArgumentException("Error: User not found.");
+           
+        }
+        public async Task DeleteTransaction(int id)
+        {
+            var transaction = await _unitOfWork.TransactionRepository.getById(id);
+            if(transaction != null)
+            {
+                transaction.IsDeleted = true;
+                await _unitOfWork.TransactionRepository.update(transaction);
+                await _unitOfWork.Save();
+            }
+            throw new ArgumentException("Error: Transaction not found.");
+        }
 
+        public async Task UpdateTransaction(TransactionEntity entity, int id)
+        {
+            try
+            {
+                entity.Date = DateTime.Now;
+                await _unitOfWork.TransactionRepository.update(entity);
+                await _unitOfWork.Save();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+        }
         public async Task saveChanges()
         {
             await _unitOfWork.TransactionRepository.saveChanges();

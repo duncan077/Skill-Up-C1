@@ -6,12 +6,12 @@ namespace AlkemyWallet.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private IGenericRepository<RoleEntity> _rolesRepository;
-        private IGenericRepository<TransactionEntity> _transactionRepository;
+        private ITransactionRepository _transactionRepository;
         private IUserRepository _userRepository;
-        private IGenericRepository<FixedTermDepositEntity> _fixedTermDepositRepository;
+        private FixedTermDepositRepository _fixedTermDepositRepository;
         private AccountsRepository _accountsRepository;
-        private IGenericRepository<CatalogueEntity> _catalogueRepository;
+        private ICatalogueRepository _catalogueRepository;
+        private IRolesRepository _rolesRepository;
         private WalletDbContext _walletDbContext;
 
         public UnitOfWork(WalletDbContext walletDbContext)
@@ -19,18 +19,18 @@ namespace AlkemyWallet.Repositories
             _walletDbContext = walletDbContext;
         }
 
-        public IGenericRepository<RoleEntity> RolesRepository
+        public IRolesRepository RolesRepository
         {
             get
             {
-                  return _rolesRepository = _rolesRepository ?? new GenericRepository<RoleEntity>(_walletDbContext);
+                  return _rolesRepository = _rolesRepository ?? new RolesRepository(_walletDbContext);
             }
         }
-        public IGenericRepository<TransactionEntity> TransactionRepository
+        public ITransactionRepository TransactionRepository
         {
             get
             {
-                return _transactionRepository = _transactionRepository ?? new GenericRepository<TransactionEntity>(_walletDbContext);
+                return _transactionRepository = _transactionRepository ?? new TransactionRepository(_walletDbContext);
             }
         }
 
@@ -53,19 +53,20 @@ namespace AlkemyWallet.Repositories
         }
 
 
-        public IGenericRepository<FixedTermDepositEntity> FixedTermDepositRepository
+        public FixedTermDepositRepository FixedTermDepositRepository
         {
             get
             {
-                return _fixedTermDepositRepository = _fixedTermDepositRepository ?? new GenericRepository<FixedTermDepositEntity>(_walletDbContext);
+                return _fixedTermDepositRepository = _fixedTermDepositRepository ?? new FixedTermDepositRepository(_walletDbContext);
             }
         }
         
-        public IGenericRepository<CatalogueEntity> CatalogueRepository
+
+        public ICatalogueRepository CatalogueRepository
         {
             get
             {
-                return _catalogueRepository = _catalogueRepository ?? new GenericRepository<CatalogueEntity>(_walletDbContext);
+                return _catalogueRepository = _catalogueRepository ?? new CatalogueRepository(_walletDbContext);
             }
         }
 

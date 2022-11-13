@@ -13,10 +13,12 @@ using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Controllers;
+using System.Reflection;
 
 var allowAnyOrigins = "allowAnyOrigins";
 var builder = WebApplication.CreateBuilder(args);
-
+var connString = builder.Configuration.GetConnectionString("WalletDbConn");
 
 // Add services to the container.
 builder.Services.AddDbContext<WalletDbContext>(o => o.UseSqlServer(connString));
@@ -35,15 +37,33 @@ builder.Services.AddSwaggerGen(options => {
         Type = SecuritySchemeType.ApiKey
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Alkemy Wallet API",
+        Description = "An ASP.NET Core Web API for managing Alkemy Wallet items",
+        TermsOfService = new Uri("https://example.com/terms"),
+     
+    });
+
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+
+
+
 });
 
-
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IFixedTermDepositServices, FixedTermDepositService>();
+builder.Services.AddScoped<IFixedTermDepositService, FixedTermDepositService>();
 builder.Services.AddScoped<IJWTAuthManager, JWTAuthManager>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -51,21 +71,28 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddCors(options => {
     options.AddPolicy(name: allowAnyOrigins, builder =>
     {
-        builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+     
         ValidateIssuerSigningKey = true,
-        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-        //.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("My clave personalizada para la app")),
-        ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
     };
 });
 
@@ -80,6 +107,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

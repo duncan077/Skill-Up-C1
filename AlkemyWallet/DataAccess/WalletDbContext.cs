@@ -21,6 +21,7 @@ namespace AlkemyWallet.DataAccess
             TransactionDataSeeder.TransactionDataSeed(modelBuilder);
             AccountsDataSeeder.AccountsDataSeed(modelBuilder);
            RoleEntitySeeder.ConfigureMyEntity(modelBuilder);
+            FixedTermDepositDataSeeder.FixedTermDepositDataSeed(modelBuilder);
 
             modelBuilder.Entity<FixedTermDepositEntity>()
                 .HasOne<AccountsEntity>(a=>a.Account)
@@ -30,7 +31,7 @@ namespace AlkemyWallet.DataAccess
                  .WithMany().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<AccountsEntity>()
                 .HasOne(u=>u.User)
-                .WithOne(a=>a.Account)
+                .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

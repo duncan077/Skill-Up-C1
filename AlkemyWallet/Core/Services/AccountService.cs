@@ -19,7 +19,7 @@ namespace AlkemyWallet.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-     
+
 
         public async Task<IReadOnlyList<AccountsEntity>> getAll()
         {
@@ -36,7 +36,7 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.insert(entity);
         }
 
-        public async Task<List<AccountDto>> ListedAccounts()
+        public async Task<List<AccountDto>> ListAccounts()
         {
 
             return _mapper.Map<List<AccountDto>>(await _unitOfWork.AccountsRepository.getAll()) ?? new List<AccountDto>();
@@ -49,6 +49,7 @@ namespace AlkemyWallet.Core.Services
 
         public async Task TransferAccounts(TransferToAccountsDTO model, int id, string userName)
         {
+            int pointsPercentage = 2;
             try
             {
 
@@ -56,22 +57,26 @@ namespace AlkemyWallet.Core.Services
 
                 var withdrawBalanceAccount = await _unitOfWork.AccountsRepository.getById(id);
                 if (withdrawBalanceAccount.UserId != user.Id) throw new ArgumentException("The account does not Correspond to the Logged User.");
-                if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
 
                 var addBalanceAccount = await _unitOfWork.AccountsRepository.getById(model.ToAccountId);
                 if (withdrawBalanceAccount is null) throw new ArgumentException("Please, Enter a valid account for the recipient.");
 
-                withdrawBalanceAccount.Money -= model.Amount;
-                await _unitOfWork.AccountsRepository.update(withdrawBalanceAccount);
+                if(addBalanceAccount != withdrawBalanceAccount)
+                {
+                    if ((withdrawBalanceAccount.Money - model.Amount) < 0) throw new ArgumentException("Not enough available balance.");
+                    withdrawBalanceAccount.Money -= model.Amount;
+                    await _unitOfWork.AccountsRepository.update(withdrawBalanceAccount);
+                    pointsPercentage = 3;
+                }
 
                 addBalanceAccount.Money += model.Amount;
                 await _unitOfWork.AccountsRepository.update(addBalanceAccount);
 
 
-                user.Points = (int)(model.Amount * (3 / 100));
+                user.Points = (int)(model.Amount * (pointsPercentage / 100));
                 await _unitOfWork.UserRepository.update(user);
                 var type = new Typess();
-                if (model.Types == "Topup") {type = Typess.Topup;} else type = Typess.Payment;
+                if (model.Types == "Topup") { type = Typess.Topup; } else type = Typess.Payment;
 
                 var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, type, DateTime.Now, model.Amount, model.Concept);
                 await _unitOfWork.TransactionRepository.update(trans);
@@ -86,9 +91,33 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-        public async Task update(AccountsEntity entity)
+        public async Task update(AccountsEntity account)
         {
-            await _unitOfWork.AccountsRepository.update(entity);
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();
         }
+
+        public async Task delete(AccountsEntity entity)
+        {
+            try
+            {
+                await _unitOfWork.AccountsRepository.delete(entity);
+                await _unitOfWork.AccountsRepository.saveChanges();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+
+        }
+
+        public async Task DeleteAccount(AccountsEntity account)
+        {
+            account.IsDeleted = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();     
+        }
+
+
     }
 }

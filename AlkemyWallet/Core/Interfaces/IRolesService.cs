@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Interfaces
 {
@@ -7,8 +9,9 @@ namespace AlkemyWallet.Core.Interfaces
         Task delete(RoleEntity entity);
         Task<IReadOnlyList<RoleEntity>> getAll();
         Task<RoleEntity> getById(int id);
-        Task insert(RoleEntity entity);
+        Task<RolesDTO> insert(RolesDTO entity);
         Task saveChanges();
-        Task update(RoleEntity entity);
+        Task<RolesDTO> update(RoleEntity entity);
+        Task<IReadOnlyList<RoleEntity>> getAll(PagesParameters rolesParams);
     }
 }

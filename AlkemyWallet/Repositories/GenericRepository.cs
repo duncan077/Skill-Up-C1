@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.DataAccess;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +34,11 @@ namespace AlkemyWallet.Repositories
            
             return await _walletDbContext.Set<T>().ToListAsync();
         }
+       
 
         public async Task<T> getById(int id)
         {
-            return await _walletDbContext.Set<T>().FirstAsync(e=> e.Id==id);
+            return await _walletDbContext.Set<T>().FirstOrDefaultAsync(e=> e.Id==id);
         }
 
         public async Task insert(T entity)
