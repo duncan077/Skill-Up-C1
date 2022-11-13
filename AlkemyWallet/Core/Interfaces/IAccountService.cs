@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Models.DTO;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Interfaces
@@ -6,6 +7,7 @@ namespace AlkemyWallet.Core.Interfaces
     public interface IAccountService
     {
         Task<IReadOnlyList<AccountsEntity>> getAll();
+        Task<PagedList<AccountsEntity>> getAll(int page);
         Task<AccountsEntity> getById(int id);
         Task insert(AccountsEntity entity);
         Task<List<AccountDto>> ListAccounts();
