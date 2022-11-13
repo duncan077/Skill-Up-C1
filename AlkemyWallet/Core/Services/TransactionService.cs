@@ -79,7 +79,7 @@ namespace AlkemyWallet.Core.Services
         {
             try
             {
-                entity.Date = DateTime.Now;
+               
                 await _unitOfWork.TransactionRepository.update(entity);
                 await _unitOfWork.Save();
 
