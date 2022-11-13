@@ -7,7 +7,7 @@ namespace AlkemyWallet.Core.Models.DTO
        public  int Id;
         public bool IsDeleted { get; set; }
         [Required]
-        public decimal Ammount { get; set; }
+        public decimal Amount { get; set; }
         [MinLength(4)]
         [MaxLength(50)]
         public string Concept { get; set; }

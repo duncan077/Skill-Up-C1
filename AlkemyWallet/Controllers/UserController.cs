@@ -152,14 +152,14 @@ namespace AlkemyWallet.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = "Regular")]
+        [AllowAnonymous]
         public async Task<ActionResult> CreateUser(CreateUserDTO request)
         {
             if (request is not null)
             {
                 UserEntity user = _mapper.Map<UserEntity>(request);
-                byte[] password = _jWTAuthManager.CreatePasswordHash(request.Password);
-                user.Password = Convert.ToBase64String(password);
+                 
+                user.Password = _jWTAuthManager.CreatePasswordHash(request.Password);
                 user.RoleId = 2;
                 try
                 {

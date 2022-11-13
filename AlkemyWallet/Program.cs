@@ -29,13 +29,33 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme
+    var securityScheme = new OpenApiSecurityScheme()
     {
-        Description = "Standard Authorization header using the Bearer scheme(\"bearer {token}\")",
-        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT" // Optional
+    };
+
+    var securityRequirement = new OpenApiSecurityRequirement
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "bearerAuth"
+            }
+        },
+        new string[] {}
+    }
+};
+
+    options.AddSecurityDefinition("bearerAuth", securityScheme);
+    options.AddSecurityRequirement(securityRequirement);
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -50,7 +70,7 @@ builder.Services.AddSwaggerGen(options => {
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-
+  
 
 
 
@@ -87,7 +107,7 @@ builder.Services.AddAuthentication(options =>
      
         ValidateIssuerSigningKey = true,
         ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateAudience = false,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],

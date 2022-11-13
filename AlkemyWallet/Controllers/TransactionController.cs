@@ -10,9 +10,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using NSwag.Annotations;
 
 namespace AlkemyWallet.Controllers
 {
+    [OpenApiTag("Transaction",
+                Description = "Web API para CRUD de Transacciones"
+                )]
     [Route("[controller]")]
     [ApiController]
     public class TransactionController : ControllerBase

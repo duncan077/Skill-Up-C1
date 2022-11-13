@@ -6,7 +6,7 @@ namespace AlkemyWallet.Entities
 {
     public class TransactionEntity : EntityBase {
         [Required]
-        public decimal Ammount { get; set; }
+        public decimal Amount { get; set; }
         [MinLength(4)]
         [MaxLength(50)]
         public string Concept { get; set; }
@@ -51,10 +51,10 @@ namespace AlkemyWallet.Entities
             ToAccountId = toAccountId;  
         }
 
-        public TransactionEntity(int userId, int accountId, int toAccountId,Typess type,DateTime date, decimal ammount, string concept) : this(userId, accountId, toAccountId, type)
+        public TransactionEntity(int userId, int accountId, int toAccountId,Typess type,DateTime date, decimal amount, string concept) : this(userId, accountId, toAccountId, type)
         {
             Date = date;
-            Ammount = ammount;
+            Amount = amount;
             Concept = concept;
         }
         public enum Typess
