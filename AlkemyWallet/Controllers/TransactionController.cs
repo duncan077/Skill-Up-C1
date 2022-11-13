@@ -31,7 +31,8 @@ namespace AlkemyWallet.Controllers
         {
             try
             {
-                var response = _mapper.Map<PagedList<TransactionDTO>>( await _transactionService.getAll(page));
+                var result =  await _transactionService.getAll(page, User.Identity.Name);
+               var response =new PagedList<TransactionDTO>(_mapper.Map<List<TransactionDTO>>(result.ToList()),result.TotalCount,result.CurrentPage,10);
                 if (response.Count>0)
                 {
                    

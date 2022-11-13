@@ -80,7 +80,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddCors(options => {
     options.AddPolicy(name: allowAnyOrigins, builder =>
     {
-        builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 

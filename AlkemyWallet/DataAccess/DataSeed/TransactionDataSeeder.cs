@@ -12,6 +12,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
                 {
                     Id = 1,
                     Ammount =  Convert.ToDecimal(100.00),
+
                     Concept = "Pago",
                     Date = DateTime.UtcNow.AddMonths(-2),
                     Types = "payment",
@@ -23,6 +24,7 @@ namespace AlkemyWallet.DataAccess.DataSeed
                 new
                 {
                     Id = 2,
+
                     Ammount = Convert.ToDecimal(2500.30),
                     Concept = "Compra del dia",
                     Date = DateTime.UtcNow.AddMonths(-3),

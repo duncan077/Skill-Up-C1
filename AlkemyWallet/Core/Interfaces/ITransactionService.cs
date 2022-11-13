@@ -11,10 +11,10 @@ namespace AlkemyWallet.Core.Interfaces
         Task insert(TransactionEntity entity);
         Task saveChanges();
         Task update(TransactionEntity entity);
-        Task<PagedList<TransactionEntity>> getTransactionsByUserId(int id);
+       
         Task UpdateTransaction(TransactionEntity entity, int id);
 
         Task DeleteTransaction(int id);
-        Task<IReadOnlyList<TransactionEntity>> getAll(int page);
+        Task<PagedList<TransactionEntity>> getAll(int page, string username);
     }
 }
