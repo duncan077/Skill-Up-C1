@@ -87,6 +87,7 @@ namespace AlkemyWallet.Controllers
                 return Ok(new { message= "Updae catalogue success", Code=200});
             }
             else return BadRequest(new { message = "Error"});
+
         }
 
         [HttpDelete("{Id}")]
@@ -106,6 +107,7 @@ namespace AlkemyWallet.Controllers
                     return BadRequest(ex.Message);
                 }
             }
+
 
         [HttpGet("user")]
         [Authorize]
@@ -131,6 +133,7 @@ namespace AlkemyWallet.Controllers
             {
                 return BadRequest($"Error: {ex.Message}");
             }
+
 
         }
 
