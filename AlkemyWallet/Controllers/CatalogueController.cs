@@ -1,6 +1,8 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -136,6 +138,43 @@ namespace AlkemyWallet.Controllers
 
 
         }
+        [HttpGet]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> GetAll([FromQuery] int page)
+        {
+            //Para cumplir con la firma del Helper
+            var pagesParameters = new PagesParameters();
+            pagesParameters.PageSize = 10;
+            try
+            {
+                var list = await _catalogueService.getAllCatalogue();
+                PagedList<CatalogueEntity> PagedList = new PagedList<CatalogueEntity>(list, list.Count, page, pagesParameters.PageSize);
+                if (PagedList != null)
+                {
+                    string NextUrl = string.Empty;
+                    string PreviousUrl = string.Empty;
+                    string ActionPath = Request.Host + Request.Path;
+                    NextUrl = PagedList.HasNext ? $"Next Page: {ActionPath} /page= {(page + 1)}" : string.Empty;
+                    PreviousUrl = PagedList.HasPrevious ? $"Previous Page: {ActionPath} /page= {(page - 1)}" : string.Empty;
+                    var ListCatalogue = from p in PagedList
+                                        select new CatalogueEntity
+                                        {
+                                            Id = p.Id,
+                                            Image = p.Image,
+                                            ProductDescription = p.ProductDescription,
+                                            Points = p.Points
+                                        };
+                    return Ok(new { NextURl = NextUrl, PreviousURl = PreviousUrl, ListCatalogue });
+                }
+                else return Ok(new { Message = "No Catalog product found.", Code = 200 });
+            }
+
+            catch (Exception ex)
+            {
+                return Ok(new { Message = ex.Message, Code = 500 });
+            }
+        }
+
 
     }
 }

@@ -63,5 +63,10 @@ namespace AlkemyWallet.Core.Services
         {
             return await _unitOfWork.UserRepository.getByUserName(userName);
         }
+
+        public async Task<List<CatalogueEntity>> getAllCatalogue()
+        {
+            return (List<CatalogueEntity>)await _unitOfWork.CatalogueRepository.getAll();
+        }
     }
 }
