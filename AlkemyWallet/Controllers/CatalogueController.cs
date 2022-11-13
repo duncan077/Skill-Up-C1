@@ -51,6 +51,7 @@ namespace AlkemyWallet.Controllers
             return Ok(catalogue);
         }
 
+
         private bool ValidateStirng(string cadena, int min, int max)
         {
             return (!string.IsNullOrEmpty(cadena)) && cadena.Length >= min && cadena.Length <=max;
@@ -86,6 +87,27 @@ namespace AlkemyWallet.Controllers
                 return Ok(new { message= "Updae catalogue success", Code=200});
             }
             else return BadRequest(new { message = "Error"});
+
+        }
+
+        [HttpDelete("{Id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteCatalogByid(int id)
+        {
+            if (id <= 0) return BadRequest("Id must be positive");
+            else
+            {
+                try
+                {
+                    await _catalogueService.delete(await _catalogueService.getById(id));
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
 
         [HttpGet("user")]
         [Authorize]
