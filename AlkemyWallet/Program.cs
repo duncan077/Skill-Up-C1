@@ -29,17 +29,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddSwaggerGen(options => {
-    var securityScheme = new OpenApiSecurityScheme()
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
+        Description = "Standard Authorization header using the Bearer scheme(\"bearer {token}\")",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT" // Optional
-    };
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme= "Bearer",
+        BearerFormat="JWT"
 
-    var securityRequirement = new OpenApiSecurityRequirement
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
 {
     {
         new OpenApiSecurityScheme
@@ -47,16 +47,16 @@ builder.Services.AddSwaggerGen(options => {
             Reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
-                Id = "bearerAuth"
-            }
-        },
-        new string[] {}
-    }
-};
 
-    options.AddSecurityDefinition("bearerAuth", securityScheme);
-    options.AddSecurityRequirement(securityRequirement);
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
+           //The name of the previously defined security scheme.
+                Id = "Bearer"
+            }
+
+        },
+        new List<string>()
+    }
+});
+  
 
     options.SwaggerDoc("v1", new OpenApiInfo
     {
@@ -122,7 +122,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "JWTAuthDemo v1"));
 }
 
 app.UseHttpsRedirection();
