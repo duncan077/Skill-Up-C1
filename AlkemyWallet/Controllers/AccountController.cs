@@ -138,7 +138,7 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        // POST: Account
+        // POST: Account/id
         /// <summary>
         /// Realizar una transferencia a una cuenta
         /// </summary>
@@ -204,7 +204,7 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        // DELETE: Account/
+        // DELETE: Account/id
         /// <summary>
         /// Elimina un Account a partir de su id
         /// </summary>
