@@ -76,6 +76,9 @@ namespace AlkemyWallet.Core.Services
             try
             {
                 var rol = _mapper.Map<RoleEntity>(entity);
+
+                await _unitOfWork.RolesRepository.insert(rol);
+
                 await _unitOfWork.RolesRepository.saveChanges();
                 return _mapper.Map<RolesDTO>(rol);
             }

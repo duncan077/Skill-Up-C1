@@ -1,8 +1,11 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services.ResourceParameters;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using static AlkemyWallet.Entities.TransactionEntity;
 
 
@@ -24,6 +27,13 @@ namespace AlkemyWallet.Core.Services
         public async Task<IReadOnlyList<AccountsEntity>> getAll()
         {
             return await _unitOfWork.AccountsRepository.getAll();
+        }
+
+        public async Task<PagedList<AccountsEntity>> getAll(int page)
+        {
+            PagesParameters parameters = new PagesParameters();
+            parameters.PageNumber = page;
+            return await _unitOfWork.AccountsRepository.getAll(parameters);
         }
 
         public async Task<AccountsEntity> getById(int id)
@@ -80,7 +90,7 @@ namespace AlkemyWallet.Core.Services
 
                 var trans = new TransactionEntity(user.Id, withdrawBalanceAccount.Id, addBalanceAccount.Id, type, DateTime.Now, model.Amount, model.Concept);
                 await _unitOfWork.TransactionRepository.update(trans);
-
+                
                 await _unitOfWork.Save();
             }
             catch (Exception err)
@@ -96,6 +106,28 @@ namespace AlkemyWallet.Core.Services
             await _unitOfWork.AccountsRepository.update(account);
             await _unitOfWork.Save();
         }
+
+        public async Task delete(AccountsEntity entity)
+        {
+            try
+            {
+                await _unitOfWork.AccountsRepository.delete(entity);
+                await _unitOfWork.AccountsRepository.saveChanges();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+
+        }
+
+        public async Task DeleteAccount(AccountsEntity account)
+        {
+            account.IsDeleted = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.Save();     
+        }
+
 
     }
 }

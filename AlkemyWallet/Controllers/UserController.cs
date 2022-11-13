@@ -9,14 +9,21 @@ using System.Linq.Expressions;
 using AutoMapper;
 using System;
 using System.Text;
+
+using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
+using AlkemyWallet.Core.Helper;
+
 using NSwag.Annotations;
 
 namespace AlkemyWallet.Controllers
 {
+
     [OpenApiTag("User",
         Description = "Web API para mantenimiento de Users.",
         DocumentationDescription = "Documentación externa",
         DocumentationUrl = "")]
+
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -32,6 +39,7 @@ namespace AlkemyWallet.Controllers
             _jWTAuthManager = jWTAuthManager;
         }
 
+
         // GET: /User
         /// <summary>
         /// Obtiene una lista de usuarios
@@ -44,18 +52,22 @@ namespace AlkemyWallet.Controllers
         /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Usuarios, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
         /// <response code="404">Not Found. No se han encontrado usuarios.</response> 
         /// <response code="500">Surgió un error inesperado.</response> 
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserDTO>>> GetUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetUsers([FromQuery]int page)
         {
-            var response = await _userService.getAll();
+            var response = _mapper.Map<List<UserDTO>>( await _userService.getAll(page));
 
             if (response.Count == 0)
+            {
                 return NotFound();
+            }
 
             return Ok(response);
 
         }
+
 
         // GET: /User/1
         /// <summary>
@@ -68,29 +80,35 @@ namespace AlkemyWallet.Controllers
         /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
         /// <response code="200">OK. Devuelve el objeto solicitado (Un usuario).</response>        
         /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen usuario con ese id.</response> 
+
         /// <response code="500">Surgió un error inesperado.</response> 
         [HttpGet("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
         {
 
+            try 
+            { 
+                var user = await _userService.getById(id);
 
-            var user = await _userService.getById(id);
+                if (user == null)
+                {
+                    return StatusCode(404, new { Status = "No user found", Message = "No user matches the Id" });
+                }
 
-            if (user == null)
+            var UserDetailDTO = new UserDetailDTO();
+            UserDetailDTO.FirstName = user.FirstName;
+            UserDetailDTO.LastName = user.LastName;
+            UserDetailDTO.Email = user.Email;
+            UserDetailDTO.Accounts = user.Accounts.Select(x => x.Id.ToString()).ToList();
+            return Ok(UserDetailDTO);
+            
+            }catch (Exception err)
             {
-                return NotFound(
-                    new
-                    {
-                        Status = "Not found",
-                        Message = "No user matches the id"
-                    });
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message});
             }
-
-
-
-            return Ok(user);
         }
+
 
         // PUT: /User/1
         /// <summary>
@@ -106,6 +124,7 @@ namespace AlkemyWallet.Controllers
         /// <response code="200">OK. El usuario ha sido actualizado correctamente.</response>        
         /// <response code="404">Not Found. No se ha encontrado el usuario solicitado.</response> 
         /// <response code="500">Surgió un error inesperado.</response> 
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userData)
@@ -137,20 +156,61 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        // PATCH: /User/1
+
+
+        // PATCH: User/block/Id
         /// <summary>
-        /// Elimina un usuario
+        /// Bloquea un usuario a partir de su ID.
         /// </summary>
         /// <remarks>
-        /// Mediante el parámetro id suministrado, elimina usuario en el sistema (Soft delete). Se debe estar autenticado con rol "Admin".
-        /// </remarks>
-        /// <param name="id">Int, usuario a eliminar.Debe ser mayor a 0.</param>
+        /// Mediante el parámetro id suministrado, obtiene y bloquea el usuario solicitado.Lo puede realizar el rol Regular. /// </remarks>
+        /// <param name="id">Int, Id del usuario a bloquear.</param>
         /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
-        /// <response code="200">OK. El usuario ha sido eliminado correctamente.</response>        
-        /// <response code="404">Not Found. No se ha encontrado el usuario solicitado.</response> 
+        /// <response code="200">OK. El usuario ha sido bloqueado.</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen Usuario con ese ID.</response> 
         /// <response code="500">Surgió un error inesperado.</response> 
+
+        [HttpPatch("block/{id}")]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> BlockAccountById(int id)
+        {
+            try {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                var account = await _userService.GetAccountByID(id);
+                if (account is null)
+                    return NotFound($"The account doesn't exist");
+                if (!user.Id.Equals(account.UserId))
+                    return Unauthorized($"You're not authorize to block this account");
+                if (account.IsBlocked)
+                    return BadRequest($"The account is already blocked");
+                await _userService.blockAccount(account);
+                return Ok($"The account has been blocked successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
+        }
+
+
+        // DELETE: User/id
+        /// <summary>
+        /// Borra un usuario a partir de su Id.
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, borra el usuario correspondiente. Solo puede ser realizado por el rol "Admin".
+        /// </remarks>
+        /// <param name="id">Int, Id del Fixed Term Deposit a consultar  .</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Items Fixed, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen Users con el id indicado.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
+
+
         [Authorize(Roles = "Admin")]
-        [HttpPatch]
+        [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -171,6 +231,7 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+
         // POST: /User/1
         /// <summary>
         /// Crea un usuario
@@ -185,15 +246,16 @@ namespace AlkemyWallet.Controllers
         /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
         /// <response code="200">OK. El usuario ha sido creado correctamente.</response>        
         /// <response code="500">Surgió un error inesperado.</response> 
+
         [HttpPost]
-        [Authorize(Roles = "Regular")]
+        [AllowAnonymous]
         public async Task<ActionResult> CreateUser(CreateUserDTO request)
         {
             if (request is not null)
             {
                 UserEntity user = _mapper.Map<UserEntity>(request);
-                byte[] password = _jWTAuthManager.CreatePasswordHash(request.Password);
-                user.Password = Convert.ToBase64String(password);
+                 
+                user.Password = _jWTAuthManager.CreatePasswordHash(request.Password);
                 user.RoleId = 2;
                 try
                 {
@@ -212,8 +274,24 @@ namespace AlkemyWallet.Controllers
             return Ok("User created successfully");
         }
 
+
+
+        // PATCH: api/UserController/product/IdProduct
+        /// <summary>
+        /// Mediante el id de producto indicado, realiza un canje de productos.
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, obtiene y canjear el producto solicitado. Esto reduce el saldo de puntos del usuario.Lo puede realizar el rol Regular. 
+        /// </remarks>
+        /// <param name="id">Int, Id del Producto a canjear.</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve mensaje que se realizo correctamente el canje.</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen Productos con el Id indicado.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
+
+
         [HttpPatch("product/{idProduct}")]
-        [Authorize]
+        [Authorize(Roles = "Regular")]
         public async Task<IActionResult> RedeemProduct(int idProduct)
         {
             try {
@@ -235,6 +313,46 @@ namespace AlkemyWallet.Controllers
             {
                 return BadRequest($"Error: {ex.Message}");
             }
+        }
+
+
+
+        // PATCH: api/UserController/id
+        /// <summary>
+        /// A partir del Id de una cuenta, la desbloquea.
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, obtiene y desbloquea el usuario solicitado. Lo puede realizar el rol Regular.
+        /// </remarks>
+        /// <param name="id">Int, Id de la cuenta a desbloquear .</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Obtiene un mensaje indicando el desbloqueo de la cuenta.</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen cuentas con ese ID.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
+
+        [HttpPatch("unblock/{id}")]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> UnblockAccountById(int id)
+        {
+            try
+            {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                var account = await _userService.GetAccountByID(id);
+                if (account is null)
+                    return NotFound($"The account doesn't exist");
+                if (!user.Id.Equals(account.UserId))
+                    return Unauthorized($"You're not authorize to unblock this account");
+                if (!account.IsBlocked)
+                    return BadRequest($"The account is already unblocked");
+                await _userService.unblockAccount(account);
+                return Ok($"The account has been unblocked successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
         }
 
     }

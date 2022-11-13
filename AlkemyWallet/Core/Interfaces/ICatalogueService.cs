@@ -16,6 +16,7 @@ namespace AlkemyWallet.Core.Interfaces
         Task<IReadOnlyList<CatalogueDTO>> getAllSortByPoints();
         Task<IReadOnlyList<CatalogueDTO>> GetCatalogueByUserPoints(int points);
         Task<UserEntity> getUserByUserName(string userName);
+        Task<List<CatalogueEntity>> getAllCatalogue();
     }
 
 
