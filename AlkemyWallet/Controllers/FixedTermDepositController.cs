@@ -61,7 +61,6 @@ namespace AlkemyWallet.Controllers
             {
                     FixedTermDepositDTO fixedDepositDTO = new FixedTermDepositDTO();
                     fixedDepositDTO.CreationDate = fixedDeposit.CreationDate;
-                    fixedDepositDTO.UserName = fixedDeposit.User.Email;
                     fixedDepositDTO.UserId = (int)fixedDeposit.UserId;
                     fixedDepositDTO.AccountId = (int)fixedDeposit.AccountId;
                     fixedDepositDTO.Amount = fixedDeposit.Amount;
@@ -105,10 +104,10 @@ namespace AlkemyWallet.Controllers
                     string NextUrl = string.Empty;
                     string PreviousUrl = string.Empty;
                     string ActionPath = Request.Host + Request.Path;
-                    NextUrl = PagedList.HasNext ? $"Next Page: {ActionPath} /page= {(page + 1)}" : string.Empty;
-                    PreviousUrl = PagedList.HasPrevious ? $"Previous Page: {ActionPath} /page= {(page - 1)}" : string.Empty;
+                    NextUrl = PagedList.HasNext ? $"Next Page: {ActionPath} ?page= {(page + 1)}" : string.Empty;
+                    PreviousUrl = PagedList.HasPrevious ? $"Previous Page: {ActionPath} ?page= {(page - 1)}" : string.Empty;
 
-                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositItemDTO
+                    var ListFixedDeposit = from p in PagedList select new FixedTermDepositDTO
                     {
                         Id = p.Id,
                         AccountId = (int)p.AccountId,
@@ -116,6 +115,8 @@ namespace AlkemyWallet.Controllers
                         ClosingDate = p.ClosingDate,
                         Amount = p.Amount
                     };
+
+
 
 
                     return Ok(new
