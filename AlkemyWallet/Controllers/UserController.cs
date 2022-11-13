@@ -9,9 +9,14 @@ using System.Linq.Expressions;
 using AutoMapper;
 using System;
 using System.Text;
+using NSwag.Annotations;
 
 namespace AlkemyWallet.Controllers
 {
+    [OpenApiTag("User",
+        Description = "Web API para mantenimiento de Users.",
+        DocumentationDescription = "Documentación externa",
+        DocumentationUrl = "")]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -27,6 +32,18 @@ namespace AlkemyWallet.Controllers
             _jWTAuthManager = jWTAuthManager;
         }
 
+        // GET: /User
+        /// <summary>
+        /// Obtiene una lista de usuarios
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, obtiene la lista de usuarios en el sistema con opción de paginación. Se debe estar autenticado con rol de administrador.
+        /// </remarks>
+        /// <param name="page">Int, página solicitada.Debe ser mayor a 0.</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Usuarios, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
+        /// <response code="404">Not Found. No se han encontrado usuarios.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserDTO>>> GetUsers()
@@ -40,7 +57,18 @@ namespace AlkemyWallet.Controllers
 
         }
 
-
+        // GET: /User/1
+        /// <summary>
+        /// Obtiene un usuario por su Id.
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, obtiene un usuario. Se debe estar autenticado con rol de "Regular".
+        /// </remarks>
+        /// <param name="id">Int, Id del usuario solicitado.Debe ser mayor a 0.</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. Devuelve el objeto solicitado (Un usuario).</response>        
+        /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen usuario con ese id.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
         [HttpGet("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> GetById(int id)
@@ -64,7 +92,20 @@ namespace AlkemyWallet.Controllers
             return Ok(user);
         }
 
-
+        // PUT: /User/1
+        /// <summary>
+        /// Actualiza un usuario
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, actualiza usuario en el sisteman. Se debe estar autenticado con rol "Regular".
+        /// </remarks>
+        /// <param name="id">Int, usuario a actualizar.Debe ser mayor a 0.</param>
+        /// <param name="firstName">String, nombre del usuario. Debe ser enviado por body</param>
+        /// <param name="lastName">String, apellido del usuario. Debe ser enviado por body</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. El usuario ha sido actualizado correctamente.</response>        
+        /// <response code="404">Not Found. No se ha encontrado el usuario solicitado.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
         [HttpPut("{id}")]
         [Authorize(Roles = "Regular")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userData)
@@ -96,6 +137,18 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        // PATCH: /User/1
+        /// <summary>
+        /// Elimina un usuario
+        /// </summary>
+        /// <remarks>
+        /// Mediante el parámetro id suministrado, elimina usuario en el sistema (Soft delete). Se debe estar autenticado con rol "Admin".
+        /// </remarks>
+        /// <param name="id">Int, usuario a eliminar.Debe ser mayor a 0.</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. El usuario ha sido eliminado correctamente.</response>        
+        /// <response code="404">Not Found. No se ha encontrado el usuario solicitado.</response> 
+        /// <response code="500">Surgió un error inesperado.</response> 
         [Authorize(Roles = "Admin")]
         [HttpPatch]
         public async Task<ActionResult> Delete(int id)
@@ -117,7 +170,21 @@ namespace AlkemyWallet.Controllers
                 return BadRequest();
             }
         }
-        
+
+        // POST: /User/1
+        /// <summary>
+        /// Crea un usuario
+        /// </summary>
+        /// <remarks>
+        /// Crea un usuario en el sistema. Se debe estar autenticado con rol "Regular".
+        /// </remarks>
+        /// <param name="firstName">String, nombre del usuario. Debe ser enviado por body</param>
+        /// <param name="lastName">String, apellido del usuario. Debe ser enviado por body</param>
+        /// <param name="email">String, email del usuario. Debe ser enviado por body</param>
+        /// <param name="password">String, contraseña del usuario. Debe ser enviado por body</param>
+        /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
+        /// <response code="200">OK. El usuario ha sido creado correctamente.</response>        
+        /// <response code="500">Surgió un error inesperado.</response> 
         [HttpPost]
         [Authorize(Roles = "Regular")]
         public async Task<ActionResult> CreateUser(CreateUserDTO request)
