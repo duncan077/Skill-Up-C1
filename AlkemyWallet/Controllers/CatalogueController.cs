@@ -107,7 +107,7 @@ namespace AlkemyWallet.Controllers
                     return BadRequest(ex.Message);
                 }
             }
-
+        }
 
         [HttpGet("user")]
         [Authorize]
