@@ -6,7 +6,7 @@ namespace AlkemyWallet.Repositories.Interfaces
 {
     public interface ITransactionRepository:IGenericRepository<TransactionEntity>
     {
-        Task<PagedList<TransactionEntity>> getAll(PagesParameters pagesParams);
-        Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id);
+        Task<PagedList<TransactionEntity>> getAll(PagesParameters pagesParams, int userId);
+        
     }
 }

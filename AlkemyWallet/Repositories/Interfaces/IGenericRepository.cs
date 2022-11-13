@@ -14,6 +14,6 @@ namespace AlkemyWallet.Repositories.Interfaces
          Task  delete(T entity);
          Task update(T entity);
          Task saveChanges();
-        
+        Task<IReadOnlyList<T>> getAll();
     }
 }
