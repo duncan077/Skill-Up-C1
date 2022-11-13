@@ -46,15 +46,11 @@ namespace AlkemyWallet.Controllers
 
             if (catalogue == null)
             {
-                return NotFound(
-                    new
-                    {
-                        Status = "Not found",
-                        Message = "No product catalogue matches the id"
-                    });
+                return StatusCode(404, new { Status = "No Item Catalogue found", Message = "No Item Catalogue found." });
             }
             return Ok(catalogue);
         }
+
 
         private bool ValidateStirng(string cadena, int min, int max)
         {
@@ -110,6 +106,32 @@ namespace AlkemyWallet.Controllers
                     return BadRequest(ex.Message);
                 }
             }
+
+        [HttpGet("user")]
+        [Authorize]
+        public async Task<IActionResult> GetProductsByUserPoints()
+        {
+            try
+            {
+                var claims = User.Claims.ToList();
+                var user = await _catalogueService.getUserByUserName(claims[0].Value);
+                if (user.Points.Equals(0))
+                    return Ok($"You don't have points");
+                var catalogue = await _catalogueService.GetCatalogueByUserPoints(user.Points);
+                if (catalogue.Count.Equals(0))
+                {
+                    return Ok($"There are no products to redeem with your amount of points");
+                }
+                else
+                {
+                    return Ok(catalogue);
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
         }
 
     }

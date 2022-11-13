@@ -1,4 +1,6 @@
-﻿using AlkemyWallet.DataAccess;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +15,23 @@ namespace AlkemyWallet.Repositories
         {
             _walletDbContext = walletDbContext;
         }
-        public async Task<IReadOnlyList<TransactionEntity>> getTransactionsByUserId(int id)
+    
+        public async Task<PagedList<TransactionEntity>> getAll(PagesParameters pagesParams, int userId)
         {
-            return await _walletDbContext.Set<TransactionEntity>()
-                .Include(u=>u.User)
-                .ThenInclude(a=>a.Accounts)
-                .Where(t => t.UserId == id)
-                .OrderByDescending(d=>d.Date)
-                .ToListAsync();
+            try
+            {
+                var collection = _walletDbContext.Transactions as IQueryable<TransactionEntity>;
+
+                collection = collection.Where(a => a.IsDeleted == false && a.UserId==userId).OrderByDescending(d=>d.Date);
+
+                return PagedList<TransactionEntity>.Create(collection,
+                pagesParams.PageNumber,
+                pagesParams.PageSize);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿namespace AlkemyWallet.Core.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlkemyWallet.Core.Models.DTO
 {
     public class UpdateFixedTermDepositDTO
     {
-
-        public int id { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime ClosingDate { get; set; }
-        public bool IsDeleted { get; set; }
-
+        [Required]
+        public int? id { get; set; }
+        public decimal? Amount { get; set; }
+        public DateTime? CreationDate { get; set; }
+        public DateTime? ClosingDate { get; set; }
+       
     }
 }

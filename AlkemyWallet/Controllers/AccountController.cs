@@ -58,7 +58,7 @@ namespace AlkemyWallet.Controllers
             }
             return Ok(account);
         }
-
+               
         /*[HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
@@ -113,13 +113,14 @@ namespace AlkemyWallet.Controllers
         {
             try
             {
-                if (!ModelState.IsValid || User.Identity?.Name == null) return BadRequest("Some of the information in the transfer request between Accounts is invalid");
+                if (!ModelState.IsValid || User.Identity?.Name == null)
+                    return StatusCode(400, new { Status = "Bad Request", Message = "Some of the information in the transfer request between Accounts is invalid" }); 
                 await _accountServices.TransferAccounts(model, id, User.Identity.Name);
                 return Ok($"Successful transfer of ${model.Amount} successfully performed from Account:'{id}' to the Account:'{model.ToAccountId}'.");
             }
             catch (Exception err)
             {
-                return BadRequest($"Unable to transfer ${model.Amount} to the Account:'{model.ToAccountId}'. Error: {err.Message}");
+                return StatusCode(500, new { Status = "Server Error", Message = $"Unable to transfer ${model.Amount} to the Account:'{model.ToAccountId}'. Error: {err.Message}" });
             }
         }
 
@@ -137,6 +138,27 @@ namespace AlkemyWallet.Controllers
             catch(Exception err)
             {
                 return BadRequest($"Couldn't create account'. Error: {err.Message}");    
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAccount(int id)
+        {
+            try
+            {
+                var account = await _accountServices.getById(id);
+
+                if (account is null) 
+                    return NotFound("No account matches the id");
+
+                await _accountServices.DeleteAccount(account);
+
+                return Ok("Account deleted");
+            }
+            catch (Exception err)
+            {
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message });
             }
         }
     }
