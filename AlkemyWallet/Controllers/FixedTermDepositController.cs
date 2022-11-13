@@ -113,7 +113,8 @@ namespace AlkemyWallet.Controllers
                         AccountId = (int)p.AccountId,
                         CreationDate = p.CreationDate,
                         ClosingDate = p.ClosingDate,
-                        Amount = p.Amount
+                        Amount = p.Amount,
+                        UserId = (int)p.UserId
                     };
 
 
