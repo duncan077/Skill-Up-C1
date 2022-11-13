@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -52,6 +53,15 @@ namespace AlkemyWallet.Core.Services
         public async Task update(CatalogueEntity entity)
         {
             await _unitOfWork.CatalogueRepository.update(entity);
+        }
+
+        public async Task<IReadOnlyList<CatalogueDTO>> GetCatalogueByUserPoints(int points)
+        {
+            return _mapper.Map<List<CatalogueDTO>>(await _unitOfWork.CatalogueRepository.getCatalogueByUserPoints(points));
+        }
+        public async Task<UserEntity> getUserByUserName(string userName)
+        {
+            return await _unitOfWork.UserRepository.getByUserName(userName);
         }
     }
 }

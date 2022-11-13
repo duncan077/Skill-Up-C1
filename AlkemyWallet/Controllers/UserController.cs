@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using System;
 using System.Text;
+using System.Security.Claims;
 
 namespace AlkemyWallet.Controllers
 {
@@ -29,12 +30,14 @@ namespace AlkemyWallet.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserDTO>>> GetUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetUsers([FromQuery]int page)
         {
-            var response = await _userService.getAll();
+            var response = await _userService.getAll(page);
 
             if (response.Count == 0)
+            {
                 return NotFound();
+            }
 
             return Ok(response);
 
@@ -96,6 +99,30 @@ namespace AlkemyWallet.Controllers
             }
         }
 
+        [HttpPatch("block/{id}")]
+        [Authorize(Roles = "Regular")]
+        public async Task<IActionResult> BlockAccountById(int id)
+        {
+            try {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                var account = await _userService.GetAccountByID(id);
+                if (account is null)
+                    return NotFound($"The account doesn't exist");
+                if (!user.Id.Equals(account.UserId))
+                    return Unauthorized($"You're not authorize to block this account");
+                if (account.IsBlocked)
+                    return BadRequest($"The account is already blocked");
+                await _userService.blockAccount(account);
+                return Ok($"The account has been blocked successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPatch]
         public async Task<ActionResult> Delete(int id)
@@ -143,6 +170,31 @@ namespace AlkemyWallet.Controllers
                 return BadRequest("Can�t create the user, please check the data");
             }
             return Ok("User created successfully");
+        }
+
+        [HttpPatch("product/{idProduct}")]
+        [Authorize]
+        public async Task<IActionResult> RedeemProduct(int idProduct)
+        {
+            try {
+                var userName = User.Identity.Name.ToString();
+                var user = await _userService.getByUserName(userName);
+                if (user.Points.Equals(0))
+                    return BadRequest($"You don't have points to redeem");
+                var product = await _userService.GetCatalogueById(idProduct);
+                if (product == null)
+                    return BadRequest($"Doesn't exist the product {idProduct}");
+                if (user.Points < product.Points)
+                    return BadRequest($"You don't have points to redeem this product, Points: {user.Points}.");
+                user.Points -= product.Points;
+                await _userService.update(user);
+                await _userService.saveChanges();
+                return Ok($"You have successfully redeemed the product ** {product.ProductDescription} **. Points deducted: {product.Points}. New points balance: {user.Points}.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
     }

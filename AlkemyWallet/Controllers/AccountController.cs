@@ -58,7 +58,7 @@ namespace AlkemyWallet.Controllers
             }
             return Ok(account);
         }
-
+               
         /*[HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)

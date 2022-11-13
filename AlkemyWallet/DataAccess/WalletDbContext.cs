@@ -21,6 +21,7 @@ namespace AlkemyWallet.DataAccess
             TransactionDataSeeder.TransactionDataSeed(modelBuilder);
             AccountsDataSeeder.AccountsDataSeed(modelBuilder);
            RoleEntitySeeder.ConfigureMyEntity(modelBuilder);
+            FixedTermDepositDataSeeder.FixedTermDepositDataSeed(modelBuilder);
 
             modelBuilder.Entity<FixedTermDepositEntity>()
                 .HasOne<AccountsEntity>(a=>a.Account)
