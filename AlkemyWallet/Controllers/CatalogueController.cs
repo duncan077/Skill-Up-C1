@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -50,6 +51,42 @@ namespace AlkemyWallet.Controllers
             return Ok(catalogue);
         }
 
+        private bool ValidateStirng(string cadena, int min, int max)
+        {
+            return (!string.IsNullOrEmpty(cadena)) && cadena.Length >= min && cadena.Length <=max;
+        }
+
+        private bool validateCatalogue(CatalogueEntity catalogue)
+        {
+            return (catalogue.Points != null && catalogue.Points >= 0) && (ValidateStirng(catalogue.Image,4,50) && (ValidateStirng(catalogue.ProductDescription,4,200)));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PostCatalogue([FromBody] CatalogueEntity catalogue)
+        {
+            if (validateCatalogue(catalogue)/*!(catalogue is null) ||ModelState.IsValid*/)
+            {
+                await _catalogueService.insert(_mapper.Map<CatalogueEntity>(catalogue));
+                return Ok(new { message = "Add Success", Code=200});
+            }
+            else return BadRequest(new { message = "Error" , Code=500});
+        }
+
+
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCatalogueDetail(int id, string detail)
+        {
+            CatalogueEntity catalogueUpdate = await _catalogueService.getById(id);
+            if (!(catalogueUpdate is null))
+            {
+                catalogueUpdate.ProductDescription = string.IsNullOrEmpty(detail) ? catalogueUpdate.ProductDescription : detail;
+                await _catalogueService.update(catalogueUpdate);
+                return Ok(new { message= "Updae catalogue success", Code=200});
+            }
+            else return BadRequest(new { message = "Error"});
+
         [HttpGet("user")]
         [Authorize]
         public async Task<IActionResult> GetProductsByUserPoints()
@@ -74,6 +111,7 @@ namespace AlkemyWallet.Controllers
             {
                 return BadRequest($"Error: {ex.Message}");
             }
+
 
         }
 
