@@ -26,7 +26,14 @@ namespace AlkemyWallet.Controllers
 
         }
 
-
+        /// <summary>
+        /// Devuelve una lista de Roles
+        /// </summary>
+        /// <param name="rolesParams">Lista de parametros para paginar</param>      
+        /// <response code="200">OK. Listado con Exito</response>    
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>
+        /// <response code="403 ">Unauthorized request. No esta autorizado para usar este recurso</response>
+        /// <response code="500">Server Error. Erores del Servidor</response>  
         [HttpGet]
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> GetRoles([FromQuery]PagesParameters rolesParams)
@@ -46,6 +53,16 @@ namespace AlkemyWallet.Controllers
             
         }
 
+
+
+        /// <summary>
+        /// Muestra el detallo de un Rol
+        /// </summary>
+        /// <param name="id">"Id" Numero identificador del Rol</param>
+        /// <response code="200">OK. Creado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>   
+        /// <response code="403 ">Unauthorized request. No esta autorizado para usar este recurso</response>
+        /// <response code="500">Server Error. Erores del Servidor</response>  
         [Authorize]
         [HttpGet("{id}")]
         public async Task <IActionResult> GetRoleDetail(int id)
@@ -55,6 +72,20 @@ namespace AlkemyWallet.Controllers
             else return Ok(rol);
         }
 
+        /// <summary>
+        /// Agrega un nuevo rol
+        /// </summary>
+        /// <remarks>
+        /// Ejemplo de Campos requeridos_
+        /// {
+        ///     "Name" : "string",
+        ///     "Description": "string"
+        /// }
+        /// </remarks>
+        /// <response code="200">OK. Creado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>   
+        /// <response code="403 ">Unauthorized request. No esta autorizado para usar este recurso</response>
+        /// <response code="500">Server Error. Erores del Servidor</response>  
         [HttpPost]
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddRole([FromBody] RolesDTO role)
@@ -72,7 +103,15 @@ namespace AlkemyWallet.Controllers
 
         }
 
-        
+
+        /// <summary>
+        /// Elimina un Rol
+        /// </summary>
+        /// <param name="id">"Id" Identificador del Rol a eliminar </param>
+        /// <response code="200">OK. Creado con exito.</response>        
+        /// <response code="400">Bad Request. No se ha podido validar la transaccion.</response>   
+        /// <response code="403 ">Unauthorized request. No esta autorizado para usar este recurso</response>
+        /// <response code="500">Server Error. Erores del Servidor</response> 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRole(int id)
@@ -90,7 +129,21 @@ namespace AlkemyWallet.Controllers
             }
         }
 
-        
+
+        /// <summary>
+        /// Modifica un Rol con nueva información
+        /// </summary>
+        /// <remarks>
+        /// Ejemplo de Campos requeridos_
+        /// {
+        ///     "Name" : "string",
+        ///     "Description": "string"
+        /// }
+        /// </remarks>
+        /// <param name="id">Id identificador del Rol a modificar</param>
+        /// <response code="200">OK. Creado con exito.</response>        
+        /// <response code="404">Not Foundt. No se ha podido validar la transaccion.</response>   
+        /// <response code="500">Server Error. No se ha indicado o es incorrecto el Token JWT de acceso.</response>  
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRole([FromBody] RolesDTO roleDto, int id)
