@@ -59,7 +59,6 @@ namespace AlkemyWallet.Controllers
             if (fixedDeposit == null) return StatusCode(404, new { Status = "No Fixed Terms Deposit Found for the logged user", Message = "No FixedTermDeposits found for the logged user that matches with the ID provided." });
             else
             {
-              
                     FixedTermDepositDTO fixedDepositDTO = new FixedTermDepositDTO();
                     fixedDepositDTO.CreationDate = fixedDeposit.CreationDate;
                     fixedDepositDTO.UserName = fixedDeposit.User.Email;
