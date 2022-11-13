@@ -2,6 +2,7 @@ using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Services.ResourceParameters;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
@@ -41,7 +42,16 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<UserEntity> getById(int id)
         {
-            return await _unitOfWork.UserRepository.getById(id);
+            var user = await _unitOfWork.UserRepository.getById(id);
+            if (user!=null) 
+            {
+                user.Accounts = _unitOfWork.AccountsRepository.getAll().Result.Where(x => x.UserId == user.Id).ToList();
+                return user;
+            }
+            return null;
+
+
+            
 
         }
         public async Task<UserEntity> getByUserName(string userName)

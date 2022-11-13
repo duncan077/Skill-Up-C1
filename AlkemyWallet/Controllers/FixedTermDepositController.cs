@@ -48,21 +48,27 @@ namespace AlkemyWallet.Controllers
         /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen FixedTermDeposit a nombre del usuario.</response> 
         /// <response code="500">Surgió un error inesperado.</response> 
 
-        [Authorize]
+        [Authorize(Roles = "Regular")]
         [HttpGet("{id}")]
             public  async Task<IActionResult> GetFixedTermDepositById(int id)
         {
-            FixedTermDepositEntity fixedDeposit = await _fixedTermDepositServices.getById(id);
-            if (fixedDeposit == null) return NotFound(new { Status = "Not Fund", Message = "No FixedDeposit Fund" });
+          
+            string username = User.Identity.Name.ToString();
+            FixedTermDepositEntity fixedDeposit = await _fixedTermDepositServices.GetFixedTermDepositDetail(id,username);
+
+            if (fixedDeposit == null) return StatusCode(404, new { Status = "No Fixed Terms Deposit Found for the logged user", Message = "No FixedTermDeposits found for the logged user that matches with the ID provided." });
             else
             {
-
-                var fixedDepositDto = _mapper.Map<FixedTermDepositDTO>(_fixedTermDepositServices.GetFixedTransactionDetailById(fixedDeposit));
-                if (fixedDepositDto is null) return BadRequest(new { Status = "Not Fund", Message = "Not Fixed Deposit Found" });
-                else return Ok(fixedDepositDto);
-
-
-
+              
+                    FixedTermDepositDTO fixedDepositDTO = new FixedTermDepositDTO();
+                    fixedDepositDTO.CreationDate = fixedDeposit.CreationDate;
+                    fixedDepositDTO.UserName = fixedDeposit.User.Email;
+                    fixedDepositDTO.UserId = (int)fixedDeposit.UserId;
+                    fixedDepositDTO.AccountId = (int)fixedDeposit.AccountId;
+                    fixedDepositDTO.Amount = fixedDeposit.Amount;
+                    fixedDepositDTO.ClosingDate = fixedDeposit.ClosingDate;
+                    return Ok(fixedDepositDTO);
+               
             }
         }
 
@@ -186,8 +192,7 @@ namespace AlkemyWallet.Controllers
         /// <remarks>
         /// Mediante el parámetro UpdateFixedTermDepositDTO como modelo, actualiza un Fixed Term Deposit. El rol del usuario debe ser "Admin". Mediante la propiedad (int) id del DTO
         /// se obtendrá el Fixed Term Deposit correspondiente y utilizando las otras propiedades del DTO se actualizarán las mismas en el Fixed Term Deposit. Se podrá modificar el Amount,
-        /// el CreationDate y el Closing Date. Tener presente, dejar todos los parámetros con el valor correcto porque los actualizará indefectiblemente. Al ser un rol con perfil admin,
-        /// no tiene las restricciones que posee un usuario con rol regular, por lo tanto, chequear bien los parámetros a actualizar considerando las restricciones existentes en el endpoint de Create.
+        /// el CreationDate y el Closing Date. Si no se setea algún parámetro se dejará el existente.
         /// </remarks>
         /// <param name="model">Model DTO, tiene como propiedades Int Id (id del Fixed Term), decimal amount (monto del Fixed Term), creation (fecha de Creacion) y Closing Date. 
         /// Las validaciones se indican arriba.</param>
@@ -207,14 +212,16 @@ namespace AlkemyWallet.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    FixedTermDepositEntity fixedTermDepositEntity = await _fixedTermDepositServices.getById(model.id);
+                    FixedTermDepositEntity fixedTermDepositEntity = await _fixedTermDepositServices.getById((int)model.id);
                     if (fixedTermDepositEntity != null) 
                     {
 
-                        fixedTermDepositEntity.Amount = model.Amount;
-                        fixedTermDepositEntity.ClosingDate = model.ClosingDate;
-                        fixedTermDepositEntity.CreationDate = model.CreationDate;
+                        if (model.Amount is not null)  fixedTermDepositEntity.Amount = (decimal)model.Amount;
+                        if (model.ClosingDate is not null)  fixedTermDepositEntity.ClosingDate = (DateTime)model.ClosingDate; 
+                        if (model.CreationDate is not null) fixedTermDepositEntity.CreationDate = (DateTime)model.CreationDate; 
+
                         await _fixedTermDepositServices.update(fixedTermDepositEntity);
+
                         return Ok("Fixed Term Deposit Updated");
                     }
                     else{return StatusCode(404, new { Status = "Not Found", Message = "No Fixed Term Deposit matches with the Id provided" }); }

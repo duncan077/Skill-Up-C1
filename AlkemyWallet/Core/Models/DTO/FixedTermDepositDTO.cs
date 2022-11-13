@@ -5,7 +5,6 @@ namespace AlkemyWallet.Core.Models.DTO
         public int UserId { get; set; }
         public int AccountId { get; set; }
         public string UserName { get; set; }
-        public int Points { get; set; }
         public decimal Amount { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ClosingDate { get; set; }

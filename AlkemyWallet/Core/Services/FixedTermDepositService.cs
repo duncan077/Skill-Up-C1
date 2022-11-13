@@ -52,11 +52,18 @@ namespace AlkemyWallet.Core.Services
 
         }
         
-        public FixedTermDepositEntity GetFixedTransactionDetailById(FixedTermDepositEntity fixedDeposit)
+        public async Task<FixedTermDepositEntity> GetFixedTermDepositDetail(int idFixedTermDeposit, string userName)
         {
-            if (fixedDeposit.UserId == _unitOfWork.UserRepository.getById(fixedDeposit.UserId.Value).Id)
+            
+            var fixedTermDeposit = await _unitOfWork.FixedTermDepositRepository.getById((int)idFixedTermDeposit);
+            var user = await _unitOfWork.UserRepository.getByUserName(userName);
+
+
+            if (fixedTermDeposit!=null && user!=null && fixedTermDeposit.UserId == user.Id)
             {
-                return  (fixedDeposit);
+                fixedTermDeposit.User = user;
+
+                return  (fixedTermDeposit);
             }
             return null;
         }

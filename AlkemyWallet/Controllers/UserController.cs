@@ -10,6 +10,8 @@ using AutoMapper;
 using System;
 using System.Text;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers
 {
@@ -49,22 +51,26 @@ namespace AlkemyWallet.Controllers
         public async Task<IActionResult> GetById(int id)
         {
 
+            try 
+            { 
+                var user = await _userService.getById(id);
 
-            var user = await _userService.getById(id);
+                if (user == null)
+                {
+                    return StatusCode(404, new { Status = "No user found", Message = "No user matches the Id" });
+                }
 
-            if (user == null)
+            var UserDetailDTO = new UserDetailDTO();
+            UserDetailDTO.FirstName = user.FirstName;
+            UserDetailDTO.LastName = user.LastName;
+            UserDetailDTO.Email = user.Email;
+            UserDetailDTO.Accounts = user.Accounts.Select(x => x.Id.ToString()).ToList();
+            return Ok(UserDetailDTO);
+            
+            }catch (Exception err)
             {
-                return NotFound(
-                    new
-                    {
-                        Status = "Not found",
-                        Message = "No user matches the id"
-                    });
+                return StatusCode(500, new { Status = "Server Error", Message = err.Message});
             }
-
-
-
-            return Ok(user);
         }
 
 
