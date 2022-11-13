@@ -42,7 +42,7 @@ namespace AlkemyWallet.Controllers
         /// <remarks>
         /// Mediante el parámetro id suministrado, obtiene el fixed term deposit correspondiente al usuario logueado y para usuarios con rol "Regular".
         /// </remarks>
-        /// <param name="id">Int, página solicitada.Debe ser mayor a 0.</param>
+        /// <param name="id">Int, Id del Fixed Term Deposit a consultar.</param>
         /// <response code="401">Unauthorized. No se ha indicado o es incorrecto el Token JWT de acceso.</response>              
         /// <response code="200">OK. Devuelve el objeto solicitado (Listado de Items Fixed, junto a dos string cuyas URL indican la anterior pagina y la posterior página).</response>        
         /// <response code="404">Not Found. No se ha encontrado el objeto solicitado, no existen FixedTermDeposit a nombre del usuario.</response> 
