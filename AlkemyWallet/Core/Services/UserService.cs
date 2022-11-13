@@ -66,5 +66,19 @@ namespace AlkemyWallet.Core.Services
         {
             return _mapper.Map<CatalogueDTO>(await _unitOfWork.CatalogueRepository.getById(idProduct));
         }
+
+        public async Task<AccountsEntity> GetAccountByID(int id)
+        {
+            return await _unitOfWork.AccountsRepository.getById(id);
+        }
+
+        public async Task blockAccount(AccountsEntity account)
+        {
+            account.IsBlocked = true;
+            await _unitOfWork.AccountsRepository.update(account);
+            await _unitOfWork.AccountsRepository.saveChanges();
+        }
+
+
     }
 }
