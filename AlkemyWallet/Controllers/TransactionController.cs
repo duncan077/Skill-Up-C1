@@ -32,13 +32,21 @@ namespace AlkemyWallet.Controllers
             try
             {
                 var result =  await _transactionService.getAll(page, User.Identity.Name);
-               var response =new PagedList<TransactionDTO>(_mapper.Map<List<TransactionDTO>>(result.ToList()),result.TotalCount,result.CurrentPage,10);
+               var response =_mapper.Map<List<TransactionDTO>>(result.ToList());
                 if (response.Count>0)
                 {
-                   
-                    return Ok(response);
+                    string NextUrl = string.Empty;
+                    string PreviousUrl = string.Empty;
+                    string ActionPath = Request.Host + Request.Path;
+                    NextUrl = result.HasNext ? $"Next Page: {ActionPath} /page= {(page + 1)}" : string.Empty;
+                    PreviousUrl = result.HasPrevious ? $"Previous Page: {ActionPath} /page= {(page - 1)}" : string.Empty;
+                    return Ok(new {result,
+                        PreviousURL = PreviousUrl,
+                        NextURl=NextUrl
+
+                    });
                 }
-                return BadRequest(new { Status = "404", Message = "Error: Not found" });
+                return NotFound(new { Status = "404", Message = "Error: Not found" });
             }
             catch (Exception ex)
             {
