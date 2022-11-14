@@ -58,7 +58,8 @@ namespace AlkemyWallet.Controllers
                     string ActionPath = Request.Host + Request.Path;
                     NextUrl = result.HasNext ? $"Next Page: {ActionPath} /page= {(page + 1)}" : string.Empty;
                     PreviousUrl = result.HasPrevious ? $"Previous Page: {ActionPath} /page= {(page - 1)}" : string.Empty;
-                    return Ok(new {result,
+                    return Ok(new {
+                        response,
                         PreviousURL = PreviousUrl,
                         NextURl=NextUrl
 
