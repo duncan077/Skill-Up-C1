@@ -21,8 +21,8 @@ namespace AlkemyWallet.DataAccess.DataSeed
                     { 
                         Id = 2, 
                         CreationDate = new DateTime(), 
-                        Money = Convert.ToDecimal(0.0), 
-                        IsBlocked = true, 
+                        Money = Convert.ToDecimal(3430.0), 
+                        IsBlocked = false, 
                         UserId = 2,
                         IsDeleted = false
                     },
