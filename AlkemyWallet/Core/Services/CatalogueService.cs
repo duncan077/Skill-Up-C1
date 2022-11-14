@@ -23,6 +23,7 @@ namespace AlkemyWallet.Core.Services
         public async Task delete(CatalogueEntity entity)
         {
              await _unitOfWork.CatalogueRepository.delete(entity);
+            await _unitOfWork.Save();
         }
 
         public async Task<IReadOnlyList<CatalogueDTO>> getAll()
@@ -48,11 +49,13 @@ namespace AlkemyWallet.Core.Services
         public async Task insert(CatalogueEntity entity)
         {
              await _unitOfWork.CatalogueRepository.insert(entity);
+            await _unitOfWork.Save();
         }
 
         public async Task update(CatalogueEntity entity)
         {
             await _unitOfWork.CatalogueRepository.update(entity);
+            await _unitOfWork.Save();
         }
 
         public async Task<IReadOnlyList<CatalogueDTO>> GetCatalogueByUserPoints(int points)
