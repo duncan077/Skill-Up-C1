@@ -29,9 +29,15 @@ namespace AlkemyWallet.DataAccess
             modelBuilder.Entity<FixedTermDepositEntity>()
                  .HasOne<UserEntity>(a => a.User)
                  .WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TransactionEntity>()
+                .HasOne<AccountsEntity>(a => a.Account)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TransactionEntity>()
+                 .HasOne<UserEntity>(a => a.User)
+                 .WithMany().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<AccountsEntity>()
                 .HasOne(u=>u.User)
-                .WithMany()
+                .WithMany(a=>a.Accounts)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

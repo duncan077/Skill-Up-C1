@@ -44,6 +44,7 @@ namespace AlkemyWallet.Core.Services
         public async Task insert(AccountsEntity entity)
         {
             await _unitOfWork.AccountsRepository.insert(entity);
+            await _unitOfWork.Save();
         }
 
         public async Task<List<AccountDto>> ListAccounts()
@@ -83,7 +84,7 @@ namespace AlkemyWallet.Core.Services
                 await _unitOfWork.AccountsRepository.update(addBalanceAccount);
 
 
-                user.Points = (int)(model.Amount * (pointsPercentage / 100));
+                user.Points += (int)(model.Amount * (pointsPercentage / 100));
                 await _unitOfWork.UserRepository.update(user);
                 var type = new Typess();
                 if (model.Types == "Topup") { type = Typess.Topup; } else type = Typess.Payment;

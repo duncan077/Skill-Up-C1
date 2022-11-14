@@ -41,10 +41,10 @@ namespace AlkemyWallet.Core.Services
         }
         public async Task CreateTransaction(TransactionEntity entity)
         {
-            var user = await _unitOfWork.UserRepository.getById(entity.UserId);
+            var user = await _unitOfWork.UserRepository.GetById(entity.UserId);
             if(user != null)
             {
-                if(user.Accounts.Where(a=>a.Id==entity.AccountId).Any())
+                if(user.Accounts.Where(a=>a.Id==entity.AccountId&&a.IsBlocked!=true).Any())
                 {
                     var accountTo = await _unitOfWork.AccountsRepository.getById(entity.ToAccountId);
                     if (accountTo != null)

@@ -15,13 +15,15 @@ namespace AlkemyWallet.Entities
         public string Types { get; set; }=String.Empty;
 
         [Required]
-        [ForeignKey("User")]
+        
         public int UserId { get; set; }
-        public virtual UserEntity User { get; set; }
+        [ForeignKey("UserId")]
+        public virtual UserEntity? User { get; set; }
         [Required]
-        [ForeignKey("Account")]
+        
         public int AccountId { get; set; }
-        public virtual AccountsEntity Account { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual AccountsEntity? Account { get; set; }
 
         [Required]
         public int ToAccountId { get; set; }
@@ -31,8 +33,7 @@ namespace AlkemyWallet.Entities
 
             Types = string.Empty;
 
-            Account = new AccountsEntity();
-            User = new UserEntity();
+           
         }
 
         public TransactionEntity(int userId, int accountId, int toAccountId,Typess type) : this()

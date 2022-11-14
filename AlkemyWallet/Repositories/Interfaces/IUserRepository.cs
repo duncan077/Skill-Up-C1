@@ -8,5 +8,6 @@ namespace AlkemyWallet.Repositories.Interfaces
     {
         Task<UserEntity> getByUserName(string userName);
         Task<PagedList<UserEntity>> getAll(PagesParameters pagesParams);
+        Task<UserEntity> GetById(int id);
     }
 }
